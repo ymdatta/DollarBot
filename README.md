@@ -1,7 +1,7 @@
 # expense-tracker-bot
 <hr>
 <p align="center">
-<a><img  height=600 width=600 
+<a><img  height=560 width=1000 
   src="https://github.com/deekay2310/expense-tracker-bot/blob/a309da8b25b937136f37224eb1074900b7cf186b/docs/expenses.jpeg" alt="Expense tracking made easy!"></a>
 </p>
 <hr>
