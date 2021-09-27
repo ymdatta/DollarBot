@@ -1,4 +1,4 @@
-# expense-tracker-bot
+# TrackMyDollar
 <hr>
 <p align="center">
 <a><img  height=560 width=1000 
