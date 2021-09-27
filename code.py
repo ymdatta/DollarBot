@@ -22,5 +22,4 @@ commands = {  # command description used in the "help" command
     'history' : 'Show spending history',
     'delete': 'debugger: clear all your records',
     'edit': 'Edit spendings'
-    'feedback': 'Yay or Nay? Tell me how I can be better!'
 }
