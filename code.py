@@ -16,10 +16,10 @@ from datetime import datetime
 API_TOKEN = "<API_KEY>"
 
 commands = {  # command description used in the "help" command
-    'menu'    : 'Display this menu',
-    'add'  : 'Record new spending',
-    'display' : 'Show sum spendings',
-    'history' : 'Show spending history',
-    'delete': 'debugger: clear all your records',
-    'edit': 'Edit spendings'
+    'menu'    : 'Display the menu',
+    'add'  : 'Record/Add a new spending',
+    'display' : 'Show sum of spendings',
+    'history' : 'Display spending history',
+    'delete': 'Clear/Erase all your records',
+    'edit': 'Edit/Change spending details'
 }
