@@ -1,6 +1,3 @@
-<<<<<<< Updated upstream
-# expense-tracker-bot
-=======
 # TrackMyDollar
 <hr>
 <p align="center">
@@ -19,4 +16,4 @@
 <hr>
 
 ## About TrackMyDollar
->>>>>>> Stashed changes
+
