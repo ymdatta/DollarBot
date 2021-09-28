@@ -35,6 +35,18 @@ commands = {
 
 bot = telebot.TeleBot(api_token)
 
+telebot.logger.setLevel(logging.INFO)
+
+#Display output on the terminal/console
+#The bot will call this function when a new input/message is recieved from the user
+def listener(messages):
+       for m in messages:
+        if m.content_type == 'text':
+            print("Timestamp:{} \nName:{} \nChatId:{} \nInput: {}\n".format(str(datetime.now()), str(m.chat.first_name), str(m.chat.id), str(m.text)))
+
+#Define listener
+bot.set_update_listener(listener)
+
 def main():
     try:
         bot.polling(none_stop=True)
