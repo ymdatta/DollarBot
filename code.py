@@ -13,11 +13,11 @@ from datetime import datetime
 
 API_TOKEN = "<API_KEY>"
 
-commands = {  # command description used in the "help" command
-    'menu'    : 'Display the menu',
-    'add'  : 'Record/Add a new spending',
-    'display' : 'Show sum of spendings',
-    'history' : 'Display spending history',
+commands = {  # description of available commands
+    'menu': 'Display the menu',
+    'add': 'Record/Add a new spending',
+    'display': 'Show sum of expenditure for the current day/month',
+    'history': 'Display spending history',
     'delete': 'Clear/Erase all your records',
     'edit': 'Edit/Change spending details'
 }
