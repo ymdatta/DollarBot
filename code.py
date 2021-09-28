@@ -35,13 +35,14 @@ commands = {
 
 bot = telebot.TeleBot(api_token)
 
+#methods for various functionalities to be implemented here
+
 def main():
     try:
         bot.polling(none_stop=True)
     except Exception:
         time.sleep(3)
         print("Connection Timeout")
-
 
 if __name__ == '__main__':
     main()
