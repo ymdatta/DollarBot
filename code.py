@@ -20,7 +20,7 @@ monthFormat = '%b-%Y'
 #global variables to store user choice, user list, spend categories, etc
 option = {}
 user_list = {}
-spend_categories = ['Food', 'Groceries', 'Transport', 'Shopping']
+spend_categories = ['Food', 'Groceries', 'Utilities', 'Transport', 'Shopping', 'Miscellaneous']
 spend_display_option = ['Day', 'Month']
 
 #set of implemented commands and their description
