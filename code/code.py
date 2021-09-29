@@ -224,6 +224,34 @@ def edit3(m):
         new_cost = bot.reply_to(m, "Please type the new cost")
         bot.register_next_step_handler(new_cost, edit_cost)        
 
+def edit_date(m):
+    global i_edit
+    new_date = m.text
+    date_format = "^(([0][1-9])|([1-2][0-9])|([3][0-1]))\-(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\-\d{4}$"
+    chat_id = m.chat.id
+    data_edit = getUserHistory(chat_id)
+    x1 = re.search(date_format,new_date)
+    if(x1 == None):
+        bot.reply_to(m, "The date is incorrect")
+        return
+    record = data_edit[i_edit].split(',')
+    record[0] = new_date + record[0][11:len(record[0])]
+    data_edit[i_edit] = record[0] + ',' + record[1] + ',' + int(record[2]) + '.0'
+    user_list[str(chat_id)] = data_edit
+    writeJson(user_list)
+    bot.reply_to(m, "Date is updated")
+    
+def edit_cat(m):
+    global i_edit
+    chat_id = m.chat.id
+    data_edit = getUserHistory(chat_id)
+    new_cat = m.text
+    record = data_edit[i_edit].split(',')
+    record[1] = new_cat
+    data_edit[i_edit] = record[0] + ',' + record[1] + ',' + int(record[2]) + '.0'
+    user_list[str(chat_id)] = data_edit
+    writeJson(user_list)
+    bot.reply_to(m, "Category is updated")
 	
 #function to display total expenditure
 @bot.message_handler(commands=['display'])
