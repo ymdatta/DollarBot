@@ -1,12 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Sun Sep 26 18:01:12 2021
 
-<<<<<<< Updated upstream
-@author: sunidhihegde
-"""
-=======
+
 import json
 import logging
 import re
@@ -43,6 +38,7 @@ bot = telebot.TeleBot(api_token)
 
 #methods for various functionalities to be implemented here
 
+
 #function to load .json expense record data
 def load_Json():
 	global user_list
@@ -59,6 +55,13 @@ def load_Json():
 def show_history(message):
 	
 
->>>>>>> Stashed changes
+
 def main():
-    pass
+    try:
+        bot.polling(none_stop=True)
+    except Exception:
+        time.sleep(3)
+        print("Connection Timeout")
+
+if __name__ == '__main__':
+    main()
