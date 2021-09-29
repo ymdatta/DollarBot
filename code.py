@@ -119,7 +119,7 @@ def validate_entered_amount(amount_entered):
 
 def write_json(user_list):
     try:
-        with open('expense_record', 'w') as json_file:
+        with open('expense_record.json', 'w') as json_file:
             json.dump(user_list, json_file, ensure_ascii=False, indent=4)
     except FileNotFoundError:
         print('Sorry, the data file could not be found.')
