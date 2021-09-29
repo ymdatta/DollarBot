@@ -156,7 +156,7 @@ def show_history(message):
 		if user_history is None:
 			raise Exception("Sorry! No spending records found!")
 		spend_history_str = "Here is your spending history : \nDATE, CATEGORY, AMOUNT\n----------------------\n"
-		if len(user_history) 0:
+		if len(user_history)==0:
 			spend_total_str = "Sorry! No spending records found!"
 		else:
 			for rec in user_history:
