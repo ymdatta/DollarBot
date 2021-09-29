@@ -38,8 +38,14 @@ bot = telebot.TeleBot(api_token)
 
 telebot.logger.setLevel(logging.INFO)
 
-#Define listener
-#bot.set_update_listener(listener)
+#Define listener for requests by user
+def listener(user_requests):
+	for req in user_requests:
+		if(req.content_type=='text'):
+			print("{} name:{} chat_id:{} \nmessage: {}\n".format(str(datetime.now()),str(req.chat.first_name),str(req.chat.id),str(req.text)))
+
+
+bot.set_update_listener(listener)
 
 #defines how the /start and /help commands have to be handled/processed
 @bot.message_handler(commands=['start', 'menu'])
