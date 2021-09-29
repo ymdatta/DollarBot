@@ -129,19 +129,36 @@ def add_user_record(chat_id, record_to_be_added):
 
 #function to load .json expense record data
 def read_json():
-    global user_list
-    try:
-        if os.stat('expense_record.json').st_size!=0:
-            with open('expense_record.json') as expense_record:
-                expense_record = json.load(expense_record)
-                user_list = expense_record
-    except FileNotFoundError:
-        print("---------NO RECORDS FOUND---------")
+	global user_list
+	try:
+		if os.stat('expense_record.json').st_size!=0:
+			with open('expense_record.json') as expense_record:
+				expense_record = json.load(expense_record)
+			user_list = expense_record
+	except FileNotFoundError:
+		print("---------NO RECORDS FOUND---------")
+
 
 #function to fetch expenditure history of the user
 @bot.message_handler(commands=['history'])
 def show_history(message):
-   
+
+	try:
+		read_json()
+		chat_id=message.chat.id
+		user_history=getUserHistory(chat_id)
+		if user_history is None:
+			raise Exception("Sorry! No spending records found!")
+		spend_history_str = "Here is your spending history : \nDATE, CATEGORY, AMOUNT\n----------------------\n"
+		if len(user_history) 0:
+			spend_total_str = "Sorry! No spending records found!"
+		else:
+			for rec in user_history:
+				spend_total_str += str(rec) + "\n"
+			bot.send_message(chat_id, spend_total_str)
+	except Exception as e:
+		bot.reply_to(message, "Oops!" + str(e))	
+				
 
 #function to display total expenditure
 @bot.message_handler(commands=['display'])
