@@ -152,7 +152,7 @@ def show_history(message):
 		read_json()
 		chat_id=message.chat.id
 		user_history=getUserHistory(chat_id)
-		spend_history_str = ""
+		spend_total_str = ""
 		if user_history is None:
 			raise Exception("Sorry! No spending records found!")
 		spend_history_str = "Here is your spending history : \nDATE, CATEGORY, AMOUNT\n----------------------\n"
