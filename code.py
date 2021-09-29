@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-
 import json
 import logging
 import re
@@ -135,7 +134,7 @@ def read_json():
 			with open('expense_record.json') as expense_record:
 				expense_record_data = json.load(expense_record)
 			user_list = expense_record_data
-				
+
 	except FileNotFoundError:
 		print("---------NO RECORDS FOUND---------")
 
