@@ -166,6 +166,19 @@ def show_history(message):
 		bot.reply_to(message, "Oops!" + str(e))	
 				
 
+@bot.message_handler(commands=['edit'])
+def edit1(m):
+    read_json()
+    global user_list
+    chat_id = m.chat.id
+    
+    if (str(chat_id) in user_list):
+        info = bot.reply_to(m, "Please enter the date and category of the transaction you made (Eg: 01-Mar-2021,Transport)")
+        bot.register_next_step_handler(info, edit2)
+    
+    else:
+       bot.reply_to(chat_id, "No data found")			
+			
 #function to display total expenditure
 @bot.message_handler(commands=['display'])
 def command_display(message):
