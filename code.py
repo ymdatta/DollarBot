@@ -128,7 +128,7 @@ def calculate_spendings(queryResult):
 def getUserHistory(chat_id):
     global user_list
     if (str(chat_id) in user_list):
-        return global_users_dict[str(chat_id)]
+        return user_list[str(chat_id)]
     return None
 >>>>>>> Stashed changes
 
