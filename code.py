@@ -55,6 +55,82 @@ def load_Json():
 def show_history(message):
 	
 
+<<<<<<< Updated upstream
+=======
+#function to display total expenditure
+@bot.message_handler(commands=['display'])
+def command_display(message):
+    read_json()
+    chat_id = message.chat.id
+    history = getUserHistory
+    if history == None:
+        bot.send_message(chat_id, "Oops! Looks like you do not have any spending records!")
+    else:
+        markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
+        markup.row_width = 2
+        for mode in spend_display_option:
+            markup.add(mode)
+        # markup.add('Day', 'Month')
+        msg = bot.reply_to(message, 'Please select a category to see the total expense', reply_markup=markup)
+        bot.register_next_step_handler(msg, display_total)
+
+def display_total(message):
+    try:
+        chat_id = message.chat.id
+        DayWeekMonth = message.text
+
+        if not DayWeekMonth in spend_display_option:
+            raise Exception("Sorry I can't show spendings for \"{}\"!".format(DayWeekMonth))
+
+        history = getUserHistory(chat_id)
+        if history is None:
+            raise Exception("Oops! Looks like you do not have any spending records!")
+
+        bot.send_message(chat_id, "Hold on! Gathering my thoughts...")
+        bot.send_chat_action(chat_id, 'typing')  # show the bot "typing" (max. 5 secs)
+        time.sleep(0.5)
+
+        total_text = ""
+
+        if DayWeekMonth == 'Day':
+            query = datetime.now().today().strftime(dateFormat)
+            queryResult = [value for index, value in enumerate(history) if str(query) in value] #query all that contains today's date
+        elif DayWeekMonth == 'Month':
+            query = datetime.now().today().strftime(monthFormat)
+            queryResult = [value for index, value in enumerate(history) if str(query) in value] #query all that contains today's date
+        total_text = calculate_spendings(queryResult)
+
+        spending_text = ""
+        if len(total_text) == 0:
+            spending_text = "You have no spendings for {}!".format(DayWeekMonth)
+        else:
+            spending_text = "Here are your total spendings {}:\nCATEGORIES,AMOUNT \n----------------------\n{}".format(DayWeekMonth.lower(), total_text)
+
+        bot.send_message(chat_id, spending_text)
+    except Exception as e:
+        bot.reply_to(message, 'Exception! Please try again' + str(e))
+
+def calculate_spendings(queryResult):
+    total_dict = {}
+
+    for row in queryResult:
+        s = row.split(',')    #date,cat,money
+        cat = s[1]  #cat
+        if cat in total_dict:
+            total_dict[cat] = round(total_dict[cat] + float(s[2]),2)    #round up to 2 decimal
+        else:
+            total_dict[cat] = float(s[2])
+    total_text = ""
+    for key, value in total_dict.items():
+        total_text += str(key) + " $" + str(value) + "\n"
+    return total_text
+
+def getUserHistory(chat_id):
+    global user_list
+    if (str(chat_id) in user_list):
+        return global_users_dict[str(chat_id)]
+    return None
+>>>>>>> Stashed changes
 
 def main():
     try:
