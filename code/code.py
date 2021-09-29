@@ -178,7 +178,30 @@ def edit1(m):
     
     else:
        bot.reply_to(chat_id, "No data found")			
-			
+
+i_edit = -1
+def edit2(m):
+    global i_edit
+    i_edit = -1
+    chat_id = m.chat.id
+    data_edit = getUserHistory(chat_id)
+    info = m.text
+    date_format = "^(([0][1-9])|([1-2][0-9])|([3][0-1]))\-(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\-\d{4}$"
+    info = info.split(',')
+    x = re.search(date_format,info[0])
+    if(x == None):
+        bot.reply_to(m, "The date is incorrect")
+        return
+    
+    
+    for record in data_edit:
+        i_edit = i_edit + 1
+        record = record.split(',')
+        if info[0] == record[0][0:11] and info[1] == record[1]:
+            choice = bot.reply_to(m, "What do you want to update?")
+            bot.register_next_step_handler(choice, edit3)
+            break
+	
 #function to display total expenditure
 @bot.message_handler(commands=['display'])
 def command_display(message):
