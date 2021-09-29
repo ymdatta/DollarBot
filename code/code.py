@@ -11,7 +11,7 @@ from telebot import types
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from datetime import datetime
 
-api_token = "INSERT API TOKEN HERE"
+api_token = "1925990647:AAHkeYbE7CU8BdR9d-ge2PepdhNvqAFxwKA"
 
 dateFormat = '%d-%b-%Y'
 timeFormat = '%H:%M'
@@ -58,6 +58,7 @@ def start_and_menu_command(m):
         text_intro += "/" + c + ": "
         text_intro += commands[c] + "\n\n"
     bot.send_message(chat_id, text_intro)
+    return True
 
 #defines how the /new command has to be handled/processed
 @bot.message_handler(commands=['add'])
