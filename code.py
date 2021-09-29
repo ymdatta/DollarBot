@@ -119,7 +119,7 @@ def validate_entered_amount(amount_entered):
 
 def write_json(user_list):
     try:
-        with open('expense_record', 'w') as json_file:
+        with open('expense_record.json', 'w') as json_file:
             json.dump(user_list, json_file, ensure_ascii=False, indent=4)
     except FileNotFoundError:
         print('Sorry, the data file could not be found.')
@@ -240,6 +240,7 @@ def getUserHistory(chat_id):
         return user_list[str(chat_id)]
     return None
 
+
 #function to delete a record
 def deleteHistory(chat_id):
     global user_list
@@ -261,7 +262,12 @@ def command_delete(message):
         delete_history_text = "No records there to be deleted. Start adding your expenses to keep track of your spendings!"
     bot.send_message(chat_id, delete_history_text)
 
-
+def addUserHistory(chat_id, user_record):
+	global user_list
+	if(not(str(chat_id) in user_list)):
+		user_list[str(chat_id)]=[]
+	user_list[str(chat_id)].append(user_record)
+	return user_list
 
 def main():
     try:
