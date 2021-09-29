@@ -6,10 +6,7 @@ setup(
     packages=find_packages(),
     description='An easy to use Telegram Bot to track everyday expenses',
     author='Dev, Prakruthi, Radhika, Rohan, Sunidhi',
-    scripts=['code/code.py'],
-    install_requires=[
-        'telebot',
-        'logging'
-    ]
+
+    scripts=['code.py']
     
 )   
