@@ -195,7 +195,7 @@ def display_total(message):
         if history is None:
             raise Exception("Oops! Looks like you do not have any spending records!")
 
-        bot.send_message(chat_id, "Hold on! Gathering my thoughts...")
+        bot.send_message(chat_id, "Hold on! Calculating...")
         bot.send_chat_action(chat_id, 'typing')  # show the bot "typing" (max. 5 secs)
         time.sleep(0.5)
 
@@ -217,7 +217,7 @@ def display_total(message):
 
         bot.send_message(chat_id, spending_text)
     except Exception as e:
-        bot.reply_to(message, 'Exception! Please try again' + str(e))
+        bot.reply_to(message, str(e))
 
 def calculate_spendings(queryResult):
     total_dict = {}
