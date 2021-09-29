@@ -129,19 +129,19 @@ def add_user_record(chat_id, record_to_be_added):
 
 #function to load .json expense record data
 def read_json():
-	global user_list
-	try:
-		if os.stat('expense_record.json').st_size!=0:
-			with open('expense_record.json') as expense_record:
-				expense_record = json.load(expense_record)
-			  user_list = expense_record
-	except FileNotFoundError:
-		print("---------NO RECORDS FOUND---------")
+    global user_list
+    try:
+        if os.stat('expense_record.json').st_size!=0:
+            with open('expense_record.json') as expense_record:
+                expense_record = json.load(expense_record)
+                user_list = expense_record
+    except FileNotFoundError:
+        print("---------NO RECORDS FOUND---------")
 
 #function to fetch expenditure history of the user
 @bot.message_handler(commands=['history'])
 def show_history(message):
-
+   
 
 #function to display total expenditure
 @bot.message_handler(commands=['display'])
