@@ -9,7 +9,6 @@ setup(
     scripts=['code.py'],
     install_requires=[
         'telebot',
-        'json',
         'logging'
     ]
     
