@@ -252,7 +252,25 @@ def edit_cat(m):
     user_list[str(chat_id)] = data_edit
     writeJson(user_list)
     bot.reply_to(m, "Category is updated")
-	
+
+def edit_cost(m):
+    global i_edit
+    print(i_edit)
+    new_cost = m.text
+    chat_id = m.chat.id
+    data_edit = getUserHistory(chat_id)
+    if(validateAmount(str(new_cost))):
+        record = data_edit[i_edit].split(',')                
+        record[2] = new_cost
+        data_edit[i_edit] = record[0] + ',' + record[1] + ',' + str(int(record[2])) +'.0'
+        user_list[str(chat_id)] = data_edit
+        writeJson(user_list)
+        bot.reply_to(m, "Cost is updated")
+    
+    else:   
+        bot.reply_to(m, "The cost is invalid")
+        return
+
 #function to display total expenditure
 @bot.message_handler(commands=['display'])
 def command_display(message):
