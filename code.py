@@ -9,7 +9,6 @@ import os
 import telebot
 import time
 from telebot import types
-from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from datetime import datetime
 
 api_token = "1925990647:AAHkeYbE7CU8BdR9d-ge2PepdhNvqAFxwKA"
@@ -129,14 +128,14 @@ def add_user_record(chat_id, record_to_be_added):
 
 #function to load .json expense record data
 def read_json():
-	global user_list
-	try:
-		if os.stat('expense_record.json').st_size!=0:
-			with open('expense_record.json') as expense_record:
-				expense_record = json.load(expense_record)
-			  user_list = expense_record
-	except FileNotFoundError:
-		print("---------NO RECORDS FOUND---------")
+    global user_list
+    try:
+        if os.stat('expense_record.json').st_size!=0:
+            with open('expense_record.json') as expense_record:
+                expense_record = json.load(expense_record)
+                user_list = expense_record
+    except FileNotFoundError:
+        print("---------NO RECORDS FOUND---------")
 
 #function to fetch expenditure history of the user
 @bot.message_handler(commands=['history'])
@@ -214,7 +213,7 @@ def calculate_spendings(queryResult):
 def getUserHistory(chat_id):
     global user_list
     if (str(chat_id) in user_list):
-        return global_users_dict[str(chat_id)]
+        return user_list[str(chat_id)]
     return None
 
 def main():
