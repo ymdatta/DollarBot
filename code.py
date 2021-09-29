@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+
 import json
 import logging
 import re
@@ -36,6 +37,24 @@ commands = {
 bot = telebot.TeleBot(api_token)
 
 #methods for various functionalities to be implemented here
+
+
+#function to load .json expense record data
+def load_Json():
+	global user_list
+	try:
+		if os.stat('expense_record.json').st_size!=0:
+			with open('expense_record.json') as expense_record:
+				expense_record = json.load(expense_record)
+			global user_list = expense_record
+	except FileNotFoundError:
+		print("---------NO RECORDS FOUND---------")
+	
+#function to fetch expenditure history of the user
+@bot.message_handler(commands=['history'])
+def show_history(message):
+	
+
 
 def main():
     try:
