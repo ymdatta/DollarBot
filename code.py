@@ -12,7 +12,7 @@ from telebot import types
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from datetime import datetime
 
-api_token = "1925990647:AAHkeYbE7CU8BdR9d-ge2PepdhNvqAFxwKA"
+api_token = "INSERT API TOKEN HERE"
 
 dateFormat = '%d-%b-%Y'
 timeFormat = '%H:%M'
@@ -134,14 +134,31 @@ def read_json():
 		if os.stat('expense_record.json').st_size!=0:
 			with open('expense_record.json') as expense_record:
 				expense_record = json.load(expense_record)
-			  user_list = expense_record
+			user_list = expense_record
 	except FileNotFoundError:
 		print("---------NO RECORDS FOUND---------")
+
 
 #function to fetch expenditure history of the user
 @bot.message_handler(commands=['history'])
 def show_history(message):
 
+	try:
+		read_json()
+		chat_id=message.chat.id
+		user_history=getUserHistory(chat_id)
+		if user_history is None:
+			raise Exception("Sorry! No spending records found!")
+		spend_history_str = "Here is your spending history : \nDATE, CATEGORY, AMOUNT\n----------------------\n"
+		if len(user_history) 0:
+			spend_total_str = "Sorry! No spending records found!"
+		else:
+			for rec in user_history:
+				spend_total_str += str(rec) + "\n"
+			bot.send_message(chat_id, spend_total_str)
+	except Exception as e:
+		bot.reply_to(message, "Oops!" + str(e))	
+				
 
 #function to display total expenditure
 @bot.message_handler(commands=['display'])
@@ -214,7 +231,7 @@ def calculate_spendings(queryResult):
 def getUserHistory(chat_id):
     global user_list
     if (str(chat_id) in user_list):
-        return global_users_dict[str(chat_id)]
+        return user_list[str(chat_id)]
     return None
 
 def main():
