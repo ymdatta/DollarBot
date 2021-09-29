@@ -264,17 +264,17 @@ def edit_cost(m):
     chat_id = m.chat.id
     data_edit = getUserHistory(chat_id)
     
-    #if(validate_entered_amount(int(new_cost))== True):
-    record = data_edit[i_edit].split(',')                
-    record[2] = str(new_cost)+'.0'
-    data_edit[i_edit] = record[0] + ',' + record[1] + ',' + record[2]
-    user_list[str(chat_id)] = data_edit
-    write_json(user_list)
-    bot.reply_to(m, "Cost is updated")
+    if(validate_entered_amount(new_cost) != 0):
+        record = data_edit[i_edit].split(',')                
+        record[2] = float(new_cost)
+        data_edit[i_edit] = record[0] + ',' + record[1] + ',' + record[2]
+        user_list[str(chat_id)] = data_edit
+        write_json(user_list)
+        bot.reply_to(m, "Cost is updated")
     
-    #else:
-     #   bot.reply_to(m, "The cost is invalid")
-      #  return
+    else:
+        bot.reply_to(m, "The cost is invalid")
+        return
 
 #function to display total expenditure
 @bot.message_handler(commands=['display'])
