@@ -7,6 +7,6 @@ setup(
     description='An easy to use Telegram Bot to track everyday expenses',
     author='Dev, Prakruthi, Radhika, Rohan, Sunidhi',
 
-    scripts=['code.py']
+    scripts=['code/code.py']
     
 )   
