@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+
 import json
 import logging
 import re
@@ -37,14 +38,6 @@ bot = telebot.TeleBot(api_token)
 
 telebot.logger.setLevel(logging.INFO)
 
-'''
-#Display output on the terminal/console
-#The bot will call this function when a new input/message is recieved from the user
-def listener(messages):
-       for m in messages:
-        if m.content_type == 'text':
-            print("Timestamp:{} \nName:{} \nChatId:{} \nInput: {}\n".format(str(datetime.now()), str(m.chat.first_name), str(m.chat.id), str(m.text)))
-'''
 #Define listener
 #bot.set_update_listener(listener)
 
@@ -60,16 +53,6 @@ def start_and_menu_command(m):
         text_intro += "/" + c + ": "
         text_intro += commands[c] + "\n\n"
     bot.send_message(chat_id, text_intro)
-
-def read_json():
-    global user_list
-    try:
-        if not os.stat('data.json').st_size == 0:  # check if file is empty or not
-            with open('data.json') as json_file:
-                data = json.load(json_file)
-            user_list = data  # assign loaded file to global users
-    except FileNotFoundError:
-        print('Sorry, the data.json file could not be found.')
 
 #defines how the /new command has to be handled/processed
 @bot.message_handler(commands=['add'])
@@ -144,8 +127,94 @@ def add_user_record(chat_id, record_to_be_added):
     user_list[str(chat_id)].append(record_to_be_added)
     return user_list
 
+#function to load .json expense record data
+def read_json():
+	global user_list
+	try:
+		if os.stat('expense_record.json').st_size!=0:
+			with open('expense_record.json') as expense_record:
+				expense_record = json.load(expense_record)
+			  user_list = expense_record
+	except FileNotFoundError:
+		print("---------NO RECORDS FOUND---------")
 
+#function to fetch expenditure history of the user
+@bot.message_handler(commands=['history'])
+def show_history(message):
 
+#function to display total expenditure
+@bot.message_handler(commands=['display'])
+def command_display(message):
+    read_json()
+    chat_id = message.chat.id
+    history = getUserHistory
+    if history == None:
+        bot.send_message(chat_id, "Oops! Looks like you do not have any spending records!")
+    else:
+        markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
+        markup.row_width = 2
+        for mode in spend_display_option:
+            markup.add(mode)
+        # markup.add('Day', 'Month')
+        msg = bot.reply_to(message, 'Please select a category to see the total expense', reply_markup=markup)
+        bot.register_next_step_handler(msg, display_total)
+
+def display_total(message):
+    try:
+        chat_id = message.chat.id
+        DayWeekMonth = message.text
+
+        if not DayWeekMonth in spend_display_option:
+            raise Exception("Sorry I can't show spendings for \"{}\"!".format(DayWeekMonth))
+
+        history = getUserHistory(chat_id)
+        if history is None:
+            raise Exception("Oops! Looks like you do not have any spending records!")
+
+        bot.send_message(chat_id, "Hold on! Gathering my thoughts...")
+        bot.send_chat_action(chat_id, 'typing')  # show the bot "typing" (max. 5 secs)
+        time.sleep(0.5)
+
+        total_text = ""
+
+        if DayWeekMonth == 'Day':
+            query = datetime.now().today().strftime(dateFormat)
+            queryResult = [value for index, value in enumerate(history) if str(query) in value] #query all that contains today's date
+        elif DayWeekMonth == 'Month':
+            query = datetime.now().today().strftime(monthFormat)
+            queryResult = [value for index, value in enumerate(history) if str(query) in value] #query all that contains today's date
+        total_text = calculate_spendings(queryResult)
+
+        spending_text = ""
+        if len(total_text) == 0:
+            spending_text = "You have no spendings for {}!".format(DayWeekMonth)
+        else:
+            spending_text = "Here are your total spendings {}:\nCATEGORIES,AMOUNT \n----------------------\n{}".format(DayWeekMonth.lower(), total_text)
+
+        bot.send_message(chat_id, spending_text)
+    except Exception as e:
+        bot.reply_to(message, 'Exception! Please try again' + str(e))
+
+def calculate_spendings(queryResult):
+    total_dict = {}
+
+    for row in queryResult:
+        s = row.split(',')    #date,cat,money
+        cat = s[1]  #cat
+        if cat in total_dict:
+            total_dict[cat] = round(total_dict[cat] + float(s[2]),2)    #round up to 2 decimal
+        else:
+            total_dict[cat] = float(s[2])
+    total_text = ""
+    for key, value in total_dict.items():
+        total_text += str(key) + " $" + str(value) + "\n"
+    return total_text
+
+def getUserHistory(chat_id):
+    global global_users_dict
+    if (str(chat_id) in global_users_dict):
+        return global_users_dict[str(chat_id)]
+    return None
 
 def main():
     try:
@@ -153,7 +222,6 @@ def main():
     except Exception:
         time.sleep(3)
         print("Connection Timeout")
-
 
 if __name__ == '__main__':
     main()
