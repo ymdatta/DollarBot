@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-
 import json
 import logging
 import re
@@ -120,10 +119,10 @@ def validate_entered_amount(amount_entered):
 
 def write_json(user_list):
     try:
-        with open('data.json', 'w') as json_file:
+        with open('expense_record', 'w') as json_file:
             json.dump(user_list, json_file, ensure_ascii=False, indent=4)
     except FileNotFoundError:
-        print('Sorry, the data.json file could not be found.')
+        print('Sorry, the data file could not be found.')
 
 def add_user_record(chat_id, record_to_be_added):
     global user_list
@@ -139,8 +138,9 @@ def read_json():
 	try:
 		if os.stat('expense_record.json').st_size!=0:
 			with open('expense_record.json') as expense_record:
-				expense_record = json.load(expense_record)
-			user_list = expense_record
+				expense_record_data = json.load(expense_record)
+			user_list = expense_record_data
+
 	except FileNotFoundError:
 		print("---------NO RECORDS FOUND---------")
 
