@@ -12,7 +12,7 @@ from telebot import types
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from datetime import datetime
 
-api_token = "1925990647:AAHkeYbE7CU8BdR9d-ge2PepdhNvqAFxwKA"
+api_token = "INSERT API TOKEN HERE"
 
 dateFormat = '%d-%b-%Y'
 timeFormat = '%H:%M'
@@ -138,9 +138,11 @@ def read_json():
 	except FileNotFoundError:
 		print("---------NO RECORDS FOUND---------")
 
+
 #function to fetch expenditure history of the user
 @bot.message_handler(commands=['history'])
 def show_history(message):
+
 	try:
 		read_json()
 		chat_id=message.chat.id
