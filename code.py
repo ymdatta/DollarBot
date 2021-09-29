@@ -37,8 +37,14 @@ bot = telebot.TeleBot(api_token)
 
 telebot.logger.setLevel(logging.INFO)
 
-#Define listener
-#bot.set_update_listener(listener)
+#Define listener for requests by user
+def listener(user_requests):
+	for req in user_requests:
+		if(req.content_type=='text'):
+			print("{} name:{} chat_id:{} \nmessage: {}\n".format(str(datetime.now()),str(req.chat.first_name),str(req.chat.id),str(req.text)))
+
+
+bot.set_update_listener(listener)
 
 #defines how the /start and /help commands have to be handled/processed
 @bot.message_handler(commands=['start', 'menu'])
@@ -142,15 +148,15 @@ def read_json():
 #function to fetch expenditure history of the user
 @bot.message_handler(commands=['history'])
 def show_history(message):
-
 	try:
 		read_json()
 		chat_id=message.chat.id
 		user_history=getUserHistory(chat_id)
+		spend_total_str = ""
 		if user_history is None:
 			raise Exception("Sorry! No spending records found!")
 		spend_history_str = "Here is your spending history : \nDATE, CATEGORY, AMOUNT\n----------------------\n"
-		if len(user_history) 0:
+		if len(user_history)==0:
 			spend_total_str = "Sorry! No spending records found!"
 		else:
 			for rec in user_history:
@@ -233,6 +239,13 @@ def getUserHistory(chat_id):
     if (str(chat_id) in user_list):
         return user_list[str(chat_id)]
     return None
+
+def addUserHistory(chat_id, user_record):
+	global user_list
+	if(not(str(chat_id) in user_list)):
+		user_list[str(chat_id)]=[]
+	user_list[str(chat_id)].append(user_record)
+	return user_list
 
 def main():
     try:
