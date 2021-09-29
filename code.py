@@ -142,6 +142,7 @@ def read_json():
 @bot.message_handler(commands=['history'])
 def show_history(message):
 
+
 #function to display total expenditure
 @bot.message_handler(commands=['display'])
 def command_display(message):
@@ -211,8 +212,8 @@ def calculate_spendings(queryResult):
     return total_text
 
 def getUserHistory(chat_id):
-    global global_users_dict
-    if (str(chat_id) in global_users_dict):
+    global user_list
+    if (str(chat_id) in user_list):
         return global_users_dict[str(chat_id)]
     return None
 
