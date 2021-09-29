@@ -5,6 +5,7 @@ Created on Wed Sep 29 17:07:37 2021
 
 @author: deekay
 """
-import pytest
-from code.code import *
+
+#import pytest
+#from code.code import *
 
