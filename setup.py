@@ -3,10 +3,8 @@ from setuptools import setup,find_packages
 setup(
     name='Track My Dollar',
     version='1.0',
-    packages=find_packages(),
     description='An easy to use Telegram Bot to track everyday expenses',
     author='Dev, Prakruthi, Radhika, Rohan, Sunidhi',
-
-    scripts=['code.py']
+    scripts=['code/code.py']
     
 )   
