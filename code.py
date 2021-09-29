@@ -148,11 +148,11 @@ def read_json():
 #function to fetch expenditure history of the user
 @bot.message_handler(commands=['history'])
 def show_history(message):
-
 	try:
 		read_json()
 		chat_id=message.chat.id
 		user_history=getUserHistory(chat_id)
+		spend_history_str = ""
 		if user_history is None:
 			raise Exception("Sorry! No spending records found!")
 		spend_history_str = "Here is your spending history : \nDATE, CATEGORY, AMOUNT\n----------------------\n"
