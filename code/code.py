@@ -201,6 +201,29 @@ def edit2(m):
             choice = bot.reply_to(m, "What do you want to update?")
             bot.register_next_step_handler(choice, edit3)
             break
+
+def edit3(m):
+    choice1 = m.text
+    chat_id = m.chat.id
+    data_edit = getUserHistory(chat_id)
+    markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
+    markup.row_width = 2
+    for cat in CATEGORIES:
+        markup.add(cat)
+    if(choice1 == 'Date'):
+        new_date = bot.reply_to(m, "Please enter the new date (in dd-mmm-yyy format)")
+        bot.register_next_step_handler(new_date, edit_date)
+        
+            
+    if(choice1 == 'Category'):
+        new_cat = bot.reply_to(m, "Please select the new category", reply_markup = markup)
+        bot.register_next_step_handler(new_cat, edit_cat)
+        
+                
+    if(choice1 == 'Cost'):
+        new_cost = bot.reply_to(m, "Please type the new cost")
+        bot.register_next_step_handler(new_cost, edit_cost)        
+
 	
 #function to display total expenditure
 @bot.message_handler(commands=['display'])
