@@ -28,3 +28,37 @@ With simple commands, this bot allows you to:
 ## Demo
 https://user-images.githubusercontent.com/15325746/135395315-e234dc5e-d891-470a-b3f4-04aa1d11ed45.mp4
 
+## Installation guide
+
+The below instructions can be followed in order to set-up this bot at your end in a span of few minutes! Let's get started:
+
+1. This installation guide assumes that you have already installed Python (Python3 would be preferred)
+
+2. Clone this repository to your local system at a suitable directory/location of your choice
+
+3. Start a terminal session, and navigate to the directory where the repo has been cloned
+
+4. Run the following command to install the required dependencies:
+```
+  pip install -r requirements.txt
+```
+5. Download and install the Telegram desktop application for your system from the following site: https://desktop.telegram.org/
+
+6. Once you login to your Telegram account, search for "BotFather" in Telegram. Click on "Start" --> enter the following command:
+```
+  /newbot
+```
+7. Follow the instructions on screen and choose a name for your bot. Post this, select a username for your bot that ends with "bot" (as per the instructions on your Telegram screen)
+
+8. BotFather will now confirm the creation of your bot and provide a TOKEN to access the HTTP API - copy this token for future use.
+
+9. In the directory where this repo has been cloned, navigate to the "code" folder and open the "code.py" file. This file consists of a variable by the name "api_token". Paste the token copied in step 8 in the placeholder provided for this variable:
+```
+  api_token = "INSERT API KEY HERE"
+```
+10. In the Telegram app, search for your newly created bot by entering the username and open the same. Once this is done, go back to the terminal session. Navigate to the directory containing the "code.py" file and run the following command:
+```
+  python code.py
+```
+11. A successful run will generate a message on your terminal that says "TeleBot: Started polling." 
+12. Post this, navigate to your bot on Telegram, enter the "/start" or "/menu" command, and you are all set to track your expenses!
