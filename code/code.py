@@ -167,6 +167,7 @@ def show_history(message):
 		bot.reply_to(message, "Oops!" + str(e))	
 				
 
+#function to edit date, category or cost of a transaction
 @bot.message_handler(commands=['edit'])
 def edit1(m):
     read_json()
