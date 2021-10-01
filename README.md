@@ -62,3 +62,19 @@ The below instructions can be followed in order to set-up this bot at your end i
 ```
 11. A successful run will generate a message on your terminal that says "TeleBot: Started polling." 
 12. Post this, navigate to your bot on Telegram, enter the "/start" or "/menu" command, and you are all set to track your expenses!
+
+
+
+
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+Title:'Track My Dollar'
+Version: '1.0'
+Description: 'An easy to use Telegram Bot to track everyday expenses'
+Authors:'Dev, Prakruthi, Radhika, Rohan, Sunidhi'
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
