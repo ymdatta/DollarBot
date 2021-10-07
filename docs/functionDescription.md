@@ -1,3 +1,18 @@
+start_and_menu_command(m)
+- Function that defines how the /start and /help commands have to be handled/processed
+
+command_add(message)
+- Function that defines how the /add command has to be handled/processed
+
+post_category_selection(message)
+- Function that processes that validates the entered category, and accepts amount as input accordingly
+
+post_amount_input(message)
+- Function that writes the entered amount into the user's json file once the amount is validated 
+
+validate_entered_amount(amount_entered)
+- Function that validates the entered amount for non-string values
+
 AddUserHistory(chat_id, user_record)
 - Function to update expenditure details in the json file as and when user adds them
 
