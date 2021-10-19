@@ -1,4 +1,4 @@
-from setuptools import setup,find_packages
+from setuptools import setup, find_packages
 
 setup(
     name='Track My Dollar',
@@ -7,4 +7,4 @@ setup(
     author='Dev, Prakruthi, Radhika, Rohan, Sunidhi',
     scripts=['code/code.py'],
     packages=find_packages()
-)   
+)
