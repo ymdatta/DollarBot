@@ -18,7 +18,7 @@ user_list = {}
 
 bot = telebot.TeleBot(api_token)
 
-telebot.logger.setLevel(logging.DEBUG)
+telebot.logger.setLevel(logging.INFO)
 
 option = {}
 
@@ -91,7 +91,8 @@ def addUserHistory(chat_id, user_record):
 def main():
     try:
         bot.polling(none_stop=True)
-    except Exception:
+    except Exception as e:
+        logging.exception(str(e))
         time.sleep(3)
         print("Connection Timeout")
 

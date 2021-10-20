@@ -1,5 +1,6 @@
 import time
 import helper
+import logging
 from telebot import types
 from datetime import datetime
 
@@ -57,6 +58,7 @@ def display_total(message, bot):
 
         bot.send_message(chat_id, spending_text)
     except Exception as e:
+        logging.exception(str(e))
         bot.reply_to(message, str(e))
 
 

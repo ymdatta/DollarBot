@@ -1,4 +1,5 @@
 import helper
+import logging
 from telebot import types
 from datetime import datetime
 
@@ -29,6 +30,7 @@ def post_category_selection(message, bot):
         message = bot.send_message(chat_id, 'How much did you spend on {}? \n(Enter numeric values only)'.format(str(option[chat_id])))
         bot.register_next_step_handler(message, post_amount_input, bot)
     except Exception as e:
+        logging.exception(str(e))
         bot.reply_to(message, 'Oh no! ' + str(e))
         display_text = ""
         commands = helper.getCommands()
@@ -53,6 +55,7 @@ def post_amount_input(message, bot):
         bot.send_message(chat_id, 'The following expenditure has been recorded: You have spent ${} for {} on {}'.format(amount_str, category_str, date_str))
 
     except Exception as e:
+        logging.exception(str(e))
         bot.reply_to(message, 'Oh no. ' + str(e))
 
 
