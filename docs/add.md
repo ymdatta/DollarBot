@@ -50,13 +50,3 @@ Sri Athithya Kruth, [19.10.21 21:14]
 
 dollarbot, [19.10.21 21:14]
 The following expenditure has been recorded: You have spent $1212.0 for Food on 19-Oct-2021 21:14
-
-Sri Athithya Kruth, [19.10.21 21:14]
-/history
-
-dollarbot, [19.10.21 21:14]
-Here is your spending history : 
-DATE, CATEGORY, AMOUNT
-----------------------
-19-Oct-2021 21:13,Food,10.0
-19-Oct-2021 21:14,Food,1212.0
