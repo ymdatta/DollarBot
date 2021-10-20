@@ -10,11 +10,14 @@ import display
 import delete
 import add
 from datetime import datetime
+from jproperties import Properties
 
-api_token = "2058952091:AAGVtSVBKT1AnjTpNyojdNz4sgD68pY3mzM"
+configs = Properties()
 
-# global variables to store user choice, user list, spend categories, etc
-user_list = {}
+with open('user.properties', 'rb') as read_prop:
+    configs.load(read_prop)
+
+api_token = str(configs.get('api_token').data)
 
 bot = telebot.TeleBot(api_token)
 
