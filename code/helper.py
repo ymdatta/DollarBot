@@ -23,12 +23,15 @@ monthFormat = '%b-%Y'
 
 # function to load .json expense record data
 def read_json():
-    global user_list
     try:
-        if os.stat('expense_record.json').st_size != 0:
+        if not os.path.exists('expense_record.json'):
+            with open('expense_record.json', 'w') as json_file:
+                json_file.write('{}')
+            return json.dumps('{}')
+        elif os.stat('expense_record.json').st_size != 0:
             with open('expense_record.json') as expense_record:
                 expense_record_data = json.load(expense_record)
-            user_list = expense_record_data
+            return expense_record_data
 
     except FileNotFoundError:
         print("---------NO RECORDS FOUND---------")
@@ -36,7 +39,7 @@ def read_json():
 
 def write_json(user_list):
     try:
-        with open('expense_record.json', 'a') as json_file:
+        with open('expense_record.json', 'w') as json_file:
             json.dump(user_list, json_file, ensure_ascii=False, indent=4)
     except FileNotFoundError:
         print('Sorry, the data file could not be found.')
@@ -52,9 +55,8 @@ def validate_entered_amount(amount_entered):
     return 0
 
 
-# TODO: load from expense_record.json
 def getUserHistory(chat_id):
-    global user_list
+    user_list = read_json()
     if (str(chat_id) in user_list):
         return user_list[str(chat_id)]
     return None

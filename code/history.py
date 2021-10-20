@@ -1,7 +1,6 @@
 import helper
 
 
-# TODO: check if message is printed properly
 def run(message, bot):
     try:
         helper.read_json()

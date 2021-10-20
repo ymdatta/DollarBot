@@ -53,21 +53,12 @@ def post_amount_input(message, bot):
         bot.send_message(chat_id, 'The following expenditure has been recorded: You have spent ${} for {} on {}'.format(amount_str, category_str, date_str))
 
     except Exception as e:
-        print()
-        print()
-        print()
-        print()
-        print("blah blah.....")
-        print()
-        print()
-        print()
-        print()
         bot.reply_to(message, 'Oh no. ' + str(e))
 
 
 def add_user_record(chat_id, record_to_be_added):
-    user_list = {}
-    if not (str(chat_id) in user_list):
+    user_list = helper.read_json()
+    if str(chat_id) not in user_list:
         user_list[str(chat_id)] = []
 
     user_list[str(chat_id)].append(record_to_be_added)
