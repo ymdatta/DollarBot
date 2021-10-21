@@ -8,3 +8,5 @@ install:
 script:
   - pytest test/
 
+after_success:
+  - bash <(curl -s https://codecov.io/bash) -t c18f2a5b-6240-4bec-a551-b427163f05b8
