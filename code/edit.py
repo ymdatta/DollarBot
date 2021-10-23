@@ -24,7 +24,6 @@ def edit2(m, bot, user_list):
     chat_id = m.chat.id
     data_edit = helper.getUserHistory(chat_id)
     info = m.text
-    print("data_edit:"+str(data_edit))
     date_format = "^(([0][1-9])|([1-2][0-9])|([3][0-1]))\-(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\-\d{4}$"
     info = info.split(',')
     x = re.search(date_format, info[0])
@@ -41,8 +40,6 @@ def edit2(m, bot, user_list):
     for record in data_edit:
         i_edit = i_edit + 1
         record = record.split(',')
-
-        print("info[1]:"+str(info[1])+", record[1]:"+str(record[1]))
         if info[0] == record[0][0:11] and str(info[1]).strip() == str(record[1]).strip():
             print("Inside what do u want to update")
             choice = bot.reply_to(m, "What do you want to update?", reply_markup=markup)
