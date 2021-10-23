@@ -12,6 +12,10 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5542548.svg)](https://doi.org/10.5281/zenodo.5542548)
 [![Platform](https://img.shields.io/badge/Platform-Telegram-blue)](https://desktop.telegram.org/)
 [![Build Status](https://app.travis-ci.com/deekay2310/MyDollarBot.svg?branch=main)](https://app.travis-ci.com/github/deekay2310/MyDollarBot)
+[![codecov](https://codecov.io/gh/sak007/MyDollarBot/branch/main/graph/badge.svg?token=5AYMR8MNMP)](https://codecov.io/gh/sak007/MyDollarBot)
+[![GitHub issues](https://img.shields.io/github/issues/sak007/MyDollarBot)](https://github.com/sak007/MyDollarBot/issues?q=is%3Aopen+is%3Aissue)
+[![GitHub closed issues](https://img.shields.io/github/issues-closed/sak007/MyDollarBot)](https://github.com/sak007/MyDollarBot/issues?q=is%3Aissue+is%3Aclosed)
+![Lines of code](https://img.shields.io/tokei/lines/github/sak007/MyDollarBot)
 
 <hr>
 
