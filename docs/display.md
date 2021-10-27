@@ -33,7 +33,9 @@ mydollarbot20102021, [20.10.21 20:33]
 Hold on! Calculating...
 
 mydollarbot20102021, [20.10.21 20:33]
+
 Here are your total spendings day:
+
 CATEGORIES,AMOUNT 
 ----------------------
 Transport $1022.0
