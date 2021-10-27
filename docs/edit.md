@@ -19,13 +19,13 @@ It takes 2 arguments for processing - **message** which is the message from the 
 It takes 2 arguments for processing - **message** which is the message from the user, and **bot** which is the telegram bot object from the   edit2(m, bot):: function in the same file. Based on the category chosen for editing by the user, it redirects to the corresponding function for further processing.
 
 4. def edit_date(m, bot):
-It takes 2 arguments for processing - **message** which is the message from the user, and **bot** which is the telegram bot object from the   edit3(m, bot):: function in the same file. It takes care of date change.
+It takes 2 arguments for processing - **message** which is the message from the user, and **bot** which is the telegram bot object from the   edit3(m, bot):: function in the same file. It takes care of date change and edits.
 
 5. def edit_cost(m, bot):
-It takes 2 arguments for processing - **message** which is the message from the user, and **bot** which is the telegram bot object from the   edit3(m, bot):: function in the same file. It takes care of cost change.
+It takes 2 arguments for processing - **message** which is the message from the user, and **bot** which is the telegram bot object from the   edit3(m, bot):: function in the same file. It takes care of cost change and edits.
 
 6. def edit_cat(m, bot):
-It takes 2 arguments for processing - **message** which is the message from the user, and **bot** which is the telegram bot object from the   edit3(m, bot):: function in the same file. It takes care of category change.
+It takes 2 arguments for processing - **message** which is the message from the user, and **bot** which is the telegram bot object from the   edit3(m, bot):: function in the same file. It takes care of category change and edits.
 
 # How to run this feature?
 Sri Athithya Kruth, [20.10.21 20:33]
