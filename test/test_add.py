@@ -1,28 +1,77 @@
-import sys
-import os
-import telebot
+# import os
+# import sys
+from mock.mock import patch
 from telebot import types
-from unittest.mock import MagicMock
-
-sys.path.insert(0, os.getcwd() + "/code")
-from add import run
-
-bot = telebot.TeleBot("1")
-bot.reply_to = MagicMock(return_value=True)
-bot.register_next_step_handler = MagicMock(return_value=True)
+# sys.path.insert(0, os.getcwd() + "/code")
+from code import add
 
 
-def test_run():
+@patch('telebot.telebot')
+def test_run(mock_telebot, mocker):
+    mc = mock_telebot.return_value
+    mc.reply_to.return_value = True
     message = create_message("hello from test run!")
-    ret_msg = run(message, bot)
-    assert ret_msg is None
+    add.run(message, mc)
+    assert(mc.reply_to.called)
+
+
+@patch('telebot.telebot')
+def test_post_category_selection_working(mock_telebot, mocker):
+    mc = mock_telebot.return_value
+    mc.send_message.return_value = True
+
+    message = create_message("hello from testing!")
+    add.post_category_selection(message, mc)
+    assert(mc.send_message.called)
+
+
+@patch('telebot.telebot')
+def test_post_category_selection_noMatchingCategory(mock_telebot, mocker):
+    mc = mock_telebot.return_value
+    mc.send_message.return_value = []
+    mc.reply_to.return_value = True
+
+    mocker.patch.object(add, 'helper')
+    add.helper.getSpendCategories.return_value = None
+
+    message = create_message("hello from testing!")
+    add.post_category_selection(message, mc)
+    assert(mc.reply_to.called)
+
+
+@patch('telebot.telebot')
+def test_post_amount_input_working(mock_telebot, mocker):
+    mc = mock_telebot.return_value
+    mc.send_message.return_value = True
+
+    message = create_message("hello from testing!")
+    add.post_category_selection(message, mc)
+    assert(mc.send_message.called)
+
+
+@patch('telebot.telebot')
+def test_post_amount_input_nonworking(mock_telebot, mocker):
+    mc = mock_telebot.return_value
+    mc.send_message.return_value = True
+    mc.reply_to.return_value = True
+    mocker.patch.object(add, 'helper')
+    add.helper.validate_entered_amount.return_value = 0
+
+    message = create_message("hello from testing!")
+    add.post_category_selection(message, mc)
+    assert(mc.reply_to.called)
+
+
+def test_add_user_record(mocker):
+    mocker.patch.object(add, 'helper')
+    add.helper.read_json.return_value = {}
+
+    addeduserrecord = add.add_user_record(1, "record : test")
+    print(addeduserrecord)
+    assert(addeduserrecord)
 
 
 def create_message(text):
     params = {'messagebody': text}
     chat = types.User(11, False, 'test')
     return types.Message(1, None, None, chat, 'text', params, "")
-
-
-def test_add_user_record():
-    pass
