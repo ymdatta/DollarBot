@@ -1,8 +1,5 @@
-# import os
-# import sys
 from mock.mock import patch
 from telebot import types
-# sys.path.insert(0, os.getcwd() + "/code")
 from code import add
 
 
