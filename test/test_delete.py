@@ -31,7 +31,7 @@ def test_delete_run_with_data(mock_telebot, mocker):
     MOCK_USER_DATA = test_read_json()
     mocker.patch.object(delete, 'helper')
     delete.helper.read_json.return_value = MOCK_USER_DATA
-    print("Hello",MOCK_USER_DATA)
+    print("Hello", MOCK_USER_DATA)
     delete.helper.write_json.return_value = True
     MOCK_Message_data = create_message("Hello")
     mc = mock_telebot.return_value
