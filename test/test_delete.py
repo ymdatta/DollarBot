@@ -6,14 +6,13 @@ from telebot import types
 
 
 def test_read_json():
-    os.chdir("D:\\Studies\\Masters - NCSU - Course wise\\CSC510 - Software Engg\\Project-2\\MyDollarBot\\test")
     try:
-        if not os.path.exists('dummy_expense_record.json'):
-            with open('dummy_expense_record.json', 'w') as json_file:
+        if not os.path.exists('./test/dummy_expense_record.json'):
+            with open('./test/dummy_expense_record.json', 'w') as json_file:
                 json_file.write('{}')
             return json.dumps('{}')
-        elif os.stat('dummy_expense_record.json').st_size != 0:
-            with open('dummy_expense_record.json') as expense_record:
+        elif os.stat('./test/dummy_expense_record.json').st_size != 0:
+            with open('./test/dummy_expense_record.json') as expense_record:
                 expense_record_data = json.load(expense_record)
             return expense_record_data
 
@@ -32,6 +31,7 @@ def test_delete_run_with_data(mock_telebot, mocker):
     MOCK_USER_DATA = test_read_json()
     mocker.patch.object(delete, 'helper')
     delete.helper.read_json.return_value = MOCK_USER_DATA
+    print("Hello",MOCK_USER_DATA)
     delete.helper.write_json.return_value = True
     MOCK_Message_data = create_message("Hello")
     mc = mock_telebot.return_value
