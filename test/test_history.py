@@ -1,9 +1,9 @@
+import os
+import json
 from code import history
 from mock.mock import patch
 from telebot import types
-import os, sys
-import json
-import pytest
+
 
 def test_read_json():
     os.chdir("D:\\Studies\\Masters - NCSU - Course wise\\CSC510 - Software Engg\\Project-2\\MyDollarBot\\test")
@@ -20,10 +20,12 @@ def test_read_json():
     except FileNotFoundError:
         print("---------NO RECORDS FOUND---------")
 
+
 def create_message(text):
     params = {'messagebody': text}
     chat = types.User("2614394724848", False, 'test')
     return types.Message(1, None, None, chat, 'text', params, "")
+
 
 @patch('telebot.telebot')
 def test_run_with_data(mock_telebot, mocker):
@@ -33,9 +35,9 @@ def test_run_with_data(mock_telebot, mocker):
     MOCK_Message_data = create_message("Hello")
     mc = mock_telebot.return_value
     mc.send_message.return_value = True
-    history_check = history.run(MOCK_Message_data, mc)
-
+    history.run(MOCK_Message_data, mc)
     assert(mc.send_message.called)
+
 
 @patch('telebot.telebot')
 def test_run_without_data(mock_telebot, mocker):
@@ -45,19 +47,17 @@ def test_run_without_data(mock_telebot, mocker):
     MOCK_Message_data = create_message("Hello")
     mc = mock_telebot.return_value
     mc.send_message.return_value = True
-    history_check = history.run(MOCK_Message_data, mc)
-
+    history.run(MOCK_Message_data, mc)
     assert(mc.send_message.called)
+
 
 @patch('telebot.telebot')
 def test_run_with_None(mock_telebot, mocker):
-    MOCK_USER_DATA = test_read_json()
     mocker.patch.object(history, 'helper')
     history.helper.getUserHistory.return_value = None
     print("Is it None?", history.helper.getUserHistory.return_value)
     MOCK_Message_data = create_message("Hello")
     mc = mock_telebot.return_value
     mc.reply_to.return_value = True
-    history_check = history.run(MOCK_Message_data, mc)
-
+    history.run(MOCK_Message_data, mc)
     assert(mc.reply_to.called)

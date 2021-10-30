@@ -1,10 +1,8 @@
+import os
+import json
 from code import delete
-from code import helper
 from mock import patch
 from telebot import types
-import os, sys, json
-import pytest
-
 
 
 def test_read_json():
@@ -22,10 +20,12 @@ def test_read_json():
     except FileNotFoundError:
         print("---------NO RECORDS FOUND---------")
 
+
 def create_message(text):
     params = {'messagebody': text}
     chat = types.User("894127939", False, 'test')
     return types.Message(1, None, None, chat, 'text', params, "")
+
 
 @patch('telebot.telebot')
 def test_delete_run_with_data(mock_telebot, mocker):
@@ -36,33 +36,18 @@ def test_delete_run_with_data(mock_telebot, mocker):
     MOCK_Message_data = create_message("Hello")
     mc = mock_telebot.return_value
     mc.send_message.return_value = True
-    history_check = delete.run(MOCK_Message_data, mc)
+    delete.run(MOCK_Message_data, mc)
     assert(delete.helper.write_json.called)
+
 
 @patch('telebot.telebot')
 def test_delete_with_no_data(mock_telebot, mocker):
-    MOCK_USER_DATA = test_read_json()
     mocker.patch.object(delete, 'helper')
     delete.helper.read_json.return_value = {}
     delete.helper.write_json.return_value = True
     MOCK_Message_data = create_message("Hello")
     mc = mock_telebot.return_value
     mc.send_message.return_value = True
-    history_check = delete.run(MOCK_Message_data, mc)
-    assert(delete.helper.write_json.called == False)
-
-
-# def test_run(mock_telebot, mocker):
-#     MOCK_USER_DATA = test_read_json()
-# 	pre_val = len(MOCK_USER_DATA)
-#     chat_id = "894127939"
-# 	test_op = delete.run(chat_id)
-# 	post_val = len(test_op)
-#
-# 	print(pre_val)
-# 	print(post_val)
-#
-# 	if post_val < pre_val:
-# 		assert True
-# 	else:
-# 		assert False
+    delete.run(MOCK_Message_data, mc)
+    if delete.helper.write_json.called is False:
+        assert True

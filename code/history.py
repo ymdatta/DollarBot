@@ -1,5 +1,3 @@
-from mock.mock import patch
-from telebot import types
 import helper
 import logging
 
