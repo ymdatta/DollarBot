@@ -204,3 +204,11 @@ def test_getMonthFormat():
         assert True
     else:
         assert False, 'expected month format are not returned'
+
+
+def test_getChoices():
+    result = helper.getChoices()
+    if result == helper.choices:
+        assert True
+    else:
+        assert False, 'expected choices are not returned'
