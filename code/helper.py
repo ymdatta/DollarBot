@@ -88,4 +88,3 @@ def getMonthFormat():
 
 def getChoices():
     return choices
-
