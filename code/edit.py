@@ -23,7 +23,7 @@ def select_category_to_be_updated(m, bot):
     chat_id = m.chat.id
     data_edit = helper.getUserHistory(chat_id)
     info = m.text
-    date_format = r"^(([0][1-9])|([1-2][0-9])|([3][0-1]))\-(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\-\d{4}$"
+    date_format = r'^(([0][1-9])|([1-2][0-9])|([3][0-1]))\-(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\-\d{4}$'
     info = [""] if info is None else info.split(',')
     x = re.search(date_format, info[0])
     if x is None:
@@ -68,7 +68,7 @@ def edit_date(m, bot, user_list):
     global i_edit
     user_list = helper.read_json()
     new_date = m.text
-    date_format = r"^(([0][1-9])|([1-2][0-9])|([3][0-1]))\-(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\-\d{4}$"
+    date_format = r'^(([0][1-9])|([1-2][0-9])|([3][0-1]))\-(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\-\d{4}$'
     chat_id = m.chat.id
     data_edit = helper.getUserHistory(chat_id)
     x1 = re.search(date_format, new_date)
