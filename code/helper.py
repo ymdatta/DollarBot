@@ -85,6 +85,7 @@ def getTimeFormat():
 def getMonthFormat():
     return monthFormat
 
+
 def getChoices():
     return choices
 
