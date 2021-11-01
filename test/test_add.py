@@ -77,7 +77,6 @@ def test_post_amount_input_nonworking(mock_telebot, mocker):
 def test_add_user_record_nonworking(mocker):
     mocker.patch.object(add, 'helper')
     add.helper.read_json.return_value = {}
-
     addeduserrecord = add.add_user_record(1, "record : test")
     assert(addeduserrecord)
 
@@ -86,9 +85,7 @@ def test_add_user_record_working(mocker):
     MOCK_USER_DATA = test_read_json()
     mocker.patch.object(add, 'helper')
     add.helper.read_json.return_value = MOCK_USER_DATA
-    print(len(MOCK_USER_DATA))
     addeduserrecord = add.add_user_record(1, "record : test")
-    print(len(MOCK_USER_DATA), " here")
     if(len(MOCK_USER_DATA) + 1 == len(addeduserrecord)):
         assert True
 
