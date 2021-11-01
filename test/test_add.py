@@ -58,7 +58,7 @@ def test_post_amount_input_working(mock_telebot, mocker):
 def test_post_amount_input_working_withdata(mock_telebot, mocker):
     mc = mock_telebot.return_value
     mc.send_message.return_value = True
-    mocker.patch.object(add, 'helper')    
+    mocker.patch.object(add, 'helper')
     add.helper.validate_entered_amount.return_value = 10
     add.helper.write_json.return_value = True
     add.helper.getDateFormat.return_value = dateFormat
@@ -88,7 +88,7 @@ def test_post_amount_input_nonworking(mock_telebot, mocker):
 def test_post_amount_input_working_withdata_chatid(mock_telebot, mocker):
     mc = mock_telebot.return_value
     mc.send_message.return_value = True
-    mocker.patch.object(add, 'helper')    
+    mocker.patch.object(add, 'helper')
     add.helper.validate_entered_amount.return_value = 10
     add.helper.write_json.return_value = True
     add.helper.getDateFormat.return_value = dateFormat
