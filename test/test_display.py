@@ -11,6 +11,7 @@ def test_run(mock_telebot, mocker):
     display.run(message, mc)
     assert mc.send_message.called
 
+
 @patch('telebot.telebot')
 def test_no_data_available(mock_telebot, mocker):
     mc = mock_telebot.return_value
@@ -19,6 +20,7 @@ def test_no_data_available(mock_telebot, mocker):
     display.run(message, mc)
     assert mc.send_message.called
 
+
 @patch('telebot.telebot')
 def test_invalid_format(mock_telebot, mocker):
     mc = mock_telebot.return_value
@@ -26,10 +28,11 @@ def test_invalid_format(mock_telebot, mocker):
     message = create_message("luster")
     try:
         display.display_total(message, mc)
-        #In this case it accepted an unusable format, fail the test
+#In this case it accepted an unusable format, fail the test
         assert False
     except Exception:
         assert True
+
 
 @patch('telebot.telebot')
 def test_valid_format(mock_telebot, mocker):
@@ -40,8 +43,10 @@ def test_valid_format(mock_telebot, mocker):
         display.display_total(message, mc)
         assert True
     except Exception:
-        #In this case it did not accept a usable format, fail the test
+#In this case it did not accept a usable format, fail the test
         assert False
+
+
 @patch('telebot.telebot')
 def test_valid_format_day(mock_telebot, mocker):
     mc = mock_telebot.return_value
@@ -51,8 +56,9 @@ def test_valid_format_day(mock_telebot, mocker):
         display.display_total(message, mc)
         assert True
     except Exception:
-        #In this case it did not accept a usable format, fail the test
+#In this case it did not accept a usable format, fail the test
         assert False
+
 
 @patch('telebot.telebot')
 def test_spending_display(mock_telebot, mocker):
@@ -64,7 +70,7 @@ def test_spending_display(mock_telebot, mocker):
         display.display_total(message, mc)
         assert False
     except Exception:
-        #In this case there where no records
+#In this case there where no records
         assert True
 
 
