@@ -3,10 +3,21 @@ import pytest
 
 MOCK_CHAT_ID = 101
 MOCK_USER_DATA = {
-    str(MOCK_CHAT_ID): ["correct_mock_value"],
-    '102': ["wrong_mock_value"]
+    str(MOCK_CHAT_ID): {
+        'data': ["correct_mock_value"],
+        'budget': {
+            'overall': None,
+            'category': None
+        }
+    },
+    '102': {
+        'data': ["wrong_mock_value"],
+        'budget': {
+            'overall': None,
+            'category': None
+        }
+    }
 }
-
 
 @pytest.mark.skipif(True, reason="Add none check")
 def test_validate_entered_amount_none():
@@ -141,7 +152,7 @@ def test_getUserHistory_with_data(mocker):
     mocker.patch.object(helper, 'read_json')
     helper.read_json.return_value = MOCK_USER_DATA
     result = helper.getUserHistory(MOCK_CHAT_ID)
-    if result == MOCK_USER_DATA[str(MOCK_CHAT_ID)]:
+    if result == MOCK_USER_DATA[str(MOCK_CHAT_ID)]['data']:
         assert True
     else:
         assert False, 'User data is available but not found'
