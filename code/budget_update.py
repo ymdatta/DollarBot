@@ -1,7 +1,6 @@
 import helper
 import logging
 from telebot import types
-from datetime import datetime
 
 
 def run(message, bot):
@@ -19,6 +18,7 @@ def run(message, bot):
         msg = bot.reply_to(message, 'Select Budget Type', reply_markup=markup)
         bot.register_next_step_handler(msg, post_type_selection, bot)
 
+
 def post_type_selection(message, bot):
     try:
         chat_id = message.chat.id
@@ -33,6 +33,7 @@ def post_type_selection(message, bot):
             update_category_budget(message, bot)
     except Exception as e:
         helper.throw_exception(e, message, bot, logging)
+
 
 def update_overall_budget(chat_id, bot):
     if (helper.isOverallBudgetAvailable(chat_id)):

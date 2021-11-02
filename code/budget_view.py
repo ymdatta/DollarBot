@@ -1,8 +1,5 @@
 import helper
-import budget_helper
 import logging
-from telebot import types
-from datetime import datetime
 
 
 def run(message, bot):
@@ -13,7 +10,7 @@ def run(message, bot):
         elif helper.isCategoryBudgetAvailable(chat_id):
             display_category_budget(message, bot)
         else:
-            raise Exception('Budget does not exist. Use '+ helper.getBudgetOptions()['update'] + ' option to add/update the budget')
+            raise Exception('Budget does not exist. Use ' + helper.getBudgetOptions()['update'] + ' option to add/update the budget')
     except Exception as e:
         helper.throw_exception(e, message, bot, logging)
 
@@ -23,10 +20,11 @@ def display_overall_budget(message, bot):
     data = helper.getOverallBudget(chat_id)
     bot.send_message(chat_id, 'Overall Budget: $' + data)
 
+
 def display_category_budget(message, bot):
     chat_id = message.chat.id
     data = helper.getCategoryBudget(chat_id)
     res = "Budget Summary\n"
-    for c,v in data.items():
+    for c, v in data.items():
         res = res + c + ": $" + v + "\n"
     bot.send_message(chat_id, res)

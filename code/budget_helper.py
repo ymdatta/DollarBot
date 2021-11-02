@@ -1,7 +1,6 @@
 import helper
 import logging
 from telebot import types
-from datetime import datetime
 
 
 def update_category_budget(message, bot):

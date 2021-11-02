@@ -4,11 +4,9 @@ import budget_update
 import budget_delete
 import logging
 from telebot import types
-from datetime import datetime
 
 
 def run(message, bot):
-    chat_id = message.chat.id
     markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
     options = helper.getBudgetOptions()
     markup.row_width = 2

@@ -142,6 +142,7 @@ def isCategoryBudgetByCategoryAvailable(chatId, cat):
         return False
     return cat in data.keys()
 
+
 def getSpendCategories():
     return spend_categories
 
