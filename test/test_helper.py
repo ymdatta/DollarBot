@@ -19,6 +19,7 @@ MOCK_USER_DATA = {
     }
 }
 
+
 @pytest.mark.skipif(True, reason="Add none check")
 def test_validate_entered_amount_none():
     result = helper.validate_entered_amount(None)
