@@ -63,7 +63,8 @@ def post_amount_input(message, bot):
 def add_user_record(chat_id, record_to_be_added):
     user_list = helper.read_json()
     if str(chat_id) not in user_list:
-        user_list[str(chat_id)] = []
+        #user_list[str(chat_id)] = []
+        user_list[str(chat_id)] = helper.createNewUserRecord()
 
-    user_list[str(chat_id)].append(record_to_be_added)
+    user_list[str(chat_id)]['data'].append(record_to_be_added)
     return user_list

@@ -6,6 +6,30 @@ spend_categories = ['Food', 'Groceries', 'Utilities', 'Transport', 'Shopping', '
 choices = ['Date', 'Category', 'Cost']
 spend_display_option = ['Day', 'Month']
 
+update_options = {
+    'continue': 'Continue',
+    'exit': 'Exit'
+}
+
+budget_options = {
+    'update': 'Add/Update',
+    'view': 'View',
+    'delete': 'Delete'
+}
+
+budget_types = {
+    'overall': 'Overall Budget',
+    'category': 'Category-Wise Budget'
+}
+
+data_format = {
+    'data': [],
+    'budget': {
+        'overall': None,
+        'category': None
+    }
+}
+
 # set of implemented commands and their description
 commands = {
     'menu': 'Display this menu',
@@ -13,7 +37,8 @@ commands = {
     'display': 'Show sum of expenditure for the current day/month',
     'history': 'Display spending history',
     'delete': 'Clear/Erase all your records',
-    'edit': 'Edit/Change spending details'
+    'edit': 'Edit/Change spending details',
+    'budget': 'Add/Update/Delete budget'
 }
 
 dateFormat = '%d-%b-%Y'
@@ -56,11 +81,66 @@ def validate_entered_amount(amount_entered):
 
 
 def getUserHistory(chat_id):
+    data = getUserData(chat_id)
+    if data is not None:
+        return data['data']
+    return None
+
+
+def getUserData(chat_id):
     user_list = read_json()
     if (str(chat_id) in user_list):
         return user_list[str(chat_id)]
     return None
 
+
+def throw_exception(e, message, bot, logging):
+    logging.exception(str(e))
+    bot.reply_to(message, 'Oh no! ' + str(e))
+
+
+def createNewUserRecord():
+    return data_format
+
+
+def getOverallBudget(chatId):
+    data = getUserData(chatId)
+    if data is None:
+        return None
+    return data['budget']['overall']
+
+
+def getCategoryBudget(chatId):
+    data = getUserData(chatId)
+    if data is None:
+        return None
+    return data['budget']['category']
+
+
+def getCategoryBudgetByCategory(chatId, cat):
+    if not isCategoryBudgetByCategoryAvailable(chatId, cat):
+        return None
+    data = getCategoryBudget(chatId)
+    return data[cat]
+
+
+def canAddBudget(chatId):
+    return (getOverallBudget(chatId) is None) and (getCategoryBudget(chatId) is None)
+
+
+def isOverallBudgetAvailable(chatId):
+    return getOverallBudget(chatId) is not None
+
+
+def isCategoryBudgetAvailable(chatId):
+    return getCategoryBudget(chatId) is not None
+
+
+def isCategoryBudgetByCategoryAvailable(chatId, cat):
+    data = getCategoryBudget(chatId)
+    if data is None:
+        return False
+    return cat in data.keys()
 
 def getSpendCategories():
     return spend_categories
@@ -88,3 +168,15 @@ def getMonthFormat():
 
 def getChoices():
     return choices
+
+
+def getBudgetOptions():
+    return budget_options
+
+
+def getBudgetTypes():
+    return budget_types
+
+
+def getUpdateOptions():
+    return update_options
