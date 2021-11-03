@@ -18,18 +18,26 @@ def run(message, bot):
 
 def post_operation_selection(message, bot):
     try:
+        print("here")
         chat_id = message.chat.id
+        print("here")
         op = message.text
+        print("here")
         options = helper.getBudgetOptions()
-        # print("here", op, options, message.chat.id)
+        print("here")
+        print("here", op, options, message.chat.id, options)
         if op not in options.values():
+            print('here')
             bot.send_message(chat_id, 'Invalid', reply_markup=types.ReplyKeyboardRemove())
             raise Exception("Sorry I don't recognise this operation \"{}\"!".format(op))
         if op == options['update']:
+            print("here in update")
             budget_update.run(message, bot)
         elif op == options['view']:
+            print("here in view")
             budget_view.run(message, bot)
         elif op == options['delete']:
+            print("here in delete")
             budget_delete.run(message, bot)
     except Exception as e:
         # print("hit exception")
