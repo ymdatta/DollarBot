@@ -22,7 +22,7 @@ def test_display_category_budget(mock_telebot, mocker):
     mc = mock_telebot.return_value
     mc.send_message.return_value = True
     mocker.patch.object(budget_view, 'helper')
-    budget_view.helper.getCategoryBudget.return_value = {'items' : ""}
+    budget_view.helper.getCategoryBudget.return_value = {'items': ""}
     message = create_message("hello from testing")
     budget_view.display_category_budget(message, mc)
     assert(mc.send_message.called)
@@ -36,7 +36,7 @@ def test_run_overall_budget(mock_telebot, mocker):
     mocker.patch.object(budget_view, 'helper')
     budget_view.helper.isOverallBudgetAvailable.return_value = True
 
-    budget_view.display_overall_budget = mock.Mock(return_value = True)
+    budget_view.display_overall_budget = mock.Mock(return_value=True)
     message = create_message("hello from testing")
     budget_view.run(mc, message)
 
@@ -51,7 +51,7 @@ def test_run_category_budget(mock_telebot, mocker):
     budget_view.helper.isCategoryBudgetAvailable.return_value = True
     budget_view.helper.isOverallBudgetAvailable.return_value = False
 
-    budget_view.display_category_budget = mock.Mock(return_value = True)
+    budget_view.display_category_budget = mock.Mock(return_value=True)
 
     message = create_message("hello from testing")
     budget_view.run(mc, message)
