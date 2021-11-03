@@ -4,6 +4,7 @@ import logging
 
 def run(message, bot):
     try:
+        print("here")
         chat_id = message.chat.id
         if helper.isOverallBudgetAvailable(chat_id):
             display_overall_budget(message, bot)
