@@ -21,6 +21,7 @@ def post_operation_selection(message, bot):
         chat_id = message.chat.id
         op = message.text
         options = helper.getBudgetOptions()
+        # print("here", op, options, message.chat.id)
         if op not in options.values():
             bot.send_message(chat_id, 'Invalid', reply_markup=types.ReplyKeyboardRemove())
             raise Exception("Sorry I don't recognise this operation \"{}\"!".format(op))
@@ -31,4 +32,5 @@ def post_operation_selection(message, bot):
         elif op == options['delete']:
             budget_delete.run(message, bot)
     except Exception as e:
+        # print("hit exception")
         helper.throw_exception(e, message, bot, logging)
