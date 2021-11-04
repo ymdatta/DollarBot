@@ -19,6 +19,8 @@ It takes 2 arguments for processing - **message** which is the message from the 
 Takes 2 arguments for processing - **queryResult** which is the query result from the estimate total function in the same file. It parses the query result and turns it into a form suitable for display on the UI by the user. **days_to_estimate** is a variable that tells the function to calculate the estimate for a specified period like a day or month.
 
 # How to run this feature?
+
+```
 $: python code/code.py
 
 $: /start
@@ -35,6 +37,7 @@ CATEGORIES,AMOUNT
 ----------------------
 Food $200.0
 Groceries $100.0
+```
 
 ![alt text](https://github.com/sak007/MyDollarBot-BOTGo/blob/estimate-feature/docs/estimate.png)
 
