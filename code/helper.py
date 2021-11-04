@@ -175,7 +175,6 @@ def calculateRemainingOverallBudget(chat_id):
 
 def calculate_total_spendings(queryResult):
     total = 0
-    total_dict = {}
 
     for row in queryResult:
         s = row.split(',')
@@ -204,7 +203,6 @@ def calculateRemainingCategoryBudget(chat_id, cat):
 
 def calculate_total_spendings_for_category(queryResult, cat):
     total = 0
-    total_dict = {}
 
     for row in queryResult:
         s = row.split(',')
