@@ -48,6 +48,8 @@ With simple commands, this bot allows you to:
 - New Feature: Custom Categories -  Lets the user add their own categories which can then be used to add expenses.
 - Display: Add budgeting information inside display to show which categories are exceeding budget
 - Recurring expense: Add a recurring expense that adds a certain amount every week to the user's spending. 
+- Web hosting: host the project on Heroku or any other cloud provider for high availability.
+- UI beautification: beautify the UI and the messages sent to the user to improve user experience and readability.
 
 ## Demo
 https://user-images.githubusercontent.com/15325746/135395315-e234dc5e-d891-470a-b3f4-04aa1d11ed45.mp4
