@@ -68,7 +68,7 @@ def test_post_amount_input_working_withdata(mock_telebot, mocker):
     add.option.return_value = {11, "here"}
 
     message = create_message("hello from testing!")
-    add.post_amount_input(message, mc)
+    add.post_amount_input(message, mc, 'Food')
     assert(mc.send_message.called)
 
 
@@ -80,7 +80,7 @@ def test_post_amount_input_nonworking(mock_telebot, mocker):
     mocker.patch.object(add, 'helper')
     add.helper.validate_entered_amount.return_value = 0
     message = create_message("hello from testing!")
-    add.post_amount_input(message, mc)
+    add.post_amount_input(message, mc, 'Food')
     assert(mc.reply_to.called)
 
 
@@ -101,7 +101,7 @@ def test_post_amount_input_working_withdata_chatid(mock_telebot, mocker):
     add.option = test_option
 
     message = create_message("hello from testing!")
-    add.post_amount_input(message, mc)
+    add.post_amount_input(message, mc, 'Food')
     assert(mc.send_message.called)
     assert(mc.send_message.called_with(11, ANY))
 

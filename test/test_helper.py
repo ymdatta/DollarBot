@@ -1,5 +1,4 @@
 from code import helper
-import pytest
 
 MOCK_CHAT_ID = 101
 MOCK_USER_DATA = {
@@ -20,7 +19,6 @@ MOCK_USER_DATA = {
 }
 
 
-@pytest.mark.skipif(True, reason="Add none check")
 def test_validate_entered_amount_none():
     result = helper.validate_entered_amount(None)
     if result:
@@ -65,7 +63,6 @@ def test_validate_entered_amount_float():
         assert False, val + ' is valid amount'
 
 
-@pytest.mark.skipif(True, reason="float value < 10^14 is valid. update the checker")
 def test_validate_entered_amount_float_max():
     val = '999999999999999.9999'
     result = helper.validate_entered_amount(val)
@@ -75,7 +72,6 @@ def test_validate_entered_amount_float_max():
         assert False, val + ' is valid amount'
 
 
-@pytest.mark.skipif(True, reason="float value < 10^14 is valid. update the checker")
 def test_validate_entered_amount_float_more_decimal():
     val = '9999999999.999999999'
     result = helper.validate_entered_amount(val)
@@ -159,7 +155,6 @@ def test_getUserHistory_with_data(mocker):
         assert False, 'User data is available but not found'
 
 
-@pytest.mark.skipif(True, reason="None check should be added for user_data")
 def test_getUserHistory_with_none(mocker):
     mocker.patch.object(helper, 'read_json')
     helper.read_json.return_value = None
