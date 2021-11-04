@@ -282,8 +282,36 @@ def test_getCategoryBudget_working_case():
     assert(overall_budget is not None)
 
 
-def test_getCategoryBudgetByCategory():
-    pass
+def test_getCategoryBudgetByCategory_none_case():
+    helper.isCategoryBudgetByCategoryAvailable = mock.Mock(return_value=False)
+    testresult = helper.getCategoryBudgetByCategory(10, 'Food')
+    assert(testresult is None)
+
+
+def test_getCategoryBudgetByCategory_normal_case():
+    helper.isCategoryBudgetByCategoryAvailable = mock.Mock(return_value=True)
+    helper.getCategoryBudget = mock.Mock(return_value={'Food': 10})
+    testresult = helper.getCategoryBudgetByCategory(10, 'Food')
+    assert(testresult is not None)
+
+
+def test_canAddBudget():
+    helper.getOverallBudget = mock.Mock(return_value=None)
+    helper.getCategoryBudget = mock.Mock(return_value=None)
+    testresult = helper.canAddBudget(10)
+    assert(testresult)
+
+
+def test_isOverallBudgetAvailable():
+    helper.getOverallBudget = mock.Mock(return_value=True)
+    testresult = helper.isOverallBudgetAvailable(10)
+    assert(testresult is True)
+
+
+def test_isCategoryBudgetAvailable():
+    helper.getCategoryBudget = mock.Mock(return_value=True)
+    testresult = helper.isCategoryBudgetByCategoryAvailable(10)
+    assert(testresult is True)
 
 
 def create_message(text):
