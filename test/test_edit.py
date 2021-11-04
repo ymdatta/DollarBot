@@ -21,6 +21,7 @@ def test_run(mock_telebot, mocker):
     edit.helper.read_json().return_value = MOCK_USER_DATA
     edit.helper.getUserHistory(MOCK_CHAT_ID).return_value = MOCK_USER_DATA[str(MOCK_CHAT_ID)]
     message = create_message("hello from test run!")
+    message.chat.id = MOCK_CHAT_ID
     edit.run(message, mc)
     assert mc.reply_to.called
 
@@ -91,6 +92,7 @@ def test_edit_date(mock_telebot, mocker):
     edit.helper.getUserHistory(MOCK_CHAT_ID).return_value = MOCK_USER_DATA[str(MOCK_CHAT_ID)]
     message = create_message("hello from testing!")
     message.text = DUMMY_DATE
+    message.chat.id = MOCK_CHAT_ID
     selected_data = MOCK_USER_DATA[str(MOCK_CHAT_ID)][0]
     edit.edit_date(message, mc, selected_data)
     assert mc.reply_to.called
@@ -104,6 +106,7 @@ def test_edit_category(mock_telebot, mocker):
     edit.helper.read_json().return_value = MOCK_USER_DATA
     edit.helper.getUserHistory(MOCK_CHAT_ID).return_value = MOCK_USER_DATA[str(MOCK_CHAT_ID)]
     message = create_message("hello from testing!")
+    message.chat.id = MOCK_CHAT_ID
     selected_data = MOCK_USER_DATA[str(MOCK_CHAT_ID)][0]
     edit.edit_cat(message, mc, selected_data)
     assert mc.reply_to.called
@@ -118,6 +121,7 @@ def test_edit_cost(mock_telebot, mocker):
     edit.helper.getUserHistory(MOCK_CHAT_ID).return_value = MOCK_USER_DATA[str(MOCK_CHAT_ID)]
     edit.helper.validate_entered_amount.return_value = 0
     message = create_message("hello from testing!")
+    message.chat.id = MOCK_CHAT_ID
     selected_data = MOCK_USER_DATA[str(MOCK_CHAT_ID)][0]
     edit.edit_cost(message, mc, selected_data)
     assert mc.reply_to.called
