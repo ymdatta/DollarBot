@@ -1,13 +1,13 @@
 from mock import patch
 from telebot import types
 from code import edit
-from code import helper
 
 MOCK_CHAT_ID = 101
 MOCK_USER_DATA = {
     str(MOCK_CHAT_ID): ["correct_mock_value"],
     '102': ["wrong_mock_value"]
 }
+
 
 @patch('telebot.telebot')
 def test_run(mock_telebot, mocker):
@@ -121,6 +121,3 @@ def create_message(text):
     params = {'messagebody': text}
     chat = types.User(11, False, 'test')
     return types.Message(1, None, None, chat, 'text', params, "")
-
-
-
