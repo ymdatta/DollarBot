@@ -4,7 +4,7 @@ This feature enables the user to edit a previously entered expense in the app. T
 Please note that this is still a Work In Progress.
 
 # Location of Code for this Feature
-The code that implements this feature can be found [here](https://github.com/sak007/MyDollarBot/blob/backlogs/code/edit.py)
+The code that implements this feature can be found [here](https://github.com/sak007/MyDollarBot-BOTGo/blob/main/code/edit.py)
 
 # Code Description
 ## Functions

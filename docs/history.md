@@ -2,7 +2,7 @@
 This feature enables the user to view all of their stored records i.e it gives a historical view of all the expenses stored in MyDollarBot.
 
 # Location of Code for this Feature
-The code that implements this feature can be found [here](https://github.com/sak007/MyDollarBot/blob/backlogs/code/history.py)
+The code that implements this feature can be found [here](https://github.com/sak007/MyDollarBot-BOTGo/blob/main/code/history.py)
 
 # Code Description
 ## Functions
