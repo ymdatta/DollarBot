@@ -18,10 +18,8 @@ def test_run(mock_telebot, mocker):
     mc = mock_telebot.return_value
     mc.reply_to.return_value = True
     mocker.patch.object(edit, 'helper')
-    edit.helper.read_json().return_value = MOCK_USER_DATA
-    edit.helper.getUserHistory(MOCK_CHAT_ID).return_value = MOCK_USER_DATA[str(MOCK_CHAT_ID)]
     message = create_message("hello from test run!")
-    message.chat.id = MOCK_CHAT_ID
+    edit.helper.getUserHistory(message.chat.id).return_value = MOCK_USER_DATA[str(MOCK_CHAT_ID)]
     edit.run(message, mc)
     assert mc.reply_to.called
 
