@@ -29,7 +29,7 @@ def post_category_selection(message, bot):
 
         option[chat_id] = selected_category
         message = bot.send_message(chat_id, 'How much did you spend on {}? \n(Enter numeric values only)'.format(str(option[chat_id])))
-        bot.register_next_step_handler(message, post_amount_input, bot)
+        bot.register_next_step_handler(message, post_amount_input, bot, selected_category)
     except Exception as e:
         logging.exception(str(e))
         bot.reply_to(message, 'Oh no! ' + str(e))
@@ -42,7 +42,7 @@ def post_category_selection(message, bot):
         bot.send_message(chat_id, display_text)
 
 
-def post_amount_input(message, bot):
+def post_amount_input(message, bot, selected_category):
     try:
         chat_id = message.chat.id
         amount_entered = message.text
@@ -54,7 +54,7 @@ def post_amount_input(message, bot):
         date_str, category_str, amount_str = str(date_of_entry), str(option[chat_id]), str(amount_value)
         helper.write_json(add_user_record(chat_id, "{},{},{}".format(date_str, category_str, amount_str)))
         bot.send_message(chat_id, 'The following expenditure has been recorded: You have spent ${} for {} on {}'.format(amount_str, category_str, date_str))
-
+        helper.display_remaining_budget(message, bot, selected_category)
     except Exception as e:
         logging.exception(str(e))
         bot.reply_to(message, 'Oh no. ' + str(e))
