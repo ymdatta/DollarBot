@@ -16,7 +16,7 @@ def run(message, bot):
         else:
             for rec in user_history:
                 spend_total_str += str(rec) + "\n"
-            bot.send_message(chat_id, spend_total_str)
+        bot.send_message(chat_id, spend_total_str)
     except Exception as e:
         logging.exception(str(e))
         bot.reply_to(message, "Oops!" + str(e))

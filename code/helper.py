@@ -3,7 +3,7 @@ import json
 import os
 
 spend_categories = ['Food', 'Groceries', 'Utilities', 'Transport', 'Shopping', 'Miscellaneous']
-
+choices = ['Date', 'Category', 'Cost']
 spend_display_option = ['Day', 'Month']
 
 # set of implemented commands and their description
@@ -84,3 +84,7 @@ def getTimeFormat():
 
 def getMonthFormat():
     return monthFormat
+
+
+def getChoices():
+    return choices
