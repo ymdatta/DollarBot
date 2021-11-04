@@ -60,12 +60,31 @@ def test_valid_format_day(mock_telebot, mocker):
 
 
 @patch('telebot.telebot')
+def test_spending_run_working(mock_telebot, mocker):
+
+    MOCK_USER_DATA = test_read_json()
+    mocker.patch.object(display, 'helper')
+    display.helper.getUserHistory.return_value = MOCK_USER_DATA["894127939"]
+    display.helper.getSpendDisplayOptions.return_value = [
+        "Day", "Month"]
+    display.helper.getDateFormat.return_value = '%d-%b-%Y'
+    display.helper.getMonthFormat.return_value = '%b-%Y'
+    mc = mock_telebot.return_value
+    mc.reply_to.return_value = True
+    message = create_message("Day")
+    message.text = "Day"
+    display.run(message, mc)
+    assert not mc.send_message.called
+
+
+@patch('telebot.telebot')
 def test_spending_display_working(mock_telebot, mocker):
 
     MOCK_USER_DATA = test_read_json()
     mocker.patch.object(display, 'helper')
     display.helper.getUserHistory.return_value = MOCK_USER_DATA["894127939"]
-    display.helper.getSpendDisplayOptions.return_value = ["Day", "Month"]
+    display.helper.getSpendDisplayOptions.return_value = [
+        "Day", "Month"]
     display.helper.getDateFormat.return_value = '%d-%b-%Y'
     display.helper.getMonthFormat.return_value = '%b-%Y'
     mc = mock_telebot.return_value
@@ -82,7 +101,8 @@ def test_spending_display_month(mock_telebot, mocker):
     MOCK_USER_DATA = test_read_json()
     mocker.patch.object(display, 'helper')
     display.helper.getUserHistory.return_value = MOCK_USER_DATA["894127939"]
-    display.helper.getSpendDisplayOptions.return_value = ["Day", "Month"]
+    display.helper.getSpendDisplayOptions.return_value = [
+        "Day", "Month"]
     display.helper.getDateFormat.return_value = '%d-%b-%Y'
     display.helper.getMonthFormat.return_value = '%b-%Y'
     mc = mock_telebot.return_value
@@ -91,23 +111,6 @@ def test_spending_display_month(mock_telebot, mocker):
     message.text = "Month"
     display.display_total(message, mc)
     assert mc.send_message.called
-
-
-@patch('telebot.telebot')
-def test_spending_display_luster(mock_telebot, mocker):
-
-    MOCK_USER_DATA = test_read_json()
-    mocker.patch.object(display, 'helper')
-    display.helper.getUserHistory.return_value = MOCK_USER_DATA["894127939"]
-    display.helper.getSpendDisplayOptions.return_value = ["Day", "Month"]
-    display.helper.getDateFormat.return_value = '%d-%b-%Y'
-    display.helper.getMonthFormat.return_value = '%b-%Y'
-    mc = mock_telebot.return_value
-    mc.reply_to.return_value = True
-    message = create_message("Luster")
-    message.text = "Luster"
-    display.display_total(message, mc)
-    assert not mc.send_message.called
 
 
 def create_message(text):
