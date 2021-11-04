@@ -1,4 +1,4 @@
-# TrackMyDollar
+# TrackMyDollar V2.0 - Budget On The Go(BOTGo)
 <hr>
 <p align="center">
 <a><img  height=360 width=550 
