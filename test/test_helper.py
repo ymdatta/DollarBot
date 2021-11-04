@@ -1,5 +1,5 @@
 from code import helper
-from code.helper import throw_exception
+from code.helper import isCategoryBudgetByCategoryAvailable, throw_exception
 from mock import ANY
 from telebot import types
 from mock.mock import patch
@@ -312,6 +312,39 @@ def test_isCategoryBudgetAvailable():
     helper.getCategoryBudget = mock.Mock(return_value=True)
     testresult = helper.isCategoryBudgetByCategoryAvailable(10)
     assert(testresult is True)
+
+
+def test_isCategoryBudgetByCategoryAvailable_working():
+    helper.getCategoryBudget = mock.Mock(return_value={'Food': 10})
+    testresult = isCategoryBudgetByCategoryAvailable(10, 'Food')
+    assert(testresult)
+
+
+def test_isCategoryBudgetByCategoryAvailable_none_case():
+    helper.getCategoryBudget = mock.Mock(return_value={})
+    testresult = isCategoryBudgetByCategoryAvailable(10, 'Food')
+    assert(testresult is False)
+
+
+def test_calculate_total_spendings():
+    pass
+
+
+def test_calculate_total_spendings_for_category():
+    pass
+
+
+def test_calculateRemainingOverallBudget():
+    pass
+
+
+def test_getBudgetTypes():
+    testresult = helper.getBudgetTypes()
+    localBudgetTypes = {
+        'overall': 'Overall Budget',
+        'category': 'Category-Wise Budget'
+    }
+    assert(sorted(testresult) == sorted(localBudgetTypes))
 
 
 def create_message(text):
