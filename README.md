@@ -84,10 +84,26 @@ A successful run will generate a message on your terminal that says "TeleBot: St
 
 6. In the Telegram app, search for your newly created bot by entering the username and open the same. Now, on Telegram, enter the "/start" or "/menu" command, and you are all set to track your expenses!
 
+## Testing
 
-# Notes:
+We use pytest to perform testing on all unit tests together. The command needs to be run from the home directory of the project. The command is:
+```
+python run -m pytest test/
+```
+
+## Code Coverage
+
+Code coverage is part of the build. Every time new code is pushed to the repository, the build is run, and along with it, code coverage is computed. This can be viewed by selecting the build, and then choosing the codecov pop-up on hover.
+
+Locally, we use the coverage package in python for code coverage. The commands to check code coverage in python are as follows:
+
+```
+coverage run -m pytest test/
+coverage report
+```
+
+## Notes:
 You can download and install the Telegram desktop application for your system from the following site: https://desktop.telegram.org/
-
 
 
 <hr>
