@@ -310,7 +310,7 @@ def test_isOverallBudgetAvailable():
 
 def test_isCategoryBudgetAvailable():
     helper.getCategoryBudget = mock.Mock(return_value=True)
-    testresult = helper.isCategoryBudgetByCategoryAvailable(10)
+    testresult = helper.isCategoryBudgetAvailable(10)
     assert(testresult is True)
 
 
@@ -321,7 +321,7 @@ def test_isCategoryBudgetByCategoryAvailable_working():
 
 
 def test_isCategoryBudgetByCategoryAvailable_none_case():
-    helper.getCategoryBudget = mock.Mock(return_value={})
+    helper.getCategoryBudget = mock.Mock(return_value=None)
     testresult = isCategoryBudgetByCategoryAvailable(10, 'Food')
     assert(testresult is False)
 
