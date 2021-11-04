@@ -33,7 +33,7 @@ def select_category_to_be_updated(m, bot):
 
 
 def enter_updated_data(m, bot, selected_data):
-    choice1 = m.text
+    choice1 = "" if m.text is None else m.text
     markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
     markup.row_width = 2
     for cat in helper.getSpendCategories():
@@ -54,7 +54,7 @@ def enter_updated_data(m, bot, selected_data):
 
 def edit_date(m, bot, selected_data):
     user_list = helper.read_json()
-    new_date = m.text
+    new_date = "" if m.text is None else m.text
     date_format = r'^(([0][1-9])|([1-2][0-9])|([3][0-1]))\-(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\-\d{4}$'
     x1 = re.search(date_format, new_date)
     if x1 is None:
@@ -80,7 +80,7 @@ def edit_cat(m, bot, selected_data):
     user_list = helper.read_json()
     chat_id = m.chat.id
     data_edit = helper.getUserHistory(chat_id)
-    new_cat = m.text
+    new_cat = "" if m.text is None else m.text
 
     for i in range(len(data_edit)):
         user_data = data_edit[i].split(',')
@@ -98,7 +98,7 @@ def edit_cat(m, bot, selected_data):
 
 def edit_cost(m, bot, selected_data):
     user_list = helper.read_json()
-    new_cost = m.text
+    new_cost = "" if m.text is None else m.text
     chat_id = m.chat.id
     data_edit = helper.getUserHistory(chat_id)
 
