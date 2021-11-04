@@ -56,7 +56,7 @@ https://user-images.githubusercontent.com/15325746/135395315-e234dc5e-d891-470a-
 
 The below instructions can be followed in order to set-up this bot at your end in a span of few minutes! Let's get started:
 
-1. This installation guide assumes that you have already installed Python (Python3 would be preferred) and Telegram web or Desktop. Clone this repository to your local system.
+1. Clone this repository to your local system.
 
 2. Start a terminal session in the directory where the project has been cloned. Run the following command to install the required dependencies:
 ```
