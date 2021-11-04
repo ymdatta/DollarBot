@@ -1,5 +1,7 @@
 import time
+import os
 import helper
+import graphing
 import logging
 from telebot import types
 from datetime import datetime
@@ -53,10 +55,12 @@ def display_total(message, bot):
         spending_text = ""
         if len(total_text) == 0:
             spending_text = "You have no spendings for {}!".format(DayWeekMonth)
+            bot.send_message(chat_id, spending_text)
         else:
             spending_text = "Here are your total spendings {}:\nCATEGORIES,AMOUNT \n----------------------\n{}".format(DayWeekMonth.lower(), total_text)
-
-        bot.send_message(chat_id, spending_text)
+            graphing.visualize(total_text)
+            bot.send_photo(chat_id, photo=open('expenditure.png', 'rb'))
+            os.remove('expenditure.png')
     except Exception as e:
         logging.exception(str(e))
         bot.reply_to(message, str(e))
