@@ -9,6 +9,7 @@ import history
 import display
 import delete
 import add
+import budget
 from datetime import datetime
 from jproperties import Properties
 
@@ -80,6 +81,11 @@ def command_display(message):
 @bot.message_handler(commands=['delete'])
 def command_delete(message):
     delete.run(message, bot)
+
+
+@bot.message_handler(commands=['budget'])
+def command_budget(message):
+    budget.run(message, bot)
 
 
 # not used
