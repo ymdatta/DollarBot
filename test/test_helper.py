@@ -350,6 +350,39 @@ def test_display_remaining_overall_budget(mock_telebot, mocker):
 
 
 @patch('telebot.telebot')
+def test_display_remaining_overall_budget_exceeding_case(mock_telebot, mocker):
+    mc = mock_telebot.return_value
+    mc.send_message.return_value = True
+    helper.calculateRemainingOverallBudget = mock.Mock(return_value=-10)
+    message = create_message("hello from testing")
+    helper.display_remaining_overall_budget(message, mc)
+
+    mc.send_message.assert_called_with(11, '\nBudget Exceded!\nExpenditure exceeds the budget by $10')
+
+
+@patch('telebot.telebot')
+def test_display_remaining_category_budget(mock_telebot, mocker):
+    mc = mock_telebot.return_value
+    mc.send_message.return_value = True
+    helper.calculateRemainingCategoryBudget = mock.Mock(return_value=150)
+    message = create_message("hello from testing")
+    helper.display_remaining_category_budget(message, mc, "Food")
+
+    mc.send_message.assert_called_with(11, '\nRemaining Budget for Food is $150')
+
+
+@patch('telebot.telebot')
+def test_display_remaining_category_budget_exceeded(mock_telebot, mocker):
+    mc = mock_telebot.return_value
+    mc.send_message.return_value = True
+    helper.calculateRemainingCategoryBudget = mock.Mock(return_value=-90)
+    message = create_message("hello from testing")
+    helper.display_remaining_category_budget(message, mc, "Food")
+
+    mc.send_message.assert_called_with(11, '\nBudget for Food Exceded!\nExpenditure exceeds the budget by $90')
+
+
+@patch('telebot.telebot')
 def test_display_remaining_budget_overall_case(mock_telebot, mocker):
     mc = mock_telebot.return_value
     message = create_message("hello from testing")
