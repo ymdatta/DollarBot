@@ -1,6 +1,7 @@
 import re
 import json
 import os
+from datetime import datetime
 
 spend_categories = ['Food', 'Groceries', 'Utilities', 'Transport', 'Shopping', 'Miscellaneous']
 choices = ['Date', 'Category', 'Cost']
@@ -141,6 +142,73 @@ def isCategoryBudgetByCategoryAvailable(chatId, cat):
     if data is None:
         return False
     return cat in data.keys()
+
+
+def display_remaining_budget(message, bot, cat):
+    chat_id = message.chat.id
+    if isOverallBudgetAvailable(chat_id):
+        display_remaining_overall_budget(message, bot)
+    elif isCategoryBudgetByCategoryAvailable(chat_id, cat):
+        display_remaining_category_budget(message, bot, cat)
+
+
+def display_remaining_overall_budget(message, bot):
+    chat_id = message.chat.id
+    remaining_budget = calculateRemainingOverallBudget(chat_id)
+    if remaining_budget >= 0:
+        msg = '\nRemaining Overall Budget is $' + str(remaining_budget)
+    else:
+        msg = '\nBudget Exceded!\nExpenditure exceeds the budget by $' + str(remaining_budget)[1:]
+    bot.send_message(chat_id, msg)
+
+
+def calculateRemainingOverallBudget(chat_id):
+    budget = getOverallBudget(chat_id)
+    history = getUserHistory(chat_id)
+    query = datetime.now().today().strftime(getMonthFormat())
+    queryResult = [value for index, value in enumerate(history) if str(query) in value]
+
+    return float(budget) - calculate_total_spendings(queryResult)
+
+
+def calculate_total_spendings(queryResult):
+    total = 0
+    total_dict = {}
+
+    for row in queryResult:
+        s = row.split(',')
+        total = total + float(s[2])
+    return total
+
+
+def display_remaining_category_budget(message, bot, cat):
+    chat_id = message.chat.id
+    remaining_budget = calculateRemainingCategoryBudget(chat_id, cat)
+    if remaining_budget >= 0:
+        msg = '\nRemaining Budget for ' + cat + ' is $' + str(remaining_budget)
+    else:
+        msg = '\nBudget for ' + cat + ' Exceded!\nExpenditure exceeds the budget by $' + str(abs(remaining_budget))
+    bot.send_message(chat_id, msg)
+
+
+def calculateRemainingCategoryBudget(chat_id, cat):
+    budget = getCategoryBudgetByCategory(chat_id, cat)
+    history = getUserHistory(chat_id)
+    query = datetime.now().today().strftime(getMonthFormat())
+    queryResult = [value for index, value in enumerate(history) if str(query) in value]
+
+    return float(budget) - calculate_total_spendings_for_category(queryResult, cat)
+
+
+def calculate_total_spendings_for_category(queryResult, cat):
+    total = 0
+    total_dict = {}
+
+    for row in queryResult:
+        s = row.split(',')
+        if cat == s[1]:
+            total = total + float(s[2])
+    return total
 
 
 def getSpendCategories():
