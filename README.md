@@ -32,6 +32,18 @@ With simple commands, this bot allows you to:
 - Clear/Erase all your records
 - Edit/Change any spending details if you wish to
 
+## New Features and Delta
+
+- Budgeting: Overall
+- Budgeting: Category-wise
+- Display: Bar graphs
+- Edit Feature: Improved to use calendar
+- Expense Estimator
+- Code Refactoring: Modularization
+- Code Coverage: Test Cases
+
+## Work for the upcoming iteration
+
 ## Demo
 https://user-images.githubusercontent.com/15325746/135395315-e234dc5e-d891-470a-b3f4-04aa1d11ed45.mp4
 
