@@ -1,4 +1,10 @@
 from code import helper
+from code.helper import throw_exception
+from mock import ANY
+from telebot import types
+from mock.mock import patch
+import logging
+import mock
 
 MOCK_CHAT_ID = 101
 MOCK_USER_DATA = {
@@ -219,3 +225,64 @@ def test_getChoices():
         assert True
     else:
         assert False, 'expected choices are not returned'
+
+
+def test_write_json(mocker):
+    mocker.patch.object(helper, 'json')
+    helper.json.dump.return_value = True
+    user_list = ['hello']
+    helper.write_json(user_list)
+    helper.json.dump.assert_called_with(user_list, ANY, ensure_ascii = ANY, indent = ANY)
+
+
+@patch('telebot.telebot')
+def test_throw_exception(mock_telebot, mocker):
+    mc = mock_telebot.return_value
+    mc.reply_to.return_value = True
+
+    message = create_message("message from testing")
+
+    throw_exception("hello, exception from testing", message, mc, logging)
+    mc.reply_to.assert_called_with(message, 'Oh no! hello, exception from testing')
+
+
+def test_createNewUserRecord():
+    data_format_call = helper.createNewUserRecord()
+    data_format = {
+        'data': [],
+        'budget': {
+            'overall': None,
+            'category': None
+        }
+    }
+    assert(sorted(data_format_call) == sorted(data_format))
+
+
+def test_getOverallBudget_none_case():
+    helper.getUserData.return_value = None
+    overall_budget = helper.getOverallBudget(11)
+    assert(overall_budget is None)
+
+
+def test_getOverallBudget_working_case():
+    helper.getUserData = mock.Mock(return_value= {'budget':{'overall':10}})
+    overall_budget = helper.getOverallBudget(11)
+    assert(overall_budget == 10)
+
+
+def test_getCategoryBudget_none_case():
+    helper.getUserData.return_value = None
+    overall_budget = helper.getCategoryBudget(11)
+    assert(overall_budget is None)
+
+
+def test_getOverallBudget_working_case():
+    helper.getUserData = mock.Mock(return_value = {'budget':{'category':{'Food':10}}})
+    overall_budget = helper.getCategoryBudget(11)
+    assert(overall_budget is not None)
+
+
+def create_message(text):
+    params = {'messagebody': text}
+    chat = types.User(11, False, 'test')
+    return types.Message(1, None, None, chat, 'text', params, "")
