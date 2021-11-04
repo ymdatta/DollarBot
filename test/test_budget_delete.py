@@ -9,7 +9,8 @@ def test_run_normal_case(mock_telebot, mocker):
     mc.send_message.return_value = True
 
     mocker.patch.object(budget_delete, 'helper')
-    budget_delete.helper.read_json.return_value = {11}
+    budget_delete.helper.read_json.return_value = [11]
+    budget_delete.helper.write_json.return_value = True
 
     message = create_message("hello from testing")
     budget_delete.run(message, mc)
