@@ -28,7 +28,6 @@ def test_invalid_format(mock_telebot, mocker):
     message = create_message("luster")
     try:
         display.display_total(message, mc)
-#In this case it accepted an unusable format, fail the test
         assert False
     except Exception:
         assert True
@@ -43,7 +42,6 @@ def test_valid_format(mock_telebot, mocker):
         display.display_total(message, mc)
         assert True
     except Exception:
-#In this case it did not accept a usable format, fail the test
         assert False
 
 
@@ -56,7 +54,6 @@ def test_valid_format_day(mock_telebot, mocker):
         display.display_total(message, mc)
         assert True
     except Exception:
-#In this case it did not accept a usable format, fail the test
         assert False
 
 
@@ -70,7 +67,6 @@ def test_spending_display(mock_telebot, mocker):
         display.display_total(message, mc)
         assert False
     except Exception:
-#In this case there where no records
         assert True
 
 
