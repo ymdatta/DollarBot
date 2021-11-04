@@ -81,7 +81,6 @@ def edit_cat(m, bot, selected_data):
     chat_id = m.chat.id
     data_edit = helper.getUserHistory(chat_id)
     new_cat = "" if m.text is None else m.text
-
     for i in range(len(data_edit)):
         user_data = data_edit[i].split(',')
         selected_date = selected_data[0].split('=')[1]
