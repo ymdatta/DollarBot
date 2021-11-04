@@ -5,12 +5,13 @@ import os
 spend_categories = ['Food', 'Groceries', 'Utilities', 'Transport', 'Shopping', 'Miscellaneous']
 choices = ['Date', 'Category', 'Cost']
 spend_display_option = ['Day', 'Month']
-
+spend_estimate_option = ['Next day', 'Next month']
 # set of implemented commands and their description
 commands = {
     'menu': 'Display this menu',
     'add': 'Record/Add a new spending',
     'display': 'Show sum of expenditure for the current day/month',
+    'estimate': 'Show an estimate of expenditure for the next day/month',
     'history': 'Display spending history',
     'delete': 'Clear/Erase all your records',
     'edit': 'Edit/Change spending details'
@@ -68,6 +69,9 @@ def getSpendCategories():
 
 def getSpendDisplayOptions():
     return spend_display_option
+
+def getSpendEstimateOptions():
+    return spend_estimate_option
 
 
 def getCommands():

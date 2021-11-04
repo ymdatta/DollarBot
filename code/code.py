@@ -7,6 +7,7 @@ import helper
 import edit
 import history
 import display
+import estimate
 import delete
 import add
 from datetime import datetime
@@ -74,6 +75,11 @@ def command_edit(message):
 @bot.message_handler(commands=['display'])
 def command_display(message):
     display.run(message, bot)
+
+# function to estimate future expenditure
+@bot.message_handler(commands=['estimate'])
+def command_estimate(message):
+    estimate.run(message, bot)
 
 
 # handles "/delete" command
