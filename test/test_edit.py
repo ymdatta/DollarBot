@@ -3,7 +3,6 @@ import datetime
 from mock import patch
 from telebot import types
 from code import edit
-from code import helper
 
 MOCK_CHAT_ID = 101
 MOCK_USER_DATA = {
