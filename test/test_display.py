@@ -1,3 +1,5 @@
+import os
+import json
 from mock import patch
 from telebot import types
 from code import display
@@ -58,19 +60,38 @@ def test_valid_format_day(mock_telebot, mocker):
 
 
 @patch('telebot.telebot')
-def test_spending_display(mock_telebot, mocker):
+def test_spending_display_working(mock_telebot, mocker):
+
+    MOCK_USER_DATA = test_read_json()
+    mocker.patch.object(display, 'helper')
+    display.helper.getUserHistory.return_value = MOCK_USER_DATA["894127939"]
+    display.helper.getSpendDisplayOptions.return_value = ["Day", "Month"]
+    display.helper.getDateFormat.return_value = '%d-%b-%Y'
+    display.helper.getMonthFormat.return_value = '%b-%Y'
     mc = mock_telebot.return_value
     mc.reply_to.return_value = True
     message = create_message("Day")
     message.text = "Day"
-    try:
-        display.display_total(message, mc)
-        assert False
-    except Exception:
-        assert True
+    display.display_total(message, mc)
+    assert True
 
 
 def create_message(text):
     params = {'messagebody': text}
     chat = types.User(11, False, 'test')
     return types.Message(894127939, None, None, chat, 'text', params, "")
+
+
+def test_read_json():
+    try:
+        if not os.path.exists('./test/dummy_expense_record.json'):
+            with open('./test/dummy_expense_record.json', 'w') as json_file:
+                json_file.write('{}')
+            return json.dumps('{}')
+        elif os.stat('./test/dummy_expense_record.json').st_size != 0:
+            with open('./test/dummy_expense_record.json') as expense_record:
+                expense_record_data = json.load(expense_record)
+            return expense_record_data
+
+    except FileNotFoundError:
+        print("---------NO RECORDS FOUND---------")
