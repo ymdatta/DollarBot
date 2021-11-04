@@ -35,3 +35,7 @@ CATEGORIES,AMOUNT
 ----------------------
 Food $200.0
 Groceries $100.0
+
+![alt text](https://github.com/sak007/MyDollarBot-BOTGo/blob/estimate-feature/docs/estimate.png)
+
+
