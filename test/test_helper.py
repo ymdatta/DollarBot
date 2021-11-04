@@ -232,7 +232,7 @@ def test_write_json(mocker):
     helper.json.dump.return_value = True
     user_list = ['hello']
     helper.write_json(user_list)
-    helper.json.dump.assert_called_with(user_list, ANY, ensure_ascii = ANY, indent = ANY)
+    helper.json.dump.assert_called_with(user_list, ANY, ensure_ascii=ANY, indent=ANY)
 
 
 @patch('telebot.telebot')
@@ -265,7 +265,7 @@ def test_getOverallBudget_none_case():
 
 
 def test_getOverallBudget_working_case():
-    helper.getUserData = mock.Mock(return_value= {'budget':{'overall':10}})
+    helper.getUserData = mock.Mock(return_value={'budget': {'overall': 10}})
     overall_budget = helper.getOverallBudget(11)
     assert(overall_budget == 10)
 
@@ -276,10 +276,14 @@ def test_getCategoryBudget_none_case():
     assert(overall_budget is None)
 
 
-def test_getOverallBudget_working_case():
-    helper.getUserData = mock.Mock(return_value = {'budget':{'category':{'Food':10}}})
+def test_getCategoryBudget_working_case():
+    helper.getUserData = mock.Mock(return_value={'budget': {'category': {'Food': 10}}})
     overall_budget = helper.getCategoryBudget(11)
     assert(overall_budget is not None)
+
+
+def test_getCategoryBudgetByCategory():
+    pass
 
 
 def create_message(text):
