@@ -72,12 +72,12 @@ def write_json(user_list):
 
 
 def validate_entered_amount(amount_entered):
-    if len(amount_entered) > 0 and len(amount_entered) <= 15:
-        if amount_entered.isdigit:
-            if re.match("^[0-9]*\\.?[0-9]*$", amount_entered):
-                amount = round(float(amount_entered), 2)
-                if amount > 0:
-                    return str(amount)
+    if amount_entered is None:
+        return 0
+    if re.match("^[1-9][0-9]{0,14}\\.[0-9]*$", amount_entered) or re.match("^[1-9][0-9]{0,14}$", amount_entered):
+        amount = round(float(amount_entered), 2)
+        if amount > 0:
+            return str(amount)
     return 0
 
 
@@ -90,6 +90,8 @@ def getUserHistory(chat_id):
 
 def getUserData(chat_id):
     user_list = read_json()
+    if user_list is None:
+        return None
     if (str(chat_id) in user_list):
         return user_list[str(chat_id)]
     return None
