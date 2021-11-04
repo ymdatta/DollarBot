@@ -46,9 +46,10 @@ With simple commands, this bot allows you to:
 
 - Display: Add pie charts
 - New Feature: Custom Categories -  Lets the user add their own categories which can then be used to add expenses.
-- Display: Add budgeting information inside display to show which categories are exceeding budget
+- Display: Add budgets inside display function's output so user can see budget alongside spending.
 - Recurring expense: Add a recurring expense that adds a certain amount every week to the user's spending. 
 - Web hosting: host the project on Heroku or any other cloud provider for high availability.
+- Add: Add calendar in UI to allow user to choose dates to add expenses.
 - UI beautification: beautify the UI and the messages sent to the user to improve user experience and readability.
 
 ## Demo
