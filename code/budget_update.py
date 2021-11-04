@@ -122,8 +122,9 @@ def post_category_add(message, bot):
 
 
 def post_option_selection(message, bot):
+    print("here")
     selected_option = message.text
     options = helper.getUpdateOptions()
-
+    print("here")
     if selected_option == options['continue']:
         update_category_budget(message, bot)
