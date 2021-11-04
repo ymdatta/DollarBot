@@ -17,4 +17,4 @@ It takes 2 arguments for processing - **message** which is the message from the 
 It takes 2 arguments for processing - **message** which is the message from the user, and **bot** which is the telegram bot object from the run(message, bot): in the same file. It gets the category-wise budget for the user based on their chat ID using the helper module.It then processes it into a string format suitable for display, and returns the same through the bot to the Telegram UI.
 
 # How to run this feature?
-Once the project is running(please follow the instructions given in the main README.md for this), please type /budget into the telegram bot.
+Once the project is running(please follow the instructions given in the main README.md for this), please type /budget into the telegram bot. Create a budget, and then type /budget again, and choose the option to view your budget.
