@@ -155,8 +155,10 @@ def display_remaining_budget(message, bot, cat):
 
 
 def display_remaining_overall_budget(message, bot):
+    print('here')
     chat_id = message.chat.id
     remaining_budget = calculateRemainingOverallBudget(chat_id)
+    print("here", remaining_budget)
     if remaining_budget >= 0:
         msg = '\nRemaining Overall Budget is $' + str(remaining_budget)
     else:

@@ -338,6 +338,42 @@ def test_calculateRemainingOverallBudget():
     pass
 
 
+@patch('telebot.telebot')
+def test_display_remaining_overall_budget(mock_telebot, mocker):
+    mc = mock_telebot.return_value
+    mc.send_message.return_value = True
+    helper.calculateRemainingOverallBudget = mock.Mock(return_value=100)
+    message = create_message("hello from testing")
+    helper.display_remaining_overall_budget(message, mc)
+
+    mc.send_message.assert_called_with(11, '\nRemaining Overall Budget is $100')
+
+
+@patch('telebot.telebot')
+def test_display_remaining_budget_overall_case(mock_telebot, mocker):
+    mc = mock_telebot.return_value
+    message = create_message("hello from testing")
+
+    helper.isOverallBudgetAvailable = mock.Mock(return_value=True)
+    helper.display_remaining_overall_budget = mock.Mock(return_value=True)
+
+    helper.display_remaining_budget(message, mc, 'Food')
+    helper.display_remaining_overall_budget.assert_called_with(message, mc)
+
+
+@patch('telebot.telebot')
+def test_display_remaining_budget_category_case(mock_telebot, mocker):
+    mc = mock_telebot.return_value
+    message = create_message("hello from testing")
+
+    helper.isOverallBudgetAvailable = mock.Mock(return_value=False)
+    helper.isCategoryBudgetByCategoryAvailable = mock.Mock(return_value=True)
+    helper.display_remaining_category_budget = mock.Mock(return_value=True)
+
+    helper.display_remaining_budget(message, mc, 'Food')
+    helper.display_remaining_category_budget.assert_called_with(message, mc, 'Food')
+
+
 def test_getBudgetTypes():
     testresult = helper.getBudgetTypes()
     localBudgetTypes = {
