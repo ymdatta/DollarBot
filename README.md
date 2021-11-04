@@ -44,6 +44,11 @@ With simple commands, this bot allows you to:
 
 ## Work for the upcoming iteration
 
+- Display: Add pie charts
+- New Feature: Custom Categories -  Lets the user add their own categories which can then be used to add expenses.
+- Display: Add budgeting information inside display to show which categories are exceeding budget
+- Recurring expense: Add a recurring expense that adds a certain amount every week to the user's spending. 
+
 ## Demo
 https://user-images.githubusercontent.com/15325746/135395315-e234dc5e-d891-470a-b3f4-04aa1d11ed45.mp4
 
