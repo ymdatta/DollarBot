@@ -39,7 +39,7 @@ def test_invalid_format(mock_telebot, mocker):
 def test_valid_format(mock_telebot, mocker):
     mc = mock_telebot.return_value
     mc.reply_to.return_value = True
-    message = create_message("Month")
+    message = create_message("Next month")
     try:
         estimate.estimate_total(message, mc)
         assert True
@@ -51,7 +51,7 @@ def test_valid_format(mock_telebot, mocker):
 def test_valid_format_day(mock_telebot, mocker):
     mc = mock_telebot.return_value
     mc.reply_to.return_value = True
-    message = create_message("Day")
+    message = create_message("Next day")
     try:
         estimate.estimate_total(message, mc)
         assert True
@@ -65,7 +65,7 @@ def test_spending_estimate_working(mock_telebot, mocker):
     MOCK_USER_DATA = test_read_json()
     mocker.patch.object(estimate, 'helper')
     estimate.helper.getUserHistory.return_value = MOCK_USER_DATA["894127939"]
-    estimate.helper.getSpendestimateOptions.return_value = [
+    estimate.helper.getSpendEstimateOptions.return_value = [
         "Next day", "Next month"]
     estimate.helper.getDateFormat.return_value = '%d-%b-%Y'
     estimate.helper.getMonthFormat.return_value = '%b-%Y'
@@ -74,7 +74,25 @@ def test_spending_estimate_working(mock_telebot, mocker):
     message = create_message("Next day")
     message.text = "Next day"
     estimate.estimate_total(message, mc)
-    assert True
+    assert mc.send_message.called
+
+
+@patch('telebot.telebot')
+def test_spending_estimate_month(mock_telebot, mocker):
+
+    MOCK_USER_DATA = test_read_json()
+    mocker.patch.object(estimate, 'helper')
+    estimate.helper.getUserHistory.return_value = MOCK_USER_DATA["894127939"]
+    estimate.helper.getSpendEstimateOptions.return_value = [
+        "Next day", "Next month"]
+    estimate.helper.getDateFormat.return_value = '%d-%b-%Y'
+    estimate.helper.getMonthFormat.return_value = '%b-%Y'
+    mc = mock_telebot.return_value
+    mc.reply_to.return_value = True
+    message = create_message("Next month")
+    message.text = "Next month"
+    estimate.estimate_total(message, mc)
+    assert mc.send_message.called
 
 
 def create_message(text):
