@@ -11,10 +11,10 @@ def run(m, bot):
         markup.row_width = 2
         for c in helper.getUserHistory(chat_id):
             expense_data = c.split(',')
-            str_date = "Date="+expense_data[0]
-            str_category = ",\t\tCategory="+expense_data[1]
-            str_amount = ",\t\tAmount=$"+expense_data[2]
-            markup.add(str_date+str_category+str_amount)
+            str_date = "Date=" + expense_data[0]
+            str_category = ",\t\tCategory=" + expense_data[1]
+            str_amount = ",\t\tAmount=$" + expense_data[2]
+            markup.add(str_date + str_category + str_amount)
         info = bot.reply_to(m, "Select expense to be edited:", reply_markup=markup)
         bot.register_next_step_handler(info, select_category_to_be_updated, bot)
     else:
@@ -34,7 +34,6 @@ def select_category_to_be_updated(m, bot):
 
 def enter_updated_data(m, bot, selected_data):
     choice1 = m.text
-    print("choice1:"+choice1)
     markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
     markup.row_width = 2
     for cat in helper.getSpendCategories():
