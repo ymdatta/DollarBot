@@ -25,7 +25,7 @@ def select_category_to_be_updated(m, bot):
     info = m.text
     markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
     markup.row_width = 2
-    selected_data = info.split(',')
+    selected_data = [] if info is None else info.split(',')
     for c in selected_data:
         markup.add(c.strip())
     choice = bot.reply_to(m, "What do you want to update?", reply_markup=markup)
