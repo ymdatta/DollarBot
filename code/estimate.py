@@ -91,6 +91,6 @@ def calculate_estimate(queryResult, days_to_estimate):
     for key, value in total_dict.items():
         category_count = len(days_data_available)
         daily_avg = value / category_count
-        estimated_avg = round(daily_avg*days_to_estimate, 2)
+        estimated_avg = round(daily_avg * days_to_estimate, 2)
         total_text += str(key) + " $" + str(estimated_avg) + "\n"
     return total_text

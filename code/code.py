@@ -76,6 +76,7 @@ def command_edit(message):
 def command_display(message):
     display.run(message, bot)
 
+
 # function to estimate future expenditure
 @bot.message_handler(commands=['estimate'])
 def command_estimate(message):

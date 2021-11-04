@@ -70,6 +70,7 @@ def getSpendCategories():
 def getSpendDisplayOptions():
     return spend_display_option
 
+
 def getSpendEstimateOptions():
     return spend_estimate_option
 
