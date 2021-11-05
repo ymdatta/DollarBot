@@ -7,14 +7,6 @@ install:
   - pip install -r requirements.txt
   - pip install coverage
   - pip install codecov
-coverage:
-  status:
-    project:
-      default:
-        target: 80%
-        threshold: null
-    patch: false
-    changes: false
 script:
   - flake8 --ignore=E501,W605
   - coverage run -m  pytest -q test/
