@@ -1,4 +1,4 @@
-# TrackMyDollar V2.0 - Budget On The Go(BOTGo)
+# 💰 TrackMyDollar V2.0 - Budget On The Go(BOTGo) 💰
 <hr>
 <p align="center">
 <a><img  height=360 width=550 
@@ -9,11 +9,8 @@
 ![MIT license](https://img.shields.io/badge/License-MIT-green.svg)
 [![Platform](https://img.shields.io/badge/Platform-Telegram-blue)](https://desktop.telegram.org/)
 ![GitHub](https://img.shields.io/badge/Language-Python-blue.svg)
-
-![GitHub contributors](https://img.shields.io/github/contributors/sak007/MyDollarBot-BOTGo)
-
+[![GitHub contributors](https://img.shields.io/github/contributors/sak007/MyDollarBot-BOTGo)](https://github.com/sak007/MyDollarBot-BOTGo/graphs/contributors)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5542548.svg)](https://doi.org/10.5281/zenodo.5542548)
-
 [![Build Status](https://app.travis-ci.com/sak007/MyDollarBot.svg?branch=backlogs)](https://app.travis-ci.com/github/sak007/MyDollarBot-BOTGo)
 [![codecov](https://codecov.io/gh/sak007/MyDollarBot-BOTGo/branch/main/graph/badge.svg?token=5AYMR8MNMP)](https://codecov.io/gh/sak007/MyDollarBot-BOTGo)
 [![GitHub issues](https://img.shields.io/github/issues/sak007/MyDollarBot-BOTGo)](https://github.com/sak007/MyDollarBot-BOTGo/issues?q=is%3Aopen+is%3Aissue)
@@ -66,7 +63,8 @@ With simple commands, this bot allows you to:
 - UI beautification: beautify the UI and the messages sent to the user to improve user experience and readability.
 
 ## Demo
-https://user-images.githubusercontent.com/15325746/135395315-e234dc5e-d891-470a-b3f4-04aa1d11ed45.mp4
+
+https://app.animaker.com/animo/fXrA8Oa8bGfiD4ft/
 
 ## Installation guide
 

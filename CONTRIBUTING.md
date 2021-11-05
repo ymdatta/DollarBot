@@ -1,16 +1,20 @@
-# Contributing to TrackMyDollar
+# Contributing to TrackMyDollar - BudgetOnTheGo - BOTGo v2
 
-Follow the set of guidelines below to contribute to TrackMyDollar!
+Follow the set of guidelines below to contribute to MyDollarBot-BOTGo!
 
 ## Code of Conduct
 
-By participating, you are expected to uphold this code. Please report unacceptable behavior to psomash@ncsu.edu.
+By participating, you are expected to uphold this code. Please report unacceptable behavior to svenka25@ncsu.edu.
 
 Prerequistes required before starting this project
 
-1. Must be a graduate student at NC State University
-2. Must be a student in Software Engineering Course in Fall 2021
-3. Have proficiency in Python
+If you're doing this as part of CSC510 - SE for Fall'21, then: 
+1. Have good understanding of Python Programming Language and Telegram Bots
+
+If you like our project and would like to contribue otherwise, please note:
+1. This project is created as part of CSC510 Coursework at NC State for Fall'21.
+2. If you like to contribute, reach out to the maintainers before creating a branch, to confirm if we're still maintaining the repo.
+3. Have good understanding of Python Programming Language and Telegram Bots
 
 ## How can I Contribute -
  
@@ -48,9 +52,9 @@ If the problem is related to performance or memory, include a CPU profile captur
 
 The process described here has several goals:
 
-Maintain the projects quality
+Maintain the projects quality and ensure you have a code coverage of > 80%. Otherwise your PR will not be approved.
 
-Fix problems that are important to users
+Fix problems that are important to users.
 
 Enable a sustainable system for the projects maintainers to review contributions
 
@@ -58,7 +62,7 @@ Enable a sustainable system for the projects maintainers to review contributions
 
 Check the Projects tab for TO-DO list and pick the feature you find interesting to work on.
 
-Create a branch and implement the feature in Python using Telegram bot and test it locally.
+Create a branch and implement the feature in Python using Telegram bot and test it locally. (Check the docs to learn more)
 
 Write corresponding test cases to ensure it is not breaking the existing system.
 
