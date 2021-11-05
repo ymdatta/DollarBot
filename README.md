@@ -1,4 +1,4 @@
-# TrackMyDollar V2.0 - Budget On The Go(BOTGo)
+# 💰 TrackMyDollar V2.0 - Budget On The Go(BOTGo) 💰
 <hr>
 <p align="center">
 <a><img  height=360 width=550 
@@ -49,7 +49,8 @@ With simple commands, this bot allows you to:
 - UI beautification: beautify the UI and the messages sent to the user to improve user experience and readability.
 
 ## Demo
-https://user-images.githubusercontent.com/15325746/135395315-e234dc5e-d891-470a-b3f4-04aa1d11ed45.mp4
+
+https://app.animaker.com/animo/fXrA8Oa8bGfiD4ft/
 
 ## Installation guide
 
