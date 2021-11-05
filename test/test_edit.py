@@ -6,8 +6,8 @@ from code import edit
 
 MOCK_CHAT_ID = 101
 MOCK_USER_DATA = {
-    str(MOCK_CHAT_ID):{'data':["correct_mock_value"]},
-    '102':{"data":["wrong_mock_value"]}
+    str(MOCK_CHAT_ID): {'data': ["correct_mock_value"]},
+    '102': {"data": ["wrong_mock_value"]}
 }
 
 DUMMY_DATE = str(datetime.datetime.now())
@@ -128,4 +128,4 @@ def test_edit_cost(mock_telebot, mocker):
 def create_message(text):
     params = {'messagebody': text}
     chat = types.User(11, False, 'test')
-    return types.Message(1, None, None, chat, 'text', params, “")
+    return types.Message(1, None, None, chat, 'text', params, "")
