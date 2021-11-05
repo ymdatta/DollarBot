@@ -10,7 +10,7 @@
 [![Platform](https://img.shields.io/badge/Platform-Telegram-blue)](https://desktop.telegram.org/)
 ![GitHub](https://img.shields.io/badge/Language-Python-blue.svg)
 
-![GitHub contributors](https://img.shields.io/github/contributors/sak007/MyDollarBot-BOTGo)
+[![GitHub contributors](https://img.shields.io/github/contributors/sak007/MyDollarBot-BOTGo)](https://github.com/sak007/MyDollarBot-BOTGo/graphs/contributors)
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5542548.svg)](https://doi.org/10.5281/zenodo.5542548)
 
