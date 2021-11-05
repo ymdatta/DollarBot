@@ -67,7 +67,7 @@ def edit_date(m, bot, selected_data):
             data_edit[i] = new_date + ',' + selected_category + ',' + selected_amount[1:]
             break
 
-    user_list[str(chat_id)] = data_edit
+    user_list[str(chat_id)]['data'] = data_edit
     helper.write_json(user_list)
     bot.reply_to(m, "Date is updated")
 
@@ -86,7 +86,7 @@ def edit_cat(m, bot, selected_data):
             data_edit[i] = selected_date + ',' + new_cat + ',' + selected_amount[1:]
             break
 
-    user_list[str(chat_id)] = data_edit
+    user_list[str(chat_id)]['data'] = data_edit
     helper.write_json(user_list)
     bot.reply_to(m, "Category is updated")
 
@@ -106,7 +106,7 @@ def edit_cost(m, bot, selected_data):
             if user_data[0] == selected_date and user_data[1] == selected_category and user_data[2] == selected_amount[1:]:
                 data_edit[i] = selected_date + ',' + selected_category + ',' + new_cost
                 break
-        user_list[str(chat_id)] = data_edit
+        user_list[str(chat_id)]['data'] = data_edit
         helper.write_json(user_list)
         bot.reply_to(m, "Expense amount is updated")
     else:
