@@ -29,28 +29,42 @@ With simple commands, this bot allows you to:
 - Clear/Erase all your records
 - Edit/Change any spending details if you wish to
 
-## New Features and Delta
+## What's new? (Delta, New Features)
+
+- Code Refactoring: Modularization
+  The codebase was inside a single file containing more than 1000 lines of code when we began our work. To make it modular, easier to understand, and easier to contribute to, we have performed a complete modularization of the codebase into 13 separate files, modularizing for functionality. 
 
 - Budgeting: Overall
+  We have introduced a new feature to allow users to create a budget to track their expenses across categories. Using this, after adding a budget, whenever the user adds a new expense, this gets deducted from the budget and the remaining amount is shown to the user.
+
 - Budgeting: Category-wise
+  We have introduced a new categorical budget feature to allow users to create a budget to track their expenses for each categories they require it for. Using this, after adding a budget for a particular category, whenever the user adds a new expense to that category, this gets deducted from the budget and the remaining amount is shown to the user for that budget category.
+  
 - Display: Bar graphs
-- Edit Feature: Improved to use calendar
+  This features allows for a bar graph showing the expenditures made across categories through a bar graph. This allows users to understand their better. 
+
+- Edit Feature: Improved to show dates for deletion
+  The edit feature now shows a list of expenses and dates for the user to choose from and delete. The user can choose the ones they would like to delete instead of manually typing in the date of the expense.
+
 - Expense Estimator
-- Code Refactoring: Modularization
+  To allow for user to estimate their expenses for the future, we have implemented a estimator which employs the user's historical data to predict their next month's expenses. 
+
 - Code Coverage: Test Cases
+  The project only had a single test case when we took over the project. From there, we have added test cases for both existing and new features. Our code coverage now stands at 90%, with over 110+ test cases.
 
 ## Work for the upcoming iteration
 
 - Display: Add pie charts
 - New Feature: Custom Categories -  Lets the user add their own categories which can then be used to add expenses.
-- Display: Add budgeting information inside display to show which categories are exceeding budget
+- Display: Add budgets inside display function's output so user can see budget alongside spending.
 - Recurring expense: Add a recurring expense that adds a certain amount every week to the user's spending. 
 - Web hosting: host the project on Heroku or any other cloud provider for high availability.
+- Add: Add calendar in UI to allow user to choose dates to add expenses.
 - UI beautification: beautify the UI and the messages sent to the user to improve user experience and readability.
 
 ## Demo
 
-https://app.animaker.com/animo/fXrA8Oa8bGfiD4ft/
+https://user-images.githubusercontent.com/72677919/140454147-f879010a-173b-47b9-9cfb-a389171924de.mp4
 
 ## Installation guide
 
