@@ -1,7 +1,7 @@
-pyTelegramBotAPI==4.1.0
-pytest==6.2.4
+pyTelegramBotAPI
+pytest
 jproperties
-flake8==4.0.1
-matplotlib==3.4.3
-coverage==6.0.2
+flake8
+matplotlib
+coverage
 pytest-mock
