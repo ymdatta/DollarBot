@@ -64,7 +64,7 @@ With simple commands, this bot allows you to:
 
 ## Demo
 
-https://app.animaker.com/animo/fXrA8Oa8bGfiD4ft/
+https://user-images.githubusercontent.com/72677919/140454147-f879010a-173b-47b9-9cfb-a389171924de.mp4
 
 ## Installation guide
 
