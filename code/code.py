@@ -7,8 +7,10 @@ import helper
 import edit
 import history
 import display
+import estimate
 import delete
 import add
+import budget
 from datetime import datetime
 from jproperties import Properties
 
@@ -76,10 +78,21 @@ def command_display(message):
     display.run(message, bot)
 
 
+# function to estimate future expenditure
+@bot.message_handler(commands=['estimate'])
+def command_estimate(message):
+    estimate.run(message, bot)
+
+
 # handles "/delete" command
 @bot.message_handler(commands=['delete'])
 def command_delete(message):
     delete.run(message, bot)
+
+
+@bot.message_handler(commands=['budget'])
+def command_budget(message):
+    budget.run(message, bot)
 
 
 # not used
