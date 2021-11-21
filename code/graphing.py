@@ -8,7 +8,9 @@ def addlabels(x, y):
         plt.text(i, y[i] // 2, y[i], ha='center')
 
 
-def visualize(total_text):
+def visualize(total_text, budgetData):
+    colors=['red','cornflowerblue','greenyellow','orange','violet','grey']
+    # plot the expense bar chart
     total_text_split = [line for line in total_text.split('\n') if line.strip() != '']
     categ_val = {}
     for i in total_text_split:
@@ -19,11 +21,37 @@ def visualize(total_text):
     x = list(categ_val.keys())
     y = list(categ_val.values())
 
-    plt.bar(categ_val.keys(), categ_val.values(), color=[(1.00, 0, 0, 0.6), (0.2, 0.4, 0.6, 0.6), (0, 1.00, 0, 0.6), (1.00, 1.00, 0, 1.00)], edgecolor='blue')
+    plt.bar(categ_val.keys(), categ_val.values(), color=colors, edgecolor='black')
     addlabels(x, y)
 
-    plt.ylabel("Categories")
-    plt.xlabel("Expenditure")
+    plt.ylabel("Expenditure")
+    plt.xlabel("Categories")
     plt.xticks(rotation=45)
 
+    # plot budget horizontal line
+    lines = []
+    labels = []
+    if isinstance(budgetData, str):
+        lines.append(plt.axhline(y=float(budgetData), color="r", linestyle="-"))
+        labels.append("overall budget")
+    elif isinstance(budgetData, dict):
+        colorCnt = 0
+        # to avoid the budget override by each others, record the budget and adjust the line
+        duplicate = {}
+        for key in budgetData.keys():
+            val = budgetData[key]
+            plotVal = float(val)
+            if val in duplicate:
+                # if duplicate, move line
+                plotVal += 2*duplicate[val]
+            lines.append(plt.axhline(y=plotVal, color=colors[colorCnt], linestyle="-"))
+            duplicate[val] = duplicate[val] + 1 if val in duplicate else 1
+            labels.append(key)
+            colorCnt += 1
+
+    plt.legend(lines, labels)
     plt.savefig('expenditure.png', bbox_inches='tight')
+
+    plt.clf()
+    plt.cla()
+    plt.close()

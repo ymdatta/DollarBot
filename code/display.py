@@ -52,13 +52,20 @@ def display_total(message, bot):
             queryResult = [value for index, value in enumerate(history) if str(query) in value]
         total_text = calculate_spendings(queryResult)
 
+        # get budget data
+        budgetData = {}
+        if helper.isOverallBudgetAvailable(chat_id):
+            budgetData = helper.getOverallBudget(chat_id)
+        elif helper.isCategoryBudgetAvailable(chat_id):
+            budgetData = helper.getCategoryBudget(chat_id)
+
         spending_text = ""
         if len(total_text) == 0:
             spending_text = "You have no spendings for {}!".format(DayWeekMonth)
             bot.send_message(chat_id, spending_text)
         else:
             spending_text = "Here are your total spendings {}:\nCATEGORIES,AMOUNT \n----------------------\n{}".format(DayWeekMonth.lower(), total_text)
-            graphing.visualize(total_text)
+            graphing.visualize(total_text, budgetData)
             bot.send_photo(chat_id, photo=open('expenditure.png', 'rb'))
             os.remove('expenditure.png')
     except Exception as e:
