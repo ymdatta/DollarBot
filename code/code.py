@@ -11,6 +11,7 @@ import estimate
 import delete
 import add
 import budget
+import category
 from datetime import datetime
 from jproperties import Properties
 
@@ -94,6 +95,10 @@ def command_delete(message):
 def command_budget(message):
     budget.run(message, bot)
 
+# handles "/category" command
+@bot.message_handler(commands=['category'])
+def command_category(message):
+    category.run(message, bot)
 
 # not used
 def addUserHistory(chat_id, user_record):

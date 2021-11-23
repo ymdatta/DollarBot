@@ -39,7 +39,8 @@ commands = {
     'history': 'Display spending history',
     'delete': 'Clear/Erase all your records',
     'edit': 'Edit/Change spending details',
-    'budget': 'Add/Update/View/Delete budget'
+    'budget': 'Add/Update/View/Delete budget',
+    'category': 'Add/Delete a custom category'
 }
 
 dateFormat = '%d-%b-%Y'
