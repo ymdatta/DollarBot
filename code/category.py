@@ -2,6 +2,8 @@ import helper
 import logging
 from telebot import types
 
+# The main funtion of category.py.
+# User can start to manage their categories after calling it
 def run(message, bot):
     markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
     options = helper.getCategoryOptions()
@@ -11,12 +13,14 @@ def run(message, bot):
     msg = bot.reply_to(message, 'Select Operation', reply_markup=markup)
     bot.register_next_step_handler(msg, post_operation_selection, bot)
     
+# User have three funtionaliy can choose, add a category, delete a category or view the current categories
 def post_operation_selection(message, bot):
     try:
         chat_id = message.chat.id
         op = message.text
         options = helper.getCategoryOptions()
         markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
+        # Handle the exception of unknown operation 
         if op not in options.values():
             bot.send_message(chat_id, 'Invalid', reply_markup=types.ReplyKeyboardRemove())
             raise Exception("Sorry I don't recognise this operation \"{}\"!".format(op))
@@ -29,6 +33,7 @@ def post_operation_selection(message, bot):
             markup.row_width = 2
             for c in helper.getSpendCategories():
                 markup.add(c)
+            # Handle the exception of trying to delete the last category
             if len(helper.getSpendCategories()) <= 1:
                 bot.send_message(chat_id, 'Invalid', reply_markup=types.ReplyKeyboardRemove())
                 raise Exception("Number of categories cannot be zero.")
@@ -39,7 +44,7 @@ def post_operation_selection(message, bot):
         # print("hit exception")
         helper.throw_exception(e, message, bot, logging)
     
-    
+# Use the funtion to add a new category 
 def category_add(message, bot):
     chat_id = message.chat.id
     category_name = message.text
@@ -53,14 +58,16 @@ def category_add(message, bot):
         f.write(',' + category_name)
     f.close()
     bot.send_message(chat_id, 'Add category "{}" successfully!'.format(category_name))
-    
+
+# Use the funciton to view all of the categories in chat room
 def category_view(message, bot):
     chat_id = message.chat.id
     with open("categories.txt", "r") as tf:
         lines = tf.read()
         tf.close()
     bot.send_message(chat_id, 'The categories are:\n{}'.format(lines))
-    
+
+# Use the funtion to delete a category
 def category_delete(message, bot):
     chat_id = message.chat.id
     category_name = message.text
@@ -74,6 +81,7 @@ def category_delete(message, bot):
         if category == category_name:
             find_to_delete = True
             categories.remove(category)
+    # Handle the exception of deleting a not exist category
     if find_to_delete == False:
         bot.send_message(chat_id, 'Cannot find the category QAQ', reply_markup=types.ReplyKeyboardRemove())
     elif find_to_delete:
