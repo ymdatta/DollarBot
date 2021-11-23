@@ -2,7 +2,7 @@
 This feature enables the user to view all of their stored records i.e it gives a historical view of all the expenses stored in MyDollarBot.
 
 # Location of Code for this Feature
-The code that implements this feature can be found [here](https://github.com/sak007/MyDollarBot-BOTGo/blob/main/code/history.py)
+The code that implements this feature can be found [here](https://github.com/prithvish-doshi-17/MyDollarBot-BOTGo/blob/main/code/history.py)
 
 # Code Description
 ## Functions
@@ -33,3 +33,5 @@ DATE, CATEGORY, AMOUNT
 ----------------------
 20-Oct-2021 20:33,Transport,1022.0
 20-Oct-2021 20:33,Groceries,12.0
+
+Along with the spending history, the histogram displaying spending of each month is plotted, which can help user to manage his/her expenses.
