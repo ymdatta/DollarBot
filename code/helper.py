@@ -222,7 +222,7 @@ def calculate_total_spendings_for_category(queryResult, cat):
 
 def getSpendCategories():
     with open("categories.txt", "r") as tf:
-        spend_categories = tf.read().split(',')
+        spend_categories = tf.read().split('\n')
     return spend_categories
 
 
