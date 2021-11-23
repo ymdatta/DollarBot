@@ -32,8 +32,8 @@ data_format = {
 
 category_options = {
     'add': 'Add',
-    'view': 'View',
-    'delete': 'Delete'
+    'delete': 'Delete',
+    'view': 'Show Categories'
 }
 
 # set of implemented commands and their description
@@ -46,7 +46,7 @@ commands = {
     'delete': 'Clear/Erase all your records',
     'edit': 'Edit/Change spending details',
     'budget': 'Add/Update/View/Delete budget',
-    'category': 'Add/Delete a custom category'
+    'category': 'Add/Delete/Show custom categories'
 }
 
 dateFormat = '%d-%b-%Y'
@@ -222,7 +222,7 @@ def calculate_total_spendings_for_category(queryResult, cat):
 
 def getSpendCategories():
     with open("categories.txt", "r") as tf:
-        spend_categories = tf.read().split('\n')
+        spend_categories = tf.read().split(',')
     return spend_categories
 
 

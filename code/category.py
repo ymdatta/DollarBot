@@ -29,8 +29,12 @@ def post_operation_selection(message, bot):
             markup.row_width = 2
             for c in helper.getSpendCategories():
                 markup.add(c)
-            msg = bot.reply_to(message, 'Please choose the category you want to delete', reply_markup=markup)
-            bot.register_next_step_handler(msg, category_delete, bot)
+            if len(helper.getSpendCategories()) <= 1:
+                bot.send_message(chat_id, 'Invalid', reply_markup=types.ReplyKeyboardRemove())
+                raise Exception("Number of categories cannot be zero.")
+            else:
+                msg = bot.reply_to(message, 'Please choose the category you want to delete', reply_markup=markup)
+                bot.register_next_step_handler(msg, category_delete, bot)
     except Exception as e:
         # print("hit exception")
         helper.throw_exception(e, message, bot, logging)
@@ -40,18 +44,17 @@ def category_add(message, bot):
     chat_id = message.chat.id
     category_name = message.text
     with open("categories.txt", "r") as tf:
-        lines = tf.read().split('\n')
+        lines = tf.read().split(',')
         tf.close()
     f = open("categories.txt", "a")   
     if lines == ['']:
         f.write(category_name)    
     else:
-        f.write(category_name + '\n')
+        f.write(',' + category_name)
     f.close()
     bot.send_message(chat_id, 'Add category "{}" successfully!'.format(category_name))
     
 def category_view(message, bot):
-    #print("I'm here")
     chat_id = message.chat.id
     with open("categories.txt", "r") as tf:
         lines = tf.read()
@@ -63,19 +66,23 @@ def category_delete(message, bot):
     category_name = message.text
     find_to_delete = False
     with open("categories.txt", "r") as tf:
-        categories = tf.read().split('\n')
+        categories = tf.read().split(',')
         tf.close()
     for category in categories:
+        if category == '':
+            categories.remove('')            
         if category == category_name:
             find_to_delete = True
             categories.remove(category)
-    
-    if find_to_delete:
+    if find_to_delete == False:
+        bot.send_message(chat_id, 'Cannot find the category QAQ', reply_markup=types.ReplyKeyboardRemove())
+    elif find_to_delete:
         f = open("categories.txt", "w")   
         for category in categories:
-            f.write(category + "\n")
+            if category == categories[0]:
+                f.write(category)
+            else:   
+                f.write("," + category)
         f.close()
         bot.send_message(chat_id, 'Delete category "{}" successfully!'.format(category_name))
-    else:
-        bot.send_message(chat_id, 'Invalid', reply_markup=types.ReplyKeyboardRemove())
-        raise Exception("Sorry I don't recognise this category \"{}\"!".format(category_name))
+        
