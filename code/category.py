@@ -22,8 +22,8 @@ def post_operation_selection(message, bot):
         if op == options['add']:
             msg = bot.reply_to(message, 'Please type the new category name')
             bot.register_next_step_handler(msg, category_add, bot)
-        #elif op == options['view']:
-        #    category_view.run(message, bot)
+        elif op == options['view']:
+            category_view(message, bot)
         #elif op == options['delete']:
         #    category_delete.run(message, bot)
     except Exception as e:
@@ -44,4 +44,12 @@ def category_add(message, bot):
         f.write("," + category_name)
     f.close()
     bot.send_message(chat_id, 'Add category "{}" successfully!'.format(category_name))
+    
+def category_view(message, bot):
+    #print("I'm here")
+    chat_id = message.chat.id
+    with open("categories.txt", "r") as tf:
+        lines = tf.read()
+        tf.close()
+    bot.send_message(chat_id, 'The categories are:\n{}.'.format(lines))
     
