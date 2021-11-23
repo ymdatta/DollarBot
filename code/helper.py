@@ -3,7 +3,6 @@ import json
 import os
 from datetime import datetime
 
-spend_categories = ['Food', 'Groceries', 'Utilities', 'Transport', 'Shopping', 'Miscellaneous']
 choices = ['Date', 'Category', 'Cost']
 spend_display_option = ['Day', 'Month']
 spend_estimate_option = ['Next day', 'Next month']
@@ -215,6 +214,8 @@ def calculate_total_spendings_for_category(queryResult, cat):
 
 
 def getSpendCategories():
+    with open("categories.txt", "r") as tf:
+        spend_categories = tf.read().split(',')
     return spend_categories
 
 
