@@ -15,23 +15,25 @@ Once the project is running(please follow the instructions given in the main REA
 
 Below you can see an example in text format:
 
-Sri Athithya Kruth, [20.10.21 20:33]
+Vraj Chokshi, [23.11.21 20:33]
 /display
 
-Sri Athithya Kruth, [20.10.21 20:33]
-Day
+Vraj Chokshi, [23.11.21 20:33]
+Month
 
-mydollarbot20102021, [20.10.21 20:33]
+mydollarbot20102021, [23.11.21 20:33]
 Hold on! Calculating...
 
-Sri Athithya Kruth, [20.10.21 20:53]
+Vraj Chokshi, [23.11.21 20:53]
 /history
 
-mydollarbot20102021, [20.10.21 20:53]
+mydollarbot20102021, [23.11.21 20:53]
 Here is your spending history : 
 DATE, CATEGORY, AMOUNT
 ----------------------
-20-Oct-2021 20:33,Transport,1022.0
-20-Oct-2021 20:33,Groceries,12.0
+01-Dec-2021,Transport,100.0
+23-Nov-2021 15:13,Groceries,500.0
 
 Along with the spending history, the histogram displaying spending of each month is plotted, which can help user to manage his/her expenses.
+
+![Test Image ](https://github.com/prithvish-doshi-17/MyDollarBot-BOTGo/blob/main/histo.png)
