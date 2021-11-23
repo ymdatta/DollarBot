@@ -30,6 +30,12 @@ data_format = {
     }
 }
 
+category_options = {
+    'add': 'Add',
+    'view': 'View',
+    'delete': 'Delete'
+}
+
 # set of implemented commands and their description
 commands = {
     'menu': 'Display this menu',
@@ -258,3 +264,7 @@ def getBudgetTypes():
 
 def getUpdateOptions():
     return update_options
+
+
+def getCategoryOptions():
+    return category_options
