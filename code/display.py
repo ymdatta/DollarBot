@@ -95,32 +95,41 @@ def calculate_spendings(queryResult):
 
 def display_budget_by_text(history, budget_data) -> str:
     query = datetime.now().today().strftime(helper.getMonthFormat())
-    # query all that contains today's date
+    # query all expense history that contains today's date
     queryResult = [value for index, value in enumerate(history) if str(query) in value]
     total_text = calculate_spendings(queryResult)
     budget_display = ""
     total_text_split = [line for line in total_text.split('\n') if line.strip() != '']
+
     if isinstance(budget_data, str):
+        # if budget is string denoting it is overall budget
         budget_val = float(budget_data)
         total_expense = 0
+        # sum all expense
         for expense in total_text_split:
             a = expense.split(' ')
             amount = a[1].replace("$", "")
             total_expense += float(amount)
+        # calculate the remaining budget
         remaining = budget_val - total_expense
+        # set the return message
         budget_display += "Overall Budget is: " + str(budget_val) + "\n----------------------\nCurrent remaining budget is " + str(
             remaining) + "\n"
     elif isinstance(budget_data, dict):
         budget_display += "Budget by Catergories is:\n"
         categ_remaining = {}
+        # categorize the budgets by their categories
         for key in budget_data.keys():
             budget_display += key + ":" + budget_data[key] + "\n"
             categ_remaining[key] = float(budget_data[key])
+        #  calculate the remaining budgets by categories
         for i in total_text_split:
+            # the expense text is in the format like "Food $100"
             a = i.split(' ')
             a[1] = a[1].replace("$", "")
             categ_remaining[a[0]] = categ_remaining[a[0]] - float(a[1]) if a[0] in categ_remaining else -float(a[1])
         budget_display += "----------------------\nCurrent remaining budget is: \n"
+        # show the remaining budgets
         for key in categ_remaining.keys():
             budget_display += key + ":" + str(categ_remaining[key]) + "\n"
     return budget_display
