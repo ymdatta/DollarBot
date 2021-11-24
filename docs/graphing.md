@@ -9,9 +9,8 @@ The code that implements this feature can be found [here](https://github.com/sak
 # Code Description
 ## Functions
 
-1. visualize(total_text):
-This is the main function used to implement the graphing part of display feature. This file is called from display.py, and takes the user expense as a string and creates a dictionary which in turn is fed as input matplotlib to create the graph
-
+1. visualize(total_text, budgetData):
+This is the main function used to implement the graphing part of display feature. This file is called from display.py. It takes two arguements- which **total_text** is the user history expense fo a user and **budgetData** is the user's budget settings. It creates a graph into the directory which is the return value of display.py.
 2. addlabels(x, y):
 This function is used to add the labels to the graph. It takes the expense values and adds the values inside the bar graph for each expense type
 
