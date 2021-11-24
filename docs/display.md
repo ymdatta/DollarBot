@@ -18,6 +18,9 @@ It takes 2 arguments for processing - **message** which is the message from the 
 3. calculate_spendings(queryResult):
 Takes 1 argument for processing - **queryResult** which is the query result from the display total function in the same file. It parses the query result and turns it into a form suitable for display on the UI by the user.
 
+4. display_budget_by_text(history, budget_data) -> str:
+It takes 2 arguments for processing - **history** which is the history expense of a user, and **budget_data** is the budget setting of a user. It collects the budget setting and calculates the remaining budget so far.
+
 # How to run this feature?
 Sri Athithya Kruth, [20.10.21 20:33]
 /display
