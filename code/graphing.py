@@ -44,7 +44,7 @@ def visualize(total_text, budgetData):
             if val in duplicate:
                 # if duplicate, move line
                 plotVal += 2*duplicate[val]
-            lines.append(plt.axhline(y=plotVal, color=colors[colorCnt], linestyle="-"))
+            lines.append(plt.axhline(y=plotVal, color=colors[colorCnt % len(colors)], linestyle="-"))
             duplicate[val] = duplicate[val] + 1 if val in duplicate else 1
             labels.append(key)
             colorCnt += 1
