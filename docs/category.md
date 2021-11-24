@@ -36,7 +36,7 @@ This is the main function used to implement the category feature. It pop ups a m
 Once the project is running(please follow the instructions given in the main README.md for this), please type /category into the telegram bot.
 
 Below you can see an example in text format:
-
+-Add
 Alex Chao, [2021/11/23 10:12]
 /category
 
@@ -57,3 +57,38 @@ Restaurant
 DollarBot, [2021/11/23 10:12]
 Add category "Restaurant" successfully!
 
+-Delete
+Alex Chao, [2021/11/23 10:15]
+/category
+
+DollarBot, [2021/11/23 10:15]
+[In reply to Alex Chao]
+Select Operation
+
+Alex Chao, [2021/11/23 10:15]
+Delete
+
+DollarBot, [2021/11/23 10:15]
+[In reply to Alex Chao]
+Please choose the category you want to delete
+
+Alex Chao, [2021/11/23 10:15]
+Restaurant
+
+DollarBot, [2021/11/23 10:15]
+Delete category "Restaurant" successfully!
+
+-Show categories
+Alex Chao, [2021/11/23 10:17]
+/category
+
+DollarBot, [2021/11/23 10:17]
+[In reply to Alex Chao]
+Select Operation
+
+Alex Chao, [2021/11/23 10:17]
+Show Categories
+
+DollarBot, [2021/11/23 10:17]
+The categories are:
+Food,Groceries,Utilities,Transport,Shopping,Miscellaneous
