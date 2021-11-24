@@ -12,7 +12,7 @@ Currently we have the following expense categories set by default:
 The user can choose to add/delete/show categories, and after that, add the cost with custom category to the expense tracker.
 
 # Location of Code for this Feature
-The code that implements this feature can be found [here](https://github.com/sak007/MyDollarBot-BOTGo/blob/main/code/category.py)
+The code that implements this feature can be found [here](https://github.com/prithvish-doshi-17/MyDollarBot-BOTGo/blob/addCategories/code/category.py)
 
 # Code Description
 ## Functions
@@ -32,3 +32,28 @@ This is the main function used to implement the category feature. It pop ups a m
 5. category_view(message, bot):
  It takes 2 arguments for processing - **message** which is the message from the user, and **bot** which is the telegram bot object from the post_operation_selection(message, bot): function in the category.py file. It read the file categories.txt and output the text in chat room.
  
+# How to run this feature?
+Once the project is running(please follow the instructions given in the main README.md for this), please type /category into the telegram bot.
+
+Below you can see an example in text format:
+
+Alex Chao, [2021/11/23 10:12]
+/category
+
+DollarBot, [2021/11/23 10:12]
+[In reply to Alex Chao]
+Select Operation
+
+Alex Chao, [2021/11/23 10:12]
+Add
+
+DollarBot, [2021/11/23 10:12]
+[In reply to Alex Chao]
+Please type the new category name
+
+Alex Chao, [2021/11/23 10:12]
+Restaurant
+
+DollarBot, [2021/11/23 10:12]
+Add category "Restaurant" successfully!
+
