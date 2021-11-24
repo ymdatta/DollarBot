@@ -37,9 +37,7 @@ Once the project is running(please follow the instructions given in the main REA
 
 Below you can see an example in text format:
 
-####Add
-
-
+#### Add
 Alex Chao, [2021/11/23 10:12]
 /category
 
@@ -60,7 +58,7 @@ Restaurant
 DollarBot, [2021/11/23 10:12]
 Add category "Restaurant" successfully!
 
-####Delete
+#### Delete
 Alex Chao, [2021/11/23 10:15]
 /category
 
@@ -81,7 +79,7 @@ Restaurant
 DollarBot, [2021/11/23 10:15]
 Delete category "Restaurant" successfully!
 
-####Show categories
+#### Show categories
 Alex Chao, [2021/11/23 10:17]
 /category
 
