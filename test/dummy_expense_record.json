@@ -38,7 +38,50 @@
         "28-Oct-2021 15:31,Utilities,6.0",
         "28-Oct-2021 15:38,Food,10.0",
         "28-Oct-2021 15:40,Groceries,80.0"  
-    ]
+    ],
+    "1075979006": {
+      "data": [
+        "28-Nov-2021 15:27,Food,2.3",
+        "28-Nov-2021 15:28,Food,15.75",
+        "28-Nov-2021 15:28,Food,9.99",
+        "28-Nov-2021 15:28,Groceries,20.0",
+        "28-Nov-2021 15:28,Utilities,10.0",
+        "28-Nov-2021 15:28,Transport,7.28",
+        "28-Nov-2021 15:28,Transport,25.99",
+        "28-Nov-2021 15:31,Utilities,6.0",
+        "28-Nov-2021 15:38,Food,10.0",
+        "28-Nov-2021 15:40,Groceries,80.0"
+      ],
+      "budget": {
+        "overall": "1000.0",
+        "category": null
+      }
+    },
+    "1075979007": {
+      "data": [
+        "28-Nov-2021 15:27,Food,2.3",
+        "28-Nov-2021 15:28,Food,15.75",
+        "28-Nov-2021 15:28,Food,9.99",
+        "28-Nov-2021 15:28,Groceries,20.0",
+        "28-Nov-2021 15:28,Utilities,10.0",
+        "28-Nov-2021 15:28,Transport,7.28",
+        "28-Nov-2021 15:28,Transport,25.99",
+        "28-Nov-2021 15:31,Utilities,6.0",
+        "28-Nov-2021 15:38,Food,10.0",
+        "28-Nov-2021 15:40,Groceries,80.0"
+    ],
+      "budget": {
+        "overall": null,
+        "category": {
+          "Food": "100.0",
+          "Groceries": "150.0",
+          "Utilities": "180.0",
+          "Transport": "20.0",
+          "Shopping": "180.0",
+          "Miscellaneous": "80.0"
+        }
+      }
+    }
 }
 
 
