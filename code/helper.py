@@ -5,6 +5,7 @@ from datetime import datetime
 
 spend_categories = ['Food', 'Groceries', 'Utilities', 'Transport', 'Shopping', 'Miscellaneous']
 choices = ['Date', 'Category', 'Cost']
+plot = ['Bar with budget', 'Pie','Bar without budget']
 spend_display_option = ['Day', 'Month']
 spend_estimate_option = ['Next day', 'Next month']
 update_options = {
@@ -216,7 +217,8 @@ def calculate_total_spendings_for_category(queryResult, cat):
 
 def getSpendCategories():
     return spend_categories
-
+def getplot():
+    return plot
 
 def getSpendDisplayOptions():
     return spend_display_option
