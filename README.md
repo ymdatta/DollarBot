@@ -16,7 +16,7 @@
 [![GitHub issues](https://img.shields.io/github/issues/prithvish-doshi-17/MyDollarBot-BOTGo)](https://github.com/prithvish-doshi-17/MyDollarBot-BOTGo/issues?q=is%3Aopen+is%3Aissue)
 [![GitHub closed issues](https://img.shields.io/github/issues-closed/prithvish-doshi-17/MyDollarBot-BOTGo)](https://github.com/prithvish-doshi-17/MyDollarBot-BOTGo/issues?q=is%3Aissue+is%3Aclosed)
 ![Lines of code](https://img.shields.io/tokei/lines/github/prithvish-doshi-17/MyDollarBot-BOTGo)
-
+![Fork](https://img.shields.io/github/forks/deekay2310/MyDollarBot?style=social)
 <hr>
 
 ## About TrackMyDollar
