@@ -37,6 +37,9 @@ This functions returns the time format used in the bot.
 10. def getMonthFormat():
 This functions returns the month format used in the bot. 
 
+11. def getplot():
+This functions returns the different plots used in the bot. These are defined the same file.
+
 # How to run this feature?
 Once the project is running(please follow the instructions given in the main README.md for this), please type /add into the telegram bot.
 
