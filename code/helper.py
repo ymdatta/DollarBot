@@ -3,7 +3,6 @@ import json
 import os
 from datetime import datetime
 
-spend_categories = ['Food', 'Groceries', 'Utilities', 'Transport', 'Shopping', 'Miscellaneous']
 choices = ['Date', 'Category', 'Cost']
 plot = ['Bar with budget', 'Pie','Bar without budget']
 spend_display_option = ['Day', 'Month']
@@ -32,6 +31,12 @@ data_format = {
     }
 }
 
+category_options = {
+    'add': 'Add',
+    'delete': 'Delete',
+    'view': 'Show Categories'
+}
+
 # set of implemented commands and their description
 commands = {
     'menu': 'Display this menu',
@@ -41,7 +46,8 @@ commands = {
     'history': 'Display spending history',
     'delete': 'Clear/Erase all your records',
     'edit': 'Edit/Change spending details',
-    'budget': 'Add/Update/View/Delete budget'
+    'budget': 'Add/Update/View/Delete budget',
+    'category': 'Add/Delete/Show custom categories'
 }
 
 dateFormat = '%d-%b-%Y'
@@ -216,6 +222,8 @@ def calculate_total_spendings_for_category(queryResult, cat):
 
 
 def getSpendCategories():
+    with open("categories.txt", "r") as tf:
+        spend_categories = tf.read().split(',')
     return spend_categories
 def getplot():
     return plot
@@ -258,3 +266,7 @@ def getBudgetTypes():
 
 def getUpdateOptions():
     return update_options
+
+
+def getCategoryOptions():
+    return category_options
