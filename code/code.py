@@ -11,6 +11,7 @@ import estimate
 import delete
 import add
 import budget
+import category
 import add_recurring
 from datetime import datetime
 from jproperties import Properties
@@ -101,6 +102,10 @@ def command_delete(message):
 @bot.message_handler(commands=['budget'])
 def command_budget(message):
     budget.run(message, bot)
+
+@bot.message_handler(commands=['category'])
+def command_category(message):
+    category.run(message, bot)
 
 
 # not used
