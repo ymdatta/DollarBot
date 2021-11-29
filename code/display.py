@@ -94,7 +94,7 @@ def plot_total(message, bot):
        bot.send_photo(chat_id, photo=open('expend.png', 'rb'))
        os.remove('expend.png')
      else:
-       graphing.viz(total)
+       graphing.vis(total)
        bot.send_photo(chat_id, photo=open('pie.png', 'rb'))
        os.remove('pie.png')
 def calculate_spendings(queryResult):
