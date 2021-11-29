@@ -41,6 +41,7 @@ category_options = {
 commands = {
     'menu': 'Display this menu',
     'add': 'Record/Add a new spending',
+    'add_recurring': 'Add a new recurring expense for future months',
     'display': 'Show sum of expenditure for the current day/month',
     'estimate': 'Show an estimate of expenditure for the next day/month',
     'history': 'Display spending history',
