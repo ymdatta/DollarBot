@@ -11,7 +11,7 @@ import estimate
 import delete
 import add
 import budget
-import category
+import add_recurring
 from datetime import datetime
 from jproperties import Properties
 
@@ -56,11 +56,18 @@ def start_and_menu_command(m):
 
 
 # defines how the /new command has to be handled/processed
+# function to add an expense
 @bot.message_handler(commands=['add'])
 def command_add(message):
     add.run(message, bot)
 
 
+# function to add recurring expenses
+@bot.message_handler(commands=['add_recurring'])
+def command_add_recurring(message):
+    add_recurring.run(message, bot)
+    
+    
 # function to fetch expenditure history of the user
 @bot.message_handler(commands=['history'])
 def command_history(message):
@@ -95,10 +102,6 @@ def command_delete(message):
 def command_budget(message):
     budget.run(message, bot)
 
-# handles "/category" command
-@bot.message_handler(commands=['category'])
-def command_category(message):
-    category.run(message, bot)
 
 # not used
 def addUserHistory(chat_id, user_record):
