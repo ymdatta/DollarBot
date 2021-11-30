@@ -21,7 +21,7 @@
 
 ## About TrackMyDollar
 
-TrackMyDollar is an easy-to-use Telegram Bot that assists you in recording your daily expenses on a local system without any hassle.  
+TrackMyDollar is an easy-to-use Telegram Bot that assists you in recording your daily expenses on a local system without any hassle 
 With simple commands, this bot allows you to:
 - Add/Record a new spending
 - Show the sum of your expenditure for the current day/month
