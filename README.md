@@ -29,38 +29,23 @@ With simple commands, this bot allows you to:
 - Clear/Erase all your records
 - Edit/Change any spending details if you wish to
 
-## What's new? (Delta, New Features)
 
-- Code Refactoring: Modularization
-  The codebase was inside a single file containing more than 1000 lines of code when we began our work. To make it modular, easier to understand, and easier to contribute to, we have performed a complete modularization of the codebase into 13 separate files, modularizing for functionality. 
+## What's new? (From Phase 2 to Phase 3)
 
-- Budgeting: Overall
-  We have introduced a new feature to allow users to create a budget to track their expenses across categories. Using this, after adding a budget, whenever the user adds a new expense, this gets deducted from the budget and the remaining amount is shown to the user.
-
-- Budgeting: Category-wise
-  We have introduced a new categorical budget feature to allow users to create a budget to track their expenses for each categories they require it for. Using this, after adding a budget for a particular category, whenever the user adds a new expense to that category, this gets deducted from the budget and the remaining amount is shown to the user for that budget category.
+- Recurring expense:
+  Add a recurring expense that adds a certain amount every month to the user's spending, for any given category.
   
-- Display: Bar graphs
-  This features allows for a bar graph showing the expenditures made across categories through a bar graph. This allows users to understand their better. 
+- Custom category:
+  User can add a new category and delete an existing category as per the needs
+  
+- Budgeting:
+  User can see the budget value for the total expense and/or for each of the existing categories in the /display function
+  
+- Better visualization:
+  Added pie charts, bar graphs with and without budget lines for the user to have a look at the spending history in a better manner
+  Added bar graph in the /history command to see spending across different categories
+  User can see the daily and monthly expenses for spending history
 
-- Edit Feature: Improved to show dates for deletion
-  The edit feature now shows a list of expenses and dates for the user to choose from and delete. The user can choose the ones they would like to delete instead of manually typing in the date of the expense.
-
-- Expense Estimator
-  To allow for user to estimate their expenses for the future, we have implemented a estimator which employs the user's historical data to predict their next month's expenses. 
-
-- Code Coverage: Test Cases
-  The project only had a single test case when we took over the project. From there, we have added test cases for both existing and new features. Our code coverage now stands at 90%, with over 110+ test cases.
-
-## Work for the upcoming iteration
-
-- Display: Add pie charts
-- New Feature: Custom Categories -  Lets the user add their own categories which can then be used to add expenses.
-- Display: Add budgets inside display function's output so user can see budget alongside spending.
-- Recurring expense: Add a recurring expense that adds a certain amount every week to the user's spending. 
-- Web hosting: host the project on Heroku or any other cloud provider for high availability.
-- Add: Add calendar in UI to allow user to choose dates to add expenses.
-- UI beautification: beautify the UI and the messages sent to the user to improve user experience and readability.
 
 ## Demo
 
@@ -122,7 +107,8 @@ You can download and install the Telegram desktop application for your system fr
 
 <hr>
 <p>Title:'Track My Dollar'</p>
-<p>Version: '1.5'</p>
+<p>Version: '3.1'</p>
 <p>Description: 'An easy to use Telegram Bot to track everyday expenses'</p>
-<p>Authors(Iteration 1.5):'Athithya, Subramanian, Ashok, Zunaid, Rithik'</p>
+<p>Authors(Iteration 3):'Vraj, Alex, Leo, Prithvish, Seeya'</p>
+<p>Authors(Iteration 2):'Athithya, Subramanian, Ashok, Zunaid, Rithik'</p>
 <p>Authors(Iteration 1):'Dev, Prakruthi, Radhika, Rohan, Sunidhi'</p>
