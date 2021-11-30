@@ -62,4 +62,9 @@ The problem of overlapping plot was solve by adding plt.clf() code in every plot
 The name was changed to :My Dollar Bot, however application name was older one.
 Updated the codes for user experience.
  
+## 13) Add testcase of category.py
 
+Finished the file test_category.py.
+Check the code coverage by the following command:
+coverage run -m pytest test/
+coverage report
