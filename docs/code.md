@@ -2,7 +2,7 @@
 code.py is the main file from where calls to the corresponding .py files for all features are sent. It contains a number of endpoints which redirect to function calls in the corresponding files. 
 
 # Location of Code for this Feature
-The code that implements this feature can be found [here](https://github.com/sak007/MyDollarBot-BOTGo/blob/main/code/code.py)
+The code that implements this feature can be found [here](https://github.com/prithvish-doshi-17/MyDollarBot-BOTGo/blob/main/code/code.py)
 
 # Code Description
 ## Functions
@@ -19,16 +19,19 @@ Prints out the the main menu displaying the features that the bot offers and the
 4. command_add(message)
 Takes 1 argument **message** which contains the message from the user along with the chat ID of the user chat. It then calls add.py to run to execute the add functionality. Commands used to run this: commands=['add']
 
-5. command_history(message):
+5. command_add_recurring(message)
+Takes 1 argument **message** which contains the message from the user along with the chat ID of the user chat. It then calls add_recurring.py to run to execute the functionality. Commands used to run this: commands=['add_recurring']
+
+6. command_history(message):
 Takes 1 argument **message** which contains the message from the user along with the chat ID of the user chat. It then calls history.py to run to execute the add functionality. Commands used to run this: commands=['history']
 
-6. command_edit(message):
+7. command_edit(message):
 Takes 1 argument **message** which contains the message from the user along with the chat ID of the user chat. It then calls edit.py to run to execute the add functionality. Commands used to run this: commands=['edit']
 
-7. command_display(message):
+8. command_display(message):
 Takes 1 argument **message** which contains the message from the user along with the chat ID of the user chat. It then calls display.py to run to execute the add functionality. Commands used to run this: commands=['display']
 
-8. command_delete(message):
+9. command_delete(message):
 Takes 1 argument **message** which contains the message from the user along with the chat ID of the user chat. It then calls delete.py to run to execute the add functionality. Commands used to run this: commands=['display']
 
 # How to run this feature?
