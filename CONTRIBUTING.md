@@ -4,7 +4,7 @@ Follow the set of guidelines below to contribute to MyDollarBot-BOTGo!
 
 ## Code of Conduct
 
-By participating, you are expected to uphold this code. Please report unacceptable behavior to svenka25@ncsu.edu.
+By participating, you are expected to uphold this code. Please report unacceptable behavior to pdoshi@ncsu.edu.
 
 Prerequistes required before starting this project
 
