@@ -12,14 +12,14 @@ def run(message, bot):
     chat_id = message.chat.id
     history = helper.getUserHistory(chat_id)
     if history is None:
-        bot.send_message(chat_id, "Oops! Looks like you do not have any spending records!")
+        bot.send_message(chat_id, "Sorry, there are no records of the spending!")
     else:
         markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
         markup.row_width = 2
         for mode in helper.getSpendDisplayOptions():
             markup.add(mode)
         # markup.add('Day', 'Month')
-        msg = bot.reply_to(message, 'Please select a category to see the total expense', reply_markup=markup)
+        msg = bot.reply_to(message, 'Please select a category to see details', reply_markup=markup)
         bot.register_next_step_handler(msg, display_total, bot)
 
 total=""
