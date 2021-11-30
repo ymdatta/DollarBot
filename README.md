@@ -50,6 +50,9 @@ With simple commands, this bot allows you to:
   Added bar graph in the /history command to see spending across different categories
   User can see the daily and monthly expenses for spending history
 
+## What more can be done?
+Please refer to the issue list available [here](https://github.com/prithvish-doshi-17/MyDollarBot-BOTGo/issues) to see what more can be done to make MyDollarBot better. Please refer to the MyDollarBot project present [here](https://github.com/prithvish-doshi-17/MyDollarBot-BOTGo/projects) to have a look at the tasks to be done, tasks currently in progress and tasks already done.
+
 
 ## Demo
 
