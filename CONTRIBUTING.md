@@ -48,6 +48,9 @@ Include screenshots and animated GIFs which show you following the described ste
 
 If the problem is related to performance or memory, include a CPU profile capture with your report.
 
+## Suggesting Enhancements
+Any suggesting enhancements like adding new features or imporving existing functionalities, etc can done by following the below guidelines. They help maintainers understand your improvement. The template- this template is to be filled to add suggestions. These can include the steps that you imagine you would take if the feature you're requesting existed.
+
 ## Pull Requests
 
 The process described here has several goals:
