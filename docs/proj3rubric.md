@@ -13,7 +13,7 @@
 |1|issues are being closed |1|Please see [here](https://github.com/prithvish-doshi-17/MyDollarBot-BOTGo/issues?q=is%3Aissue+is%3Aclosed)|
 |.5|issues are discussed before they are closed |0.5|Every [closed issue](https://github.com/prithvish-doshi-17/MyDollarBot-BOTGo/issues?q=is%3Aissue+is%3Aclosed) has a comment with the summary|
 |.5|Use of syntax checkers |0.5|Use of Flake8 in [travis.yml](https://github.com/prithvish-doshi-17/MyDollarBot-BOTGo/blob/main/.travis.yml)|
-|1|Issues reports: there are many  |1|[Issue report](https://github.com/prithvish-doshi-17/MyDollarBot-BOTGo/blob/main/docs/issue%20report.md)|
+|1|Issues reports: there are many  |1|[Issue report](https://github.com/prithvish-doshi-17/MyDollarBot-BOTGo/blob/main/docs/issue%20report.md) and [here](https://github.com/prithvish-doshi-17/MyDollarBot-BOTGo/projects)|
 |.5|Use of code formatters. |0.5|Config files in GitHub|
 |.5|Use of style checkers |0.5|Use of Flake8 in [travis.yml](https://github.com/prithvish-doshi-17/MyDollarBot-BOTGo/blob/main/.travis.yml)|
 |.5|Docs: short video, animated, hosted on your repo. That convinces people why they want to work on your code. |0.5|Evidence in [Readme](https://github.com/prithvish-doshi-17/MyDollarBot-BOTGo/blob/master/README.md)|
