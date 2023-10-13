@@ -33,8 +33,8 @@ By participating, you are expected to uphold this code. Please report unacceptab
 Pre-requisites required before starting this project
 1. Have a good understanding of Python Programming Language
 2. Know how Telegram Bots work.
-2. Have a good understanding of common coding practices.
-3. If you like to contribute, please check the status of the repo, whether it's still being maintained or not.
+3. Have a good understanding of common coding practices.
+4. If you like to contribute, please check the status of the repo, whether it's still being maintained or not.
     (If you have any doubts, please reach out to the maintainers before creating a branch)
 
 ### Fork and Clone the Repository
@@ -100,8 +100,8 @@ Any suggesting enhancements like adding new features or improving existing funct
 1. Code of Conduct: Please ensure that your interactions and contributions align with our [Code of Conduct](#code-of-conduct)
 2. Check your code from your end, to check whether your changes directly address the intended feature/issue.
 3. Once ready, on GitHub, navigate to your fork of the repository and click the "New Pull Request" button. Fill in the details, briefly explaining what the PR does and if, how it addresses the issue or feature.
-2. Your PR then will be reviewed by at least one project maintainer. Please be prepared to respond to any feedback or requests for changes. You might have to make adjustments and push additional commits as needed.
-3. License: By contributing to DollarBot, you agree that your contributions will be licensed under the project's [LICENSE](LICENSE.md).
+4. Your PR then will be reviewed by at least one project maintainer. Please be prepared to respond to any feedback or requests for changes. You might have to make adjustments and push additional commits as needed.
+5. License: By contributing to DollarBot, you agree that your contributions will be licensed under the project's [LICENSE](LICENSE.md).
 
 ### Pull Request Template
 (UNDER CONSTRUCTION)
