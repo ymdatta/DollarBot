@@ -3,29 +3,30 @@ import logging
 from telebot import types
 from datetime import datetime
 
-
 option = {}
 
-
+# Main run function
 def run(message, bot):
     helper.read_json()
     chat_id = message.chat.id
     option.pop(chat_id, None)  # remove temp choice
     markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
     markup.row_width = 2
+    print("Categories:")
     for c in helper.getSpendCategories():
+        print("\t"+c)
         markup.add(c)
     msg = bot.reply_to(message, 'Select Category', reply_markup=markup)
     bot.register_next_step_handler(msg, post_category_selection, bot)
 
-
+# Contains step to run after the category is selected
 def post_category_selection(message, bot):
     try:
         chat_id = message.chat.id
         selected_category = message.text
         if selected_category not in helper.getSpendCategories():
             bot.send_message(chat_id, 'Invalid', reply_markup=types.ReplyKeyboardRemove())
-            raise Exception("Sorry I don't recognise this category \"{}\"!".format(selected_category))
+            raise Exception("Sorry I don't recognize this category \"{}\"!".format(selected_category))
 
         option[chat_id] = selected_category
         message = bot.send_message(chat_id, 'How much did you spend on {}? \n(Enter numeric values only)'.format(str(option[chat_id])))
@@ -41,7 +42,7 @@ def post_category_selection(message, bot):
         bot.send_message(chat_id, 'Please select a menu option from below:')
         bot.send_message(chat_id, display_text)
 
-
+# Contains step to run after the amount is inserted
 def post_amount_input(message, bot, selected_category):
     try:
         chat_id = message.chat.id
@@ -59,7 +60,7 @@ def post_amount_input(message, bot, selected_category):
         logging.exception(str(e))
         bot.reply_to(message, 'Oh no. ' + str(e))
 
-
+# Contains step to on user record addition
 def add_user_record(chat_id, record_to_be_added):
     user_list = helper.read_json()
     if str(chat_id) not in user_list:

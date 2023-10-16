@@ -48,11 +48,11 @@ def start_and_menu_command(m):
     global user_list
     chat_id = m.chat.id
 
-    text_intro = "Welcome to MyDollarBot - a simple solution to track your expenses and manage them ! \n Please select the options from below for me to assist you with: \n\n"
+    text_intro = "Welcome to MyDollarBot - a simple solution to track your expenses and manage them ! \nPlease select the options from below for me to assist you with: \n\n"
     commands = helper.getCommands()
     for c in commands:  # generate help text out of the commands dictionary defined at the top
         text_intro += "/" + c + ": "
-        text_intro += commands[c] + "\n\n"
+        text_intro += commands[c] + "\n"
     bot.send_message(chat_id, text_intro)
     return True
 
@@ -99,15 +99,15 @@ def command_estimate(message):
 def command_delete(message):
     delete.run(message, bot)
 
-
+# handles "/budget" command
 @bot.message_handler(commands=['budget'])
 def command_budget(message):
     budget.run(message, bot)
 
+# handles "/category" command
 @bot.message_handler(commands=['category'])
 def command_category(message):
     category.run(message, bot)
-
 
 # not used
 def addUserHistory(chat_id, user_record):
@@ -122,7 +122,7 @@ def addUserHistory(chat_id, user_record):
 def command_display(message):
     display.run(message, bot)
 
-
+# The main function
 def main():
     try:
         bot.polling(none_stop=True)
