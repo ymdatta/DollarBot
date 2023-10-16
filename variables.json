@@ -1,0 +1,49 @@
+{
+    "variables" : {
+        "spend_categories" : ["Food","Groceries","Utilities","Transport","Shopping","Miscellaneous"],
+        "choices" : ["Date", "Category", "Cost"],
+        "plot" : ["Bar with budget", "Pie","Bar without budget"],
+        "spend_display_option" : ["Day", "Month"],
+        "spend_estimate_option" : ["Next day", "Next month"],
+        "update_options" : {
+            "continue": "Continue",
+            "exit": "Exit"
+        },
+        "budget_options" : {
+            "update": "Add/Update",
+            "view": "View",
+            "delete": "Delete"
+        },
+        "budget_types" : {
+            "overall": "Overall Budget",
+            "category": "Category-Wise Budget"
+        },
+        "data_format" : {
+            "data": [],
+            "budget": {
+                "overall": null,
+                "category": null
+            }
+        },
+        "category_options" : {
+            "add": "Add",
+            "delete": "Delete",
+            "view": "Show Categories"
+        },
+        "commands" : {
+            "menu": "Display this menu",
+            "add": "Record/Add a new spending",
+            "add_recurring": "Add a new recurring expense",
+            "display": "Show sum of expenditure",
+            "estimate": "Show an estimate of expenditure",
+            "history": "Display spending history",
+            "delete": "Clear/Erase all your records",
+            "edit": "Edit/Change spending details",
+            "budget": "Add/Update/View/Delete budget",
+            "category": "Add/Delete/Show custom categories"
+        },
+        "dateFormat" : "%d-%b-%Y",
+        "timeFormat" : "%H:%M",
+        "monthFormat" : "%b-%Y"
+    }
+}
