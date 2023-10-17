@@ -96,8 +96,6 @@ def getOverallBudget(chatId):
         return None
     return data['budget']['overall']
 
-<<<<<<< HEAD
-
 def getUserReminder(chat_id):
     data = getUserData(chat_id)
     if data is not None:
@@ -105,9 +103,7 @@ def getUserReminder(chat_id):
     return None
 
 
-=======
 # function to get category based budget
->>>>>>> 98725df (Decouples variables from helper.py. Fixes #3)
 def getCategoryBudget(chatId):
     data = getUserData(chatId)
     if data is None:
