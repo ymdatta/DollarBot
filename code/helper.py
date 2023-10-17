@@ -202,8 +202,6 @@ def getSpendCategories():
     #     spend_categories = tf.read().split(',')
     return spend_categories
 
-getSpendCategories()
-
 # function to get plot
 def getplot():
     return plot

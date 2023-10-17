@@ -33,7 +33,7 @@ option = {}
 # Define listener for requests by user
 def listener(user_requests):
     for req in user_requests:
-        if(req.content_type == 'text'):
+        if (req.content_type == 'text'):
             print("{} name:{} chat_id:{} \nmessage: {}\n".format(str(datetime.now()), str(req.chat.first_name), str(req.chat.id), str(req.text)))
 
 
@@ -67,8 +67,8 @@ def command_add(message):
 @bot.message_handler(commands=['add_recurring'])
 def command_add_recurring(message):
     add_recurring.run(message, bot)
-    
-    
+
+
 # function to fetch expenditure history of the user
 @bot.message_handler(commands=['history'])
 def command_history(message):
@@ -111,7 +111,7 @@ def command_category(message):
 # not used
 def addUserHistory(chat_id, user_record):
     global user_list
-    if(not(str(chat_id) in user_list)):
+    if (not (str(chat_id) in user_list)):
         user_list[str(chat_id)] = []
     user_list[str(chat_id)].append(user_record)
     return user_list

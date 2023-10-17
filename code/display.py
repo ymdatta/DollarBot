@@ -22,8 +22,9 @@ def run(message, bot):
         msg = bot.reply_to(message, 'Please select a category to see details', reply_markup=markup)
         bot.register_next_step_handler(msg, display_total, bot)
 
-total=""
-bud=""
+
+total = ""
+bud = ""
 def display_total(message, bot):
     global total
     global bud
@@ -60,8 +61,8 @@ def display_total(message, bot):
             queryResult = [value for index, value in enumerate(history) if str(query) in value]
 
         total_text = calculate_spendings(queryResult)
-        total=total_text
-        bud=budgetData
+        total = total_text
+        bud = budgetData
         spending_text = display_budget_by_text(history, budgetData)
         if len(total_text) == 0:
             spending_text += "----------------------\nYou have no spendings for {}!".format(DayWeekMonth)
@@ -73,8 +74,8 @@ def display_total(message, bot):
             markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
             markup.row_width = 2
             for plot in helper.getplot():
-               markup.add(plot)
-              # markup.add('Day', 'Month')
+                markup.add(plot)
+                # markup.add('Day', 'Month')
             msg = bot.reply_to(message, 'Please select a plot to see the total expense', reply_markup=markup)
             bot.register_next_step_handler(msg, plot_total, bot)
     except Exception as e:
@@ -82,21 +83,21 @@ def display_total(message, bot):
         bot.reply_to(message, str(e))
 
 def plot_total(message, bot):
-     chat_id = message.chat.id
-     pyi=message.text
-     if pyi == 'Bar with budget':
-       
-       graphing.visualize(total,bud)
-       bot.send_photo(chat_id, photo=open('expenditure.png', 'rb'))
-       os.remove('expenditure.png')
-     elif pyi == 'Bar without budget': 
-       graphing.viz(total)
-       bot.send_photo(chat_id, photo=open('expend.png', 'rb'))
-       os.remove('expend.png')
-     else:
-       graphing.vis(total)
-       bot.send_photo(chat_id, photo=open('pie.png', 'rb'))
-       os.remove('pie.png')
+    chat_id = message.chat.id
+    pyi=message.text
+    if pyi == 'Bar with budget':
+        graphing.visualize(total,bud)
+        bot.send_photo(chat_id, photo = open('expenditure.png', 'rb'))
+        os.remove('expenditure.png')
+    elif pyi == 'Bar without budget': 
+        graphing.viz(total)
+        bot.send_photo(chat_id, photo = open('expend.png', 'rb'))
+        os.remove('expend.png')
+    else:
+        graphing.vis(total)
+        bot.send_photo(chat_id, photo=open('pie.png', 'rb'))
+        os.remove('pie.png')
+
 def calculate_spendings(queryResult):
     total_dict = {}
 

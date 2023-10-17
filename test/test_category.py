@@ -18,7 +18,7 @@ def test_run(mock_telebot, mocker):
     mc.reply_to.return_value = True
     message = create_message("hello from test run!")
     category.run(message, mc)
-    assert(mc.reply_to.called_with(ANY, 'Select Operation', ANY))
+    assert (mc.reply_to.called_with(ANY, 'Select Operation', ANY))
 
 @patch('telebot.telebot')
 def test_post_operation_selection_working(mock_telebot, mocker):
@@ -27,7 +27,7 @@ def test_post_operation_selection_working(mock_telebot, mocker):
 
     message = create_message("hello from testing!")
     category.post_operation_selection(message, mc)
-    assert(mc.send_message.called)
+    assert (mc.send_message.called)
 
 @patch('telebot.telebot')
 def test_post_operation_selection_noMatchingCategory(mock_telebot, mocker):
@@ -45,4 +45,3 @@ def create_message(text):
     params = {'messagebody': text}
     chat = types.User(11, False, 'test')
     return types.Message(1, None, None, chat, 'text', params, "")
-

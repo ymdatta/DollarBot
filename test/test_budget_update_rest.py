@@ -57,7 +57,7 @@ def test_post_overall_amount_input_nonworking(mock_telebot, mocker):
     message = create_message("hello from testing")
     budget_update.post_overall_amount_input(message, mc)
 
-    assert(budget_update.helper.throw_exception.called)
+    assert (budget_update.helper.throw_exception.called)
 
 
 @patch('telebot.telebot')
@@ -87,7 +87,7 @@ def test_post_category_selection_category_not_found(mock_telebot, mocker):
     budget_update.post_category_selection(message, mc)
 
     mc.send_message.assert_called_with(11, 'Invalid', reply_markup=ANY)
-    assert(budget_update.helper.throw_exception.called)
+    assert (budget_update.helper.throw_exception.called)
 
 
 @patch('telebot.telebot')
@@ -104,7 +104,7 @@ def test_post_category_selection_category_wise_case(mock_telebot, mocker):
     budget_update.post_category_selection(message, mc)
 
     mc.send_message.assert_called_with(11, ANY)
-    assert(budget_update.helper.getCategoryBudgetByCategory.called)
+    assert (budget_update.helper.getCategoryBudgetByCategory.called)
 
 
 @patch('telebot.telebot')
@@ -148,7 +148,7 @@ def test_post_category_amount_input_nonworking_case(mock_telebot, mocker):
     message = create_message("Hello from testing")
     budget_update.post_category_amount_input(message, mc, "Food")
 
-    assert(budget_update.helper.throw_exception.called)
+    assert (budget_update.helper.throw_exception.called)
 
 
 @patch('telebot.telebot')
