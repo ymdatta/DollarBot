@@ -134,7 +134,7 @@ def send_expenses_reminder(chat_id, dayormonth):
     if history is None:
         raise Exception("Oops! Looks like you do not have any spending records!")
 
-    bot.send_message(chat_id, "Hold on! Calculating...")
+    bot.send_message(chat_id, "Your Daily Expense Reminder...")
     # show the bot "typing" (max. 5 secs)
     bot.send_chat_action(chat_id, 'typing')
     time.sleep(0.5)
@@ -189,7 +189,7 @@ def check_reminders():
                     # Send a daily reminder
                     message = "Your daily reminder message goes here."
                     print(f"Sending reminder to chat ID {chat_id}: {message}")
-                    send_reminder(chat_id, message)
+                    # send_reminder(chat_id, message)
                     send_expenses_reminder(chat_id, reminder_type)
                     # Mark this reminder as sent
                     sent_reminders[(chat_id, current_date, str(reminder_time.hour)+":"+str(reminder_time.minute))] = True

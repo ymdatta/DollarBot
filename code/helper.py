@@ -54,6 +54,16 @@ def validate_entered_amount(amount_entered):
             return str(amount)
     return 0
 
+#function to validate the entered time
+def validate_time_format(time_str):
+    # Use a regular expression to match the time format HH:MM
+    time_pattern = r'^([01]\d|2[0-3]):([0-5]\d)$'
+
+    if re.match(time_pattern, time_str):
+        return True
+    else:
+        return False
+
 # function to validate the entered duration
 def validate_entered_duration(duration_entered):
     if duration_entered is None:
