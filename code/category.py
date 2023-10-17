@@ -12,7 +12,7 @@ def run(message, bot):
         markup.add(c)
     msg = bot.reply_to(message, 'Select Operation', reply_markup=markup)
     bot.register_next_step_handler(msg, post_operation_selection, bot)
-    
+
 # User have three funtionaliy can choose, add a category, delete a category or view the current categories
 def post_operation_selection(message, bot):
     try:
@@ -43,7 +43,7 @@ def post_operation_selection(message, bot):
     except Exception as e:
         # print("hit exception")
         helper.throw_exception(e, message, bot, logging)
-    
+
 # Use the funtion to add a new category 
 def category_add(message, bot):
     chat_id = message.chat.id
@@ -82,7 +82,7 @@ def category_delete(message, bot):
             find_to_delete = True
             categories.remove(category)
     # Handle the exception of deleting a not exist category
-    if find_to_delete == False:
+    if not find_to_delete:
         bot.send_message(chat_id, 'Cannot find the category QAQ', reply_markup=types.ReplyKeyboardRemove())
     elif find_to_delete:
         f = open("categories.txt", "w")   
@@ -93,4 +93,3 @@ def category_delete(message, bot):
                 f.write("," + category)
         f.close()
         bot.send_message(chat_id, 'Delete category "{}" successfully!'.format(category_name))
-        

@@ -64,7 +64,7 @@ def visualize(total_text, budgetData):
     plt.clf()
     plt.cla()
     plt.close()
-    
+
 def vis(total_text):
     total_text_split = [line for line in total_text.split('\n') if line.strip() != '']
     categ_val = {}
@@ -75,14 +75,14 @@ def vis(total_text):
 
     x = list(categ_val.keys())
     y = list(categ_val.values())
-    
-    ##plt.bar(categ_val.keys(), categ_val.values(), color=[(1.00, 0, 0, 0.6), (0.2, 0.4, 0.6, 0.6), (0, 1.00, 0, 0.6), (1.00, 1.00, 0, 1.00)], edgecolor='blue')
-   ## addlabels(x, y)
+
+    #plt.bar(categ_val.keys(), categ_val.values(), color=[(1.00, 0, 0, 0.6), (0.2, 0.4, 0.6, 0.6), (0, 1.00, 0, 0.6), (1.00, 1.00, 0, 1.00)], edgecolor='blue')
+    #addlabels(x, y)
     plt.clf()
     plt.pie(y, labels=x, autopct='%.1f%%')
-    ##plt.ylabel("Categories")
-    ##plt.xlabel("Expenditure")
-    ##plt.xticks(rotation=90)
+    #plt.ylabel("Categories")
+    #plt.xlabel("Expenditure")
+    #plt.xticks(rotation=90)
 
     plt.savefig('pie.png')
 
