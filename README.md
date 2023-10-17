@@ -1,4 +1,5 @@
 <hr>
+
 ![MIT license](https://img.shields.io/badge/License-MIT-green.svg)
 ![GitHub Actions](https://github.com/username/repo/workflows/CI/badge.svg)
 [![Platform](https://img.shields.io/badge/Platform-Telegram-blue)](https://desktop.telegram.org/)
