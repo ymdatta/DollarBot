@@ -14,7 +14,7 @@ def run(message, bot):
     markup.row_width = 2
     print("Categories:")
     for c in helper.getSpendCategories():
-        print("\t"+c)
+        print("\t",c)
         markup.add(c)
     msg = bot.reply_to(message, 'Select Category', reply_markup = markup)
     bot.register_next_step_handler(msg, post_category_selection, bot)
