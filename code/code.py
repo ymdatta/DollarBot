@@ -117,10 +117,11 @@ def addUserHistory(chat_id, user_record):
     user_list[str(chat_id)].append(user_record)
     return user_list
 
-# function to display total expenditure
+# function to create and display a reminder
 @bot.message_handler(commands=['setReminder'])
 def command_display(message):
-    display.run(message, bot)
+    reminder.run(message, bot)
+
 
 # The main function
 def main():
