@@ -1,15 +1,15 @@
 <hr>
 
 ![MIT license](https://img.shields.io/badge/License-MIT-green.svg)
-![GitHub Actions](https://github.com/username/repo/workflows/CI/badge.svg)
+![Style Checker](https://github.com/rrajpuro/DollarBot/actions/workflows/styleChecker.yml/badge.svg)
 [![Platform](https://img.shields.io/badge/Platform-Telegram-blue)](https://desktop.telegram.org/)
 ![GitHub](https://img.shields.io/badge/Language-Python-blue.svg)
-[![GitHub contributors](https://img.shields.io/github/contributors/prithvish-doshi-17/MyDollarBot-BOTGo)](https://github.com/prithvish-doshi-17/MyDollarBot-BOTGo/graphs/contributors)
+[![GitHub contributors](https://img.shields.io/github/contributors/rrajpuro/DollarBot)](https://github.com/rrajpuro/MyDollarBot-BOTGo/graphs/contributors)
 [![DOI](https://zenodo.org/badge/414661894.svg)](https://zenodo.org/badge/latestdoi/414661894)
 [![Build Status](https://app.travis-ci.com/sak007/MyDollarBot-BOTGo.svg?branch=main)](https://app.travis-ci.com/github/sak007/MyDollarBot-BOTGo)
 [![codecov](https://codecov.io/gh/sak007/MyDollarBot-BOTGo/branch/main/graph/badge.svg?token=5AYMR8MNMP)](https://codecov.io/gh/sak007/MyDollarBot-BOTGo)
-[![GitHub issues](https://img.shields.io/github/issues/prithvish-doshi-17/MyDollarBot-BOTGo)](https://github.com/prithvish-doshi-17/MyDollarBot-BOTGo/issues?q=is%3Aopen+is%3Aissue)
-[![GitHub closed issues](https://img.shields.io/github/issues-closed/prithvish-doshi-17/MyDollarBot-BOTGo)](https://github.com/prithvish-doshi-17/MyDollarBot-BOTGo/issues?q=is%3Aissue+is%3Aclosed)
+[![GitHub issues](https://img.shields.io/github/issues/rrajpuro/DollarBot)](https://github.com/rrajpuro/DollarBot/issues?q=is%3Aopen+is%3Aissue)
+[![GitHub closed issues](https://img.shields.io/github/issues-closed/rrajpuro/MyDollarBot-BOTGo)](https://github.com/rrajpuro/DollarBot/issues?q=is%3Aissue+is%3Aclosed)
 
 ![Fork](https://img.shields.io/github/forks/deekay2310/MyDollarBot?style=social)
 <hr>
@@ -178,7 +178,7 @@ Please note that we have a [Code of Conduct](CODE_OF_CONDUCT.md) that all contri
 
 
 ## What more can be done?
-Please refer to the issue list available [here](https://github.com/prithvish-doshi-17/MyDollarBot-BOTGo/issues) to see what more can be done to make MyDollarBot better. Please refer to the MyDollarBot project present [here](https://github.com/prithvish-doshi-17/MyDollarBot-BOTGo/projects) to have a look at the tasks to be done, tasks currently in progress and tasks already done.
+Please refer to the issue list available [here](https://github.com/rrajpuro/MyDollarBot-BOTGo/issues) to see what more can be done to make MyDollarBot better. Please refer to the MyDollarBot project present [here](https://github.com/rrajpuro/MyDollarBot-BOTGo/projects) to have a look at the tasks to be done, tasks currently in progress and tasks already done.
 
 ## Demo
 
