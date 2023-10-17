@@ -37,7 +37,7 @@ def test_delete_run_with_data(mock_telebot, mocker):
     mc = mock_telebot.return_value
     mc.send_message.return_value = True
     delete.run(MOCK_Message_data, mc)
-    assert(delete.helper.write_json.called)
+    assert (delete.helper.write_json.called)
 
 
 @patch('telebot.telebot')

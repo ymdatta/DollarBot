@@ -23,16 +23,16 @@ def run(message, bot):
                 av = str(rec).split(",")
                 ax = av[0].split("-")
                 am = ax[1]
-                amount = Dict[am]+ float(av[2])
+                amount = Dict[am] + float(av[2])
                 Dict[am] = amount
         bot.send_message(chat_id, spend_total_str)
 
         # bot.send_message(chat_id, Dict[am])
         plt.clf()
-        width=1.0
+        width = 1.0
         plt.bar(Dict.keys(), Dict.values(), width, color='g')
         plt.savefig('histo.png')
-        bot.send_photo(chat_id, photo=open('histo.png','rb'))
+        bot.send_photo(chat_id, photo=open('histo.png', 'rb'))
         ##bot.send_message(chat_id, amount)
     except Exception as e:
         logging.exception(str(e))

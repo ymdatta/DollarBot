@@ -84,14 +84,14 @@ def display_total(message, bot):
 
 def plot_total(message, bot):
     chat_id = message.chat.id
-    pyi=message.text
+    pyi = message.text
     if pyi == 'Bar with budget':
-        graphing.visualize(total,bud)
-        bot.send_photo(chat_id, photo = open('expenditure.png', 'rb'))
+        graphing.visualize(total, bud)
+        bot.send_photo(chat_id, photo=open('expenditure.png', 'rb'))
         os.remove('expenditure.png')
     elif pyi == 'Bar without budget': 
         graphing.viz(total)
-        bot.send_photo(chat_id, photo = open('expend.png', 'rb'))
+        bot.send_photo(chat_id, photo=open('expend.png', 'rb'))
         os.remove('expend.png')
     else:
         graphing.vis(total)

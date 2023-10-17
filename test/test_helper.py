@@ -413,7 +413,7 @@ def test_getBudgetTypes():
         'overall': 'Overall Budget',
         'category': 'Category-Wise Budget'
     }
-    assert(sorted(testresult) == sorted(localBudgetTypes))
+    assert (sorted(testresult) == sorted(localBudgetTypes))
 
 
 def create_message(text):
