@@ -48,7 +48,8 @@ commands = {
     'delete': 'Clear/Erase all your records',
     'edit': 'Edit/Change spending details',
     'budget': 'Add/Update/View/Delete budget',
-    'category': 'Add/Delete/Show custom categories'
+    'category': 'Add/Delete/Show custom categories',
+    'setReminder': 'Add a reminder'
 }
 
 dateFormat = '%d-%b-%Y'
@@ -130,6 +131,13 @@ def getOverallBudget(chatId):
     if data is None:
         return None
     return data['budget']['overall']
+
+
+def getUserReminder(chat_id):
+    data = getUserData(chat_id)
+    if data is not None:
+        return data['data']
+    return None
 
 
 def getCategoryBudget(chatId):

@@ -15,6 +15,7 @@ import category
 import add_recurring
 from datetime import datetime
 from jproperties import Properties
+import reminder
 
 configs = Properties()
 
@@ -115,6 +116,11 @@ def addUserHistory(chat_id, user_record):
         user_list[str(chat_id)] = []
     user_list[str(chat_id)].append(user_record)
     return user_list
+
+# function to display total expenditure
+@bot.message_handler(commands=['setReminder'])
+def command_display(message):
+    display.run(message, bot)
 
 
 def main():
