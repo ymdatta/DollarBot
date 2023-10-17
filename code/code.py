@@ -7,16 +7,15 @@ import helper
 import edit
 import history
 import display
+from reminder import check_reminders
 import estimate
 import delete
 import add
 import budget
 import category
 import add_recurring
-from datetime import datetime
 from jproperties import Properties
 import reminder
-import json
 from datetime import datetime, time
 import threading
 import time
@@ -126,81 +125,13 @@ def addUserHistory(chat_id, user_record):
 def command_display(message):
     reminder.run(message, bot)
 
-
-sent_reminders = {}
-
-def send_expenses_reminder(chat_id, dayormonth):
-    history = helper.getUserHistory(chat_id)
-    if history is None:
-        raise Exception("Oops! Looks like you do not have any spending records!")
-
-    bot.send_message(chat_id, "Your Daily Expense Reminder...")
-    # show the bot "typing" (max. 5 secs)
-    bot.send_chat_action(chat_id, 'typing')
-    time.sleep(0.5)
-    total_text = ""
-    # get budget data
-    budgetData = {}
-    if helper.isOverallBudgetAvailable(chat_id):
-        budgetData = helper.getOverallBudget(chat_id)
-    elif helper.isCategoryBudgetAvailable(chat_id):
-        budgetData = helper.getCategoryBudget(chat_id)
-
-    if dayormonth == 'Day':
-        query = datetime.now().today().strftime(helper.getDateFormat())
-        # query all that contains today's date
-        queryResult = [value for index, value in enumerate(history) if str(query) in value]
-    elif dayormonth == 'Month':
-        query = datetime.now().today().strftime(helper.getMonthFormat())
-        # query all that contains today's date
-        queryResult = [value for index, value in enumerate(history) if str(query) in value]
-    
-    total_text = display.calculate_spendings(queryResult)
-    spending_text = display.display_budget_by_text(history, budgetData)
-    if len(total_text) == 0:
-        spending_text += "----------------------\nYou have no spendings for {}!".format(dayormonth)
-        bot.send_message(chat_id, spending_text)
-    else:
-        spending_text += "\n----------------------\nHere are your total spendings {}:\nCATEGORIES,AMOUNT \n----------------------\n{}".format(dayormonth.lower(), total_text)
-        bot.send_message(chat_id, spending_text)
-
-def send_reminder(chat_id, message):
-    print(f"Sending reminder to chat ID {chat_id}: {message}")
-    bot.send_message(chat_id, message)
-
-def check_reminders():
-    print("Checking reminders...")
-    # Load the JSON data
-    with open("expense_record.json", "r") as file:
-        json_data = json.load(file)
-
-    current_time = datetime.now().time()
-    current_date = datetime.now().strftime('%d-%b-%Y')  # Get the current date in the same format as your data
-
-    # Loop through the chat IDs and their reminders
-    for chat_id, data in json_data.items():
-        reminder = data.get("reminder")
-        if reminder and reminder.get("time"):
-            reminder_time = datetime.strptime(reminder["time"], '%H:%M').time()
-            # Compare the time components without seconds
-            if current_time.hour == reminder_time.hour and current_time.minute == reminder_time.minute:
-                reminder_type = reminder.get("type")
-                if (chat_id, current_date, str(reminder_time.hour)+":"+str(reminder_time.minute)) not in sent_reminders:
-                    # Send a daily reminder
-                    message = "Your daily reminder message goes here."
-                    print(f"Sending reminder to chat ID {chat_id}: {message}")
-                    # send_reminder(chat_id, message)
-                    send_expenses_reminder(chat_id, reminder_type)
-                    # Mark this reminder as sent
-                    sent_reminders[(chat_id, current_date, str(reminder_time.hour)+":"+str(reminder_time.minute))] = True
-                    print(sent_reminders)
-
 # Define a function to periodically check reminders
 def reminder_checker():
     while True:
-        check_reminders()
+        check_reminders(bot)
         # Sleep for one minute
         time.sleep(60)
+
 
 # The main function
 def main():
