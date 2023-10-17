@@ -16,6 +16,10 @@ import add_recurring
 from datetime import datetime
 from jproperties import Properties
 import reminder
+import json
+from datetime import datetime, time
+import threading
+import time
 
 configs = Properties()
 
@@ -123,6 +127,46 @@ def command_display(message):
     reminder.run(message, bot)
 
 
+sent_reminders = {}
+
+def send_reminder(chat_id, message):
+    print(f"Sending reminder to chat ID {chat_id}: {message}")
+    bot.send_message(chat_id, message)
+
+def check_reminders():
+    print("Checking reminders...")
+    # Load the JSON data
+    with open("expense_record.json", "r") as file:
+        json_data = json.load(file)
+
+    current_time = datetime.now().time()
+    current_date = datetime.now().strftime('%d-%b-%Y')  # Get the current date in the same format as your data
+
+    # Loop through the chat IDs and their reminders
+    for chat_id, data in json_data.items():
+        reminder = data.get("reminder")
+        if reminder and reminder.get("time"):
+            reminder_time = datetime.strptime(reminder["time"], '%H:%M').time()
+            # Compare the time components without seconds
+            if current_time.hour == reminder_time.hour and current_time.minute == reminder_time.minute:
+                reminder_type = reminder.get("type")
+                if reminder_type == "Day":
+                    # Check if a reminder has already been sent for this chat ID and date
+                    if (chat_id, current_date) not in sent_reminders:
+                        # Send a daily reminder
+                        message = "Your daily reminder message goes here."
+                        print(f"Sending reminder to chat ID {chat_id}: {message}")
+                        send_reminder(chat_id, message)
+                        # Mark this reminder as sent
+                        sent_reminders[(chat_id, current_date)] = True
+
+# Define a function to periodically check reminders
+def reminder_checker():
+    while True:
+        check_reminders()
+        # Sleep for one minute
+        time.sleep(60)
+
 # The main function
 def main():
     try:
@@ -134,4 +178,8 @@ def main():
 
 
 if __name__ == '__main__':
+    reminder_thread = threading.Thread(target=reminder_checker)
+    reminder_thread.daemon = True
+    reminder_thread.start()
+
     main()
