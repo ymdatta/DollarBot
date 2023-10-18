@@ -38,7 +38,7 @@ def run(message, bot):
         return
 
     expenses = user_info["data"]
-    expense_text = "Select the expense you want to delete:\n"
+    expense_text = "Select the expense you want to delete by entering its index:\n"
 
     # Generate a list of expenses for the user to choose from
     for i, expense in enumerate(expenses):
