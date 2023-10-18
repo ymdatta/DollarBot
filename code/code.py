@@ -98,15 +98,11 @@ def command_estimate(message):
     estimate.run(message, bot)
 
 
-# handles "/delete_all" command
-@bot.message_handler(commands=['delete_all'])
+# handles "/delete" command
+@bot.message_handler(commands=['delet'])
 def command_delete(message):
     delete.run(message, bot)
 
-# handles "/delete" command
-@bot.message_handler(commands=['delete'])
-def command_delete(message):
-    delete_expense.run(message, bot)
 
 # handles "/budget" command
 @bot.message_handler(commands=['budget'])
