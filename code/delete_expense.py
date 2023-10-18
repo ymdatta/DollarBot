@@ -7,8 +7,6 @@ def delete_expense(chat_id, expense_index):
         user_info = user_data[str(chat_id)]
         if "data" in user_info and expense_index < len(user_info["data"]):
             deleted_expense = user_info["data"].pop(expense_index)
-            print(user_data)
-            print(deleted_expense)
             with open('expense_record.json', 'w') as file:
                 json.dump(user_data, file, indent=4)
             return f"Expense '{deleted_expense}' has been deleted."
@@ -19,14 +17,12 @@ def run(message, bot):
     chat_id = message.chat.id
     user_data = helper.read_json()
     print(chat_id)
-    # print(user_data)
 
     if str(chat_id) not in user_data:
         bot.send_message(chat_id, "You don't have any expenses to delete.")
         return
 
     user_info = user_data[str(chat_id)]
-    # print("\n\n",user_info)
 
     if "data" not in user_info or not user_info["data"]:
         bot.send_message(chat_id, "You don't have any expenses to delete.")
