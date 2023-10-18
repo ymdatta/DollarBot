@@ -37,7 +37,8 @@
             "display": "Show sum of expenditure",
             "estimate": "Show an estimate of expenditure",
             "history": "Display spending history",
-            "delete": "Clear/Erase all your records",
+            "delete_all": "Clear/Erase all your records",
+            "delete": "Delete a particular expense",
             "edit": "Edit/Change spending details",
             "budget": "Add/Update/View/Delete budget",
             "category": "Add/Delete/Show custom categories"
