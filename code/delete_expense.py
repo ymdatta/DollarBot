@@ -8,7 +8,7 @@ def delete_expense(chat_id, expense_index):
     if str(chat_id) in user_data:
         user_info = user_data[str(chat_id)]
 
-         # Check if the "data" key exists and if the expense_index is within bounds
+        # Check if the "data" key exists and if the expense_index is within bounds
         if "data" in user_info and expense_index < len(user_info["data"]):
             # Remove the expense at the specified index
             deleted_expense = user_info["data"].pop(expense_index)
