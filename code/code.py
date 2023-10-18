@@ -19,8 +19,6 @@ import reminder
 from datetime import datetime, time
 import threading
 import time
-import delete_expense
-
 configs = Properties()
 
 with open('user.properties', 'rb') as read_prop:
@@ -38,7 +36,7 @@ option = {}
 # Define listener for requests by user
 def listener(user_requests):
     for req in user_requests:
-        if(req.content_type == 'text'):
+        if (req.content_type == 'text'):
             print("{} name:{} chat_id:{} \nmessage: {}\n".format(str(datetime.now()), str(req.chat.first_name), str(req.chat.id), str(req.text)))
 
 
