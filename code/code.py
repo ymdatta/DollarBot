@@ -7,15 +7,19 @@ import helper
 import edit
 import history
 import display
+from reminder import check_reminders
 import estimate
 import delete
 import add
 import budget
 import category
 import add_recurring
-from datetime import datetime
 from jproperties import Properties
 from telebot import types
+import reminder
+from datetime import datetime, time
+import threading
+import time
 
 configs = Properties()
 
@@ -89,7 +93,19 @@ def handle_menu_command(message):
         edit.run(message, bot)
     elif command == 'history':
         history.run(message, bot)
+    elif command == 'setReminder':
+        reminder.run(message, bot)
 
+
+# Define a function to periodically check reminders
+def reminder_checker():
+    while True:
+        check_reminders(bot)
+        # Sleep for one minute
+        time.sleep(60)
+
+
+# The main function
 def main():
     try:
         bot.polling(none_stop=True)
@@ -100,4 +116,8 @@ def main():
 
 
 if __name__ == '__main__':
+    reminder_thread = threading.Thread(target=reminder_checker)
+    reminder_thread.daemon = True
+    reminder_thread.start()
+
     main()
