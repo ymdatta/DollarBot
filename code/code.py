@@ -15,7 +15,7 @@ import category
 import add_recurring
 from datetime import datetime
 from jproperties import Properties
-from telebot import types 
+from telebot import types
 
 configs = Properties()
 
@@ -48,8 +48,7 @@ menu_commands = [
     ("edit", "Edit/Change spending details"),
     ("budget", "Add/Update/View/Delete budget"),
     ("category", "Add/Delete/Show custom categories in telegram bot"),
-    ("set_reminder", "Create a reminder for your purchases or bills.")
-    
+    ("set_reminder", "Create a reminder for your purchases or bills")
 ]
 
 bot.set_my_commands([
@@ -84,12 +83,10 @@ def handle_menu_command(message):
         delete.run(message, bot)
     elif command == 'budget':
         budget.run(message, bot)
-    elif  command == 'edit':
+    elif command == 'edit':
         edit.run(message, bot)
     elif command == 'history':
-        history.run(message,bot)
-    # elif command == 'set_reminder':
-    #     setReminder.run
+        history.run(message, bot)
 
 def main():
     try:
@@ -101,4 +98,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
