@@ -50,7 +50,7 @@ def post_amount_input(message, bot, selected_category):
         amount_value = helper.validate_entered_amount(amount_entered)  # validate
         if amount_value == 0:  # cannot be $0 spending
             raise Exception("Spent amount has to be a non-zero number.")
-        
+
         message = bot.send_message(chat_id, 'For how many months in the future will the expense be there? \n(Enter integer values only)'.format(str(option[chat_id])))
         bot.register_next_step_handler(message, post_duration_input, bot, selected_category, amount_value)
     except Exception as e:
@@ -65,14 +65,14 @@ def post_duration_input(message, bot, selected_category, amount_value):
         duration_value = helper.validate_entered_duration(duration_entered)
         if duration_value == 0:
             raise Exception("Duration has to be a non-zero integer.")
-                
+
         for i in range(int(duration_value)):
             date_of_entry = (datetime.today() + relativedelta(months=+i)).strftime(helper.getDateFormat() + ' ' + helper.getTimeFormat())
             date_str, category_str, amount_str = str(date_of_entry), str(option[chat_id]), str(amount_value)
             helper.write_json(add_user_record(chat_id, "{},{},{}".format(date_str, category_str, amount_str)))
-        
+
         bot.send_message(chat_id, 'The following expenditure has been recorded: You have spent ${} for {} for the next {} months'.format(amount_str, category_str, duration_value))
-    
+
     except Exception as e:
         logging.exception(str(e))
         bot.reply_to(message, 'Oh no. ' + str(e))

@@ -70,8 +70,8 @@ def command_add(message):
 @bot.message_handler(commands=['add_recurring'])
 def command_add_recurring(message):
     add_recurring.run(message, bot)
-    
-    
+
+
 # function to fetch expenditure history of the user
 @bot.message_handler(commands=['history'])
 def command_history(message):
@@ -101,7 +101,6 @@ def command_estimate(message):
 def command_delete(message):
     delete.run(message, bot)
 
-
 # handles "/budget" command
 @bot.message_handler(commands=['budget'])
 def command_budget(message):
@@ -115,7 +114,7 @@ def command_category(message):
 # not used
 def addUserHistory(chat_id, user_record):
     global user_list
-    if(not(str(chat_id) in user_list)):
+    if (not (str(chat_id) in user_list)):
         user_list[str(chat_id)] = []
     user_list[str(chat_id)].append(user_record)
     return user_list
