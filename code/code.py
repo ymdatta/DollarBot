@@ -35,6 +35,7 @@ def listener(user_requests):
             print("{} name:{} chat_id:{} \nmessage: {}\n".format(
                 str(datetime.now()), str(req.chat.first_name), str(req.chat.id), str(req.text)))
 
+
 bot.set_update_listener(listener)
 
 
