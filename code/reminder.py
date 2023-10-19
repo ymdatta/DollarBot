@@ -48,7 +48,7 @@ sent_reminders = {}
 
 def send_expenses_reminder(chat_id, dayormonth, bot):
     history = helper.getUserHistory(chat_id)
-    if history is None:
+    if history is None or history == []:
         raise Exception("Oops! Looks like you do not have any spending records!")
 
     bot.send_message(chat_id, "Your Daily Expense Reminder...")

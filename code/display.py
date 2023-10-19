@@ -11,7 +11,7 @@ def run(message, bot):
     helper.read_json()
     chat_id = message.chat.id
     history = helper.getUserHistory(chat_id)
-    if history is None:
+    if history is None or history == []:
         bot.send_message(chat_id, "Sorry, there are no records of the spending!")
     else:
         markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
@@ -36,7 +36,7 @@ def display_total(message, bot):
             raise Exception("Sorry I can't show spendings for \"{}\"!".format(DayWeekMonth))
 
         history = helper.getUserHistory(chat_id)
-        if history is None:
+        if history is None or history == []:
             raise Exception("Oops! Looks like you do not have any spending records!")
 
         bot.send_message(chat_id, "Hold on! Calculating...")
