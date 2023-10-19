@@ -7,15 +7,18 @@ import helper
 import edit
 import history
 import display
+from reminder import check_reminders
 import estimate
 import delete
 import add
 import budget
 import category
 import add_recurring
-from datetime import datetime
 from jproperties import Properties
-
+import reminder
+from datetime import datetime, time
+import threading
+import time
 configs = Properties()
 
 with open('user.properties', 'rb') as read_prop:
@@ -94,7 +97,7 @@ def command_estimate(message):
 
 
 # handles "/delete" command
-@bot.message_handler(commands=['delete'])
+@bot.message_handler(commands=['delet'])
 def command_delete(message):
     delete.run(message, bot)
 
@@ -116,6 +119,19 @@ def addUserHistory(chat_id, user_record):
     user_list[str(chat_id)].append(user_record)
     return user_list
 
+# function to create and display a reminder
+@bot.message_handler(commands=['setReminder'])
+def command_display(message):
+    reminder.run(message, bot)
+
+# Define a function to periodically check reminders
+def reminder_checker():
+    while True:
+        check_reminders(bot)
+        # Sleep for one minute
+        time.sleep(60)
+
+
 # The main function
 def main():
     try:
@@ -127,4 +143,8 @@ def main():
 
 
 if __name__ == '__main__':
+    reminder_thread = threading.Thread(target=reminder_checker)
+    reminder_thread.daemon = True
+    reminder_thread.start()
+
     main()

@@ -54,6 +54,16 @@ def validate_entered_amount(amount_entered):
             return str(amount)
     return 0
 
+#function to validate the entered time
+def validate_time_format(time_str):
+    # Use a regular expression to match the time format HH:MM
+    time_pattern = r'^([01]\d|2[0-3]):([0-5]\d)$'
+
+    if re.match(time_pattern, time_str):
+        return True
+    else:
+        return False
+
 # function to validate the entered duration
 def validate_entered_duration(duration_entered):
     if duration_entered is None:
@@ -95,6 +105,13 @@ def getOverallBudget(chatId):
     if data is None:
         return None
     return data['budget']['overall']
+
+def getUserReminder(chat_id):
+    data = getUserData(chat_id)
+    if data is not None:
+        return data['data']
+    return None
+
 
 # function to get category based budget
 def getCategoryBudget(chatId):
@@ -201,6 +218,9 @@ def getSpendCategories():
     # with open("categories.txt", "r") as tf:
     #     spend_categories = tf.read().split(',')
     return spend_categories
+
+
+getSpendCategories()
 
 # function to get plot
 def getplot():
