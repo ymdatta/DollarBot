@@ -13,6 +13,10 @@ MOCK_USER_DATA = {
         'budget': {
             'overall': None,
             'category': None
+        },
+        "reminder": {
+            "type": "Day",
+            "time": "21:02"
         }
     },
     '102': {
@@ -20,6 +24,10 @@ MOCK_USER_DATA = {
         'budget': {
             'overall': None,
             'category': None
+        },
+        "reminder": {
+            "type": "Day",
+            "time": "21:02"
         }
     }
 }
@@ -253,6 +261,10 @@ def test_createNewUserRecord():
         'budget': {
             'overall': None,
             'category': None
+        },
+        "reminder": {
+            "type": None,
+            "time": None
         }
     }
     assert (sorted(data_format_call) == sorted(data_format))

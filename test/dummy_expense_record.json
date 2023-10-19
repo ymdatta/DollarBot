@@ -80,6 +80,10 @@
           "Shopping": "180.0",
           "Miscellaneous": "80.0"
         }
+      },
+      "reminder": {
+          "type": "Day",
+          "time": "21:02"
       }
     }
 }
