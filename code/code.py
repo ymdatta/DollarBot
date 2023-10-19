@@ -98,7 +98,8 @@ def handle_menu_command(message):
         edit.run(message, bot)
     elif command == 'history':
         history.run(message, bot)
-    elif command == 'setReminder':
+    elif command == 'set_reminder':
+        print('Setting reminder')
         reminder.run(message, bot)
 
 

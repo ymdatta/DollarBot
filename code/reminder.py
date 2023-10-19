@@ -10,7 +10,7 @@ def run(message, bot):
     helper.read_json()
     chat_id = message.chat.id
     history = helper.getUserHistory(chat_id)
-    if history is None:
+    if history is None or history == []:
         bot.send_message(chat_id, "Sorry, there are no records of spending!")
     else:
         markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
