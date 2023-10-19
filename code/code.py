@@ -14,6 +14,8 @@ import add
 import budget
 import category
 import add_recurring
+import delete_expense
+from datetime import datetime
 from jproperties import Properties
 from telebot import types
 import reminder
@@ -50,7 +52,8 @@ menu_commands = [
     ("display", "Show sum of expenditure"),
     ("estimate", "Show an estimate of expenditure"),
     ("history", "Display spending history"),
-    ("delete", "Clear/Erase all your records"),
+    ("delete", "Clear/Erase your records"),
+    ("delete_all", "Clear/Erase all your records"),
     ("edit", "Edit/Change spending details"),
     ("budget", "Add/Update/View/Delete budget"),
     ("category", "Add/Delete/Show custom categories in telegram bot"),
@@ -85,8 +88,10 @@ def handle_menu_command(message):
         estimate.run(message, bot)
     elif command == 'add_recurring':
         add_recurring.run(message, bot)
-    elif command == 'delete':
+    elif command == 'delete_all':
         delete.run(message, bot)
+    elif command == 'delete':
+        delete_expense.run(message, bot)
     elif command == 'budget':
         budget.run(message, bot)
     elif command == 'edit':
