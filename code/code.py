@@ -15,6 +15,7 @@ import category
 import add_recurring
 from datetime import datetime
 from jproperties import Properties
+from telebot import types 
 
 configs = Properties()
 
@@ -27,96 +28,69 @@ bot = telebot.TeleBot(api_token)
 
 telebot.logger.setLevel(logging.INFO)
 
-option = {}
-
-
 # Define listener for requests by user
 def listener(user_requests):
     for req in user_requests:
-        if (req.content_type == 'text'):
-            print("{} name:{} chat_id:{} \nmessage: {}\n".format(str(datetime.now()), str(req.chat.first_name), str(req.chat.id), str(req.text)))
-
+        if req.content_type == 'text':
+            print("{} name:{} chat_id:{} \nmessage: {}\n".format(
+                str(datetime.now()), str(req.chat.first_name), str(req.chat.id), str(req.text)))
 
 bot.set_update_listener(listener)
 
+# Define your list of commands and descriptions
+menu_commands = [
+    ("add", "Record/Add a new spending"),
+    ("add_recurring", "Record the recurring expenses"),
+    ("display", "Show sum of expenditure"),
+    ("estimate", "Show an estimate of expenditure"),
+    ("history", "Display spending history"),
+    ("delete", "Clear/Erase all your records"),
+    ("edit", "Edit/Change spending details"),
+    ("budget", "Add/Update/View/Delete budget"),
+    ("category", "Add/Delete/Show custom categories in telegram bot"),
+    ("set_reminder", "Create a reminder for your purchases or bills.")
+    
+]
 
-# defines how the /start and /help commands have to be handled/processed
+bot.set_my_commands([
+    types.BotCommand(command=command, description=description) for command, description in menu_commands
+])
+
+# Define a function to handle the /start and /menu commands
 @bot.message_handler(commands=['start', 'menu'])
-def start_and_menu_command(m):
-    helper.read_json()
-    global user_list
-    chat_id = m.chat.id
+def start_and_menu_command(message):
+    chat_id = message.chat.id
+    text_intro = "Welcome to MyDollarBot! Please select an option:"
 
-    text_intro = "Welcome to MyDollarBot - a simple solution to track your expenses and manage them ! \nPlease select the options from below for me to assist you with: \n\n"
-    commands = helper.getCommands()
-    for c in commands:  # generate help text out of the commands dictionary defined at the top
-        text_intro += "/" + c + ": "
-        text_intro += commands[c] + "\n"
-    bot.send_message(chat_id, text_intro)
-    return True
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+    for command, _ in menu_commands:
+        markup.add(types.KeyboardButton(f'/{command}'))
 
+    bot.send_message(chat_id, text_intro, reply_markup=markup)
 
-# defines how the /new command has to be handled/processed
-# function to add an expense
-@bot.message_handler(commands=['add'])
-def command_add(message):
-    add.run(message, bot)
+# Define command handlers for each menu option
+@bot.message_handler(commands=[command for command, _ in menu_commands])
+def handle_menu_command(message):
+    command = message.text[1:]  # Remove the '/' character from the command
+    if command == "add":
+        add.run(message, bot)
+    elif command == "display":
+        display.run(message, bot)
+    elif command == 'estimate':
+        estimate.run(message, bot)
+    elif command == 'add_recurring':
+        add_recurring.run(message, bot)
+    elif command == 'delete':
+        delete.run(message, bot)
+    elif command == 'budget':
+        budget.run(message, bot)
+    elif  command == 'edit':
+        edit.run(message, bot)
+    elif command == 'history':
+        history.run(message,bot)
+    # elif command == 'set_reminder':
+    #     setReminder.run
 
-
-# function to add recurring expenses
-@bot.message_handler(commands=['add_recurring'])
-def command_add_recurring(message):
-    add_recurring.run(message, bot)
-
-
-# function to fetch expenditure history of the user
-@bot.message_handler(commands=['history'])
-def command_history(message):
-    history.run(message, bot)
-
-
-# function to edit date, category or cost of a transaction
-@bot.message_handler(commands=['edit'])
-def command_edit(message):
-    edit.run(message, bot)
-
-
-# function to display total expenditure
-@bot.message_handler(commands=['display'])
-def command_display(message):
-    display.run(message, bot)
-
-
-# function to estimate future expenditure
-@bot.message_handler(commands=['estimate'])
-def command_estimate(message):
-    estimate.run(message, bot)
-
-
-# handles "/delete" command
-@bot.message_handler(commands=['delete'])
-def command_delete(message):
-    delete.run(message, bot)
-
-# handles "/budget" command
-@bot.message_handler(commands=['budget'])
-def command_budget(message):
-    budget.run(message, bot)
-
-# handles "/category" command
-@bot.message_handler(commands=['category'])
-def command_category(message):
-    category.run(message, bot)
-
-# not used
-def addUserHistory(chat_id, user_record):
-    global user_list
-    if (not (str(chat_id) in user_list)):
-        user_list[str(chat_id)] = []
-    user_list[str(chat_id)].append(user_record)
-    return user_list
-
-# The main function
 def main():
     try:
         bot.polling(none_stop=True)
@@ -125,6 +99,6 @@ def main():
         time.sleep(3)
         print("Connection Timeout")
 
-
 if __name__ == '__main__':
     main()
+
