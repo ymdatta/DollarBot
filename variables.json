@@ -23,6 +23,10 @@
             "budget": {
                 "overall": null,
                 "category": null
+            },
+            "reminder":{
+                "type": null,
+                "time": null
             }
         },
         "category_options" : {
@@ -41,7 +45,8 @@
             "delete": "Delete a particular expense",
             "edit": "Edit/Change spending details",
             "budget": "Add/Update/View/Delete budget",
-            "category": "Add/Delete/Show custom categories"
+            "category": "Add/Delete/Show custom categories",
+            "setReminder": "Set a Reminder about Purchase/Bill"
         },
         "dateFormat" : "%d-%b-%Y",
         "timeFormat" : "%H:%M",

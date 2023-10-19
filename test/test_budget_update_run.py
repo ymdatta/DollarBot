@@ -60,8 +60,8 @@ def test_post_type_selection_failing_case(mock_telebot, mocker):
     # budget_update.update_overall_budget = mock.Mock(return_value=True)
     message = create_message("hello from testing")
     budget_update.post_type_selection(message, mc)
-    assert(mc.send_message.called)
-    assert(budget_update.helper.throw_exception.called)
+    assert (mc.send_message.called)
+    assert (budget_update.helper.throw_exception.called)
 
 
 @patch('telebot.telebot')
@@ -104,7 +104,7 @@ def test_post_option_selectio_working(mock_telebot, mocker):
     message = create_message("Continue")
     budget_update.post_option_selection(message, mc)
 
-    assert(budget_update.update_category_budget.called)
+    assert (budget_update.update_category_budget.called)
 
 
 @patch('telebot.telebot')
@@ -115,7 +115,7 @@ def test_post_option_selection_nonworking(mock_telebot, mocker):
     message = create_message("Randomtext")
     budget_update.post_option_selection(message, mc)
 
-    assert(budget_update.update_category_budget.called is False)
+    assert (budget_update.update_category_budget.called is False)
 
 
 def create_message(text):
