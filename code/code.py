@@ -37,6 +37,7 @@ def listener(user_requests):
 
 bot.set_update_listener(listener)
 
+
 # Define your list of commands and descriptions
 menu_commands = [
     ("add", "Record/Add a new spending"),
@@ -95,6 +96,7 @@ def main():
         logging.exception(str(e))
         time.sleep(3)
         print("Connection Timeout")
+
 
 if __name__ == '__main__':
     main()
