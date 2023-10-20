@@ -38,7 +38,7 @@ With simple commands. This bot helps you you maintain and manage your expenses. 
 ## What's New?!
 - Delete particular expenses.
 - Set a daily reminder to track your expenses for either the current day or the current month.
-- Improve the UI by implementing a menu button.
+- Menu button to improve the UI.
 
 <hr>
 <p align="center">
@@ -188,7 +188,7 @@ Please refer to the issue list available [here](https://github.com/rrajpuro/MyDo
 
 ## Demo
 
-https://user-images.githubusercontent.com/72677919/140454147-f879010a-173b-47b9-9cfb-a389171924de.mp4
+You can view the demo [here](https://www.youtube.com/watch?v=RHE3oC5JdDY)
 
 <hr>
 <p>Title:'DollarBot'</p>
