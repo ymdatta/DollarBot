@@ -35,10 +35,15 @@ With simple commands. This bot helps you you maintain and manage your expenses. 
   Added bar graph in the /history command to see spending across different categories
   User can see the daily and monthly expenses for spending history
 
+## What's New?!
+- Delete particular expenses.
+- Set a daily reminder to track your expenses for either the current day or the current month.
+- Menu button to improve the UI.
+
 <hr>
 <p align="center">
 <a><img  height=360 width=550 
-  src="https://github.com/deekay2310/MyDollarBot/blob/c56b4afd4fd5bbfffea0d0a4aade58596a5cb678/docs/0001-8711513694_20210926_212845_0000.png" alt="Expense tracking made easy!"></a>
+  src="https://github.com/rrajpuro/DollarBot/blob/update_docs/docs/DOLLARBOT.jpg" alt="Expense tracking made easy!"></a>
 </p>
 
 ## Table of Contents
@@ -183,7 +188,7 @@ Please refer to the issue list available [here](https://github.com/rrajpuro/MyDo
 
 ## Demo
 
-https://user-images.githubusercontent.com/72677919/140454147-f879010a-173b-47b9-9cfb-a389171924de.mp4
+You can view the demo [here](https://www.youtube.com/watch?v=RHE3oC5JdDY)
 
 <hr>
 <p>Title:'DollarBot'</p>

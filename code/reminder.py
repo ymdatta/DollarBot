@@ -40,7 +40,7 @@ def process_reminder_time(message, chat_id, selected_type, bot):
 
         bot.send_message(chat_id, f"Your {selected_type} expenses reminder has been set for {reminder_time_str}.")
     else:
-        bot.send_message(chat_id, "Invalid time format. Please try /setReminder with the time in the format HH:MM (e.g., 14:30)")
+        bot.send_message(chat_id, "Invalid time format. Please try /set_reminder with the time in the format HH:MM (e.g., 14:30)")
 
 
 sent_reminders = {}

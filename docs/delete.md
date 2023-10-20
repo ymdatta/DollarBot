@@ -1,4 +1,4 @@
-# About MyDollarBot's /delete Feature
+# About MyDollarBot's /delete_all Feature
 This feature enables the user to delete all of their saved records till date in their expense tracker.
 
 # Location of Code for this Feature
@@ -19,7 +19,7 @@ Once the project is running(please follow the instructions given in the main REA
 Below you can see an example in text format:
 
 Sri Athithya Kruth, [19.10.21 21:50]
-/delete
+/delete_all
 
 dollarbot,[]
 History has been deleted!
