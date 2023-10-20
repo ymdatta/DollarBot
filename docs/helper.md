@@ -2,7 +2,7 @@
 The helper file contains a set of functions that are commonly used for repeated tasks in the various features of MyDollarBot. Since these come up often, we have put them all up here in a separate file for reusability.
 
 # Location of Code for this Feature
-The code that implements this feature can be found [here](https://github.com/sak007/MyDollarBot-BOTGo/blob/main/code/helper.py)
+The code that implements this feature can be found [here](https://github.com/rrajpuro/DollarBot/blob/feature/setReminder/code/helper.py)
 
 # Code Description
 ## Functions
@@ -39,6 +39,9 @@ This functions returns the month format used in the bot.
 
 11. def getplot():
 This functions returns the different plots used in the bot. These are defined the same file.
+
+12. def validate_time_format(time_str:)
+This function, validate_time_format(time_str), checks whether the input time_str matches the 24-hour time format (HH:MM), returning True if it's a valid time format and False if not.
 
 # How to run this feature?
 Once the project is running(please follow the instructions given in the main README.md for this), please type /add into the telegram bot.
