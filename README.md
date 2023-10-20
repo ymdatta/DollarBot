@@ -43,7 +43,7 @@ With simple commands. This bot helps you you maintain and manage your expenses. 
 <hr>
 <p align="center">
 <a><img  height=360 width=550 
-  src="https://github.com/deekay2310/MyDollarBot/blob/c56b4afd4fd5bbfffea0d0a4aade58596a5cb678/docs/0001-8711513694_20210926_212845_0000.png" alt="Expense tracking made easy!"></a>
+  src="https://github.com/rrajpuro/DollarBot/blob/update_docs/docs/DOLLARBOT.jpg" alt="Expense tracking made easy!"></a>
 </p>
 
 ## Table of Contents
