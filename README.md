@@ -35,6 +35,11 @@ With simple commands. This bot helps you you maintain and manage your expenses. 
   Added bar graph in the /history command to see spending across different categories
   User can see the daily and monthly expenses for spending history
 
+## What's New?!
+- Delete particular expenses.
+- Set a daily reminder to track your expenses for either the current day or the current month.
+- Improve the UI by implementing a menu button.
+
 <hr>
 <p align="center">
 <a><img  height=360 width=550 
