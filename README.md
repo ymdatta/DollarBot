@@ -42,7 +42,7 @@ With simple commands. This bot helps you you maintain and manage your expenses. 
 
 <hr>
 <p align="center">
-<a><img  height=360 width=550 
+<a><img  height=360 width=600
   src="https://github.com/rrajpuro/DollarBot/blob/update_docs/docs/DOLLARBOT.jpg" alt="Expense tracking made easy!"></a>
 </p>
 
@@ -188,7 +188,7 @@ Please refer to the issue list available [here](https://github.com/rrajpuro/MyDo
 
 ## Demo
 
-You can view the demo [here](https://www.youtube.com/watch?v=RHE3oC5JdDY)
+You can view the demo [here](https://youtu.be/EX9CTIBbOuc)
 
 <hr>
 <p>Title:'DollarBot'</p>
