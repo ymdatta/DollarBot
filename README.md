@@ -42,7 +42,7 @@ With simple commands. This bot helps you you maintain and manage your expenses. 
 
 <hr>
 <p align="center">
-<a><img  height=360 width=580 
+<a><img  height=360 width=600
   src="https://github.com/rrajpuro/DollarBot/blob/update_docs/docs/DOLLARBOT.jpg" alt="Expense tracking made easy!"></a>
 </p>
 
