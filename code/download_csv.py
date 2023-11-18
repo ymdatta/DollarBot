@@ -1,6 +1,7 @@
 import helper
 import logging
 from telegram import InputFile
+from telegram.error import TelegramError
 from telebot import types
 import csv
 import os
@@ -26,7 +27,18 @@ def run(message, bot):
             bot.send_document(chat_id, document=file)
         return file_path
 
-
+    except FileNotFoundError as e:
+        logging.error(f"File not found error: {str(e)}")
+        bot.send_message(chat_id, "Error: File not found.")
+    except PermissionError as e:
+        logging.error(f"Permission error: {str(e)}")
+        bot.send_message(chat_id, "Error: Permission issue while accessing the file.")
+    except csv.Error as e:
+        logging.error(f"CSV error: {str(e)}")
+        bot.send_message(chat_id, "Error: CSV file generation failed.")
+    except TelegramError as e:
+        logging.error(f"Telegram error: {str(e)}")
+        bot.send_message(chat_id, "Error: Telegram communication issue.")
     except Exception as e:
         logging.error(f"Unexpected error: {str(e)}")
         bot.send_message(chat_id, "An unexpected error occurred. Please try again later.")
