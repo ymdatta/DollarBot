@@ -215,12 +215,9 @@ def calculate_total_spendings_for_category(queryResult, cat):
 
 # function to get spending categories
 def getSpendCategories():
-    # with open("categories.txt", "r") as tf:
-    #     spend_categories = tf.read().split(',')
+    with open("categories.txt", "r") as tf:
+        spend_categories = tf.read().split(',')
     return spend_categories
-
-
-getSpendCategories()
 
 # function to get plot
 def getplot():
