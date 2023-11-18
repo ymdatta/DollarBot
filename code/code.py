@@ -13,6 +13,7 @@ import delete
 import add
 import budget
 import category
+import download_csv
 import add_recurring
 import delete_expense
 from datetime import datetime
@@ -57,6 +58,7 @@ menu_commands = [
     ("edit", "Edit/Change spending details"),
     ("budget", "Add/Update/View/Delete budget"),
     ("category", "Add/Delete/Show custom categories in telegram bot"),
+    ("csv", "To download your history in csv format"),
     ("set_reminder", "Create a reminder for your purchases or bills")
 ]
 
@@ -98,6 +100,10 @@ def handle_menu_command(message):
         edit.run(message, bot)
     elif command == 'history':
         history.run(message, bot)
+    elif command == 'category':
+        category.run(message, bot)
+    elif command == 'csv':
+        download_csv.run(message, bot)
     elif command == 'set_reminder':
         print('Setting reminder')
         reminder.run(message, bot)
