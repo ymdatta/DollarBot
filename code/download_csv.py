@@ -24,7 +24,13 @@ def run(message, bot):
             writer.writerows(csv.reader(user_history, delimiter=','))
 
         with open(file_path, 'rb') as file:
-            bot.send_document(chat_id, document=file)
+            try:
+                bot.send_document(chat_id, document=file)
+            except Exception as send_error:
+                logging.error(f"Error sending document: {str(send_error)}")
+                bot.send_message(chat_id, "Error: Failed to send the document.")
+                return None
+
         return file_path
 
     except FileNotFoundError as e:
