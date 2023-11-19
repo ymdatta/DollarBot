@@ -257,7 +257,16 @@ def test_throw_exception(mock_telebot, mocker):
 def test_createNewUserRecord():
     data_format_call = helper.createNewUserRecord()
     data_format = {
+        'account': {
+            'Checking': "True",
+            'Savings': "False"
+        },
+        'balance': {
+            'Checking': None,
+            'Savings': None
+        },
         'data': [],
+        'balance_data': [],
         'budget': {
             'overall': None,
             'category': None

@@ -54,7 +54,6 @@ def post_amount_input(message, bot, selected_category):
         acc_type = helper.get_account_type(message)
         acc_balance = helper.get_account_balance(message, "", acc_type)
 
-
         if is_Valid_expense(message, float(amount_value)) == False:
             raise Exception("Expenses exceed balance in {} account. Current Balance is {}.".format(acc_type, acc_balance))
 

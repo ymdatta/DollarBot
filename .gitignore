@@ -143,3 +143,4 @@ myenv/*
 # Don't include patch reject files or patches
 *.rej
 *.patch
+*.test_log

@@ -59,10 +59,12 @@ def test_post_amount_input_working_withdata(mock_telebot, mocker):
     mc = mock_telebot.return_value
     mc.send_message.return_value = True
     mocker.patch.object(add, 'helper')
-    add.helper.validate_entered_amount.return_value = 10
+    add.helper.validate_entered_amount.return_value = 100
     add.helper.write_json.return_value = True
     add.helper.getDateFormat.return_value = dateFormat
     add.helper.getTimeFormat.return_value = timeFormat
+    add.helper.get_account_type.return_value = "Checking"
+    add.helper.get_account_balance.return_value = 100 
 
     mocker.patch.object(add, 'option')
     add.option.return_value = {11, "here"}
@@ -89,10 +91,12 @@ def test_post_amount_input_working_withdata_chatid(mock_telebot, mocker):
     mc = mock_telebot.return_value
     mc.send_message.return_value = True
     mocker.patch.object(add, 'helper')
-    add.helper.validate_entered_amount.return_value = 10
+    add.helper.validate_entered_amount.return_value = 100
     add.helper.write_json.return_value = True
     add.helper.getDateFormat.return_value = dateFormat
     add.helper.getTimeFormat.return_value = timeFormat
+    add.helper.get_account_type.return_value = "Checking"
+    add.helper.get_account_balance.return_value = 100 
 
     mocker.patch.object(add, 'option')
     add.option = {11, "here"}
