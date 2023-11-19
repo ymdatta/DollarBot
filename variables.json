@@ -1,6 +1,7 @@
 {
     "variables" : {
         "spend_categories" : ["Food","Groceries","Utilities","Transport","Shopping","Miscellaneous"],
+        "account_categories" : ["Checking", "Savings"],
         "choices" : ["Date", "Category", "Cost"],
         "plot" : ["Bar with budget", "Pie","Bar without budget"],
         "spend_display_option" : ["Day", "Month"],
@@ -19,7 +20,16 @@
             "category": "Category-Wise Budget"
         },
         "data_format" : {
+            "account" : {
+                "Checking": "True",
+                "Savings": "False"
+            },
+            "balance": {
+                "Checking": null,
+                "Savings": null
+            },
             "data": [],
+            "balance_data": [],
             "budget": {
                 "overall": null,
                 "category": null

@@ -11,12 +11,14 @@ from reminder import check_reminders
 import estimate
 import delete
 import add
+import add_balance
 import budget
 import category
 import download_csv
 import download_pdf
 import add_recurring
 import delete_expense
+import account
 from datetime import datetime
 from jproperties import Properties
 from telebot import types
@@ -49,6 +51,7 @@ bot.set_update_listener(listener)
 
 # Define your list of commands and descriptions
 menu_commands = [
+    ("add_balance", "Add balance to a specific account"),
     ("add", "Record/Add a new spending"),
     ("add_recurring", "Record the recurring expenses"),
     ("display", "Show sum of expenditure"),
@@ -61,7 +64,8 @@ menu_commands = [
     ("category", "Add/Delete/Show custom categories in telegram bot"),
     ("csv", "To download your history in csv format"),
     ("pdf", "Generates a PDF file containing the user's expense history plot"),
-    ("set_reminder", "Create a reminder for your purchases or bills")
+    ("set_reminder", "Create a reminder for your purchases or bills"),
+    ("select_expenses_account", "Select account to use for expenses")
 ]
 
 bot.set_my_commands([
@@ -86,6 +90,8 @@ def handle_menu_command(message):
     command = message.text[1:]  # Remove the '/' character from the command
     if command == "add":
         add.run(message, bot)
+    elif command == "add_balance":
+        add_balance.run(message, bot)
     elif command == "display":
         display.run(message, bot)
     elif command == 'estimate':
@@ -106,6 +112,8 @@ def handle_menu_command(message):
         category.run(message, bot)
     elif command == 'csv':
         download_csv.run(message, bot)
+    elif command == 'select_expenses_account':
+        account.run(message, bot)
     elif command == 'pdf':
         download_pdf.run(message, bot)
     elif command == 'set_reminder':

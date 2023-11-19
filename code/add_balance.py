@@ -12,8 +12,8 @@ def run(message, bot):
     option.pop(chat_id, None)  # remove temp choice
     markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
     markup.row_width = 2
-    print("Categories:")
-    for c in helper.getSpendCategories():
+    print("Account Categories:")
+    for c in helper.getAccountCategories():
         print("\t", c)
         markup.add(c)
     msg = bot.reply_to(message, 'Select Category', reply_markup = markup)
@@ -24,12 +24,12 @@ def post_category_selection(message, bot):
     try:
         chat_id = message.chat.id
         selected_category = message.text
-        if selected_category not in helper.getSpendCategories():
+        if selected_category not in helper.getAccountCategories():
             bot.send_message(chat_id, 'Invalid', reply_markup=types.ReplyKeyboardRemove())
             raise Exception("Sorry I don't recognize this category \"{}\"!".format(selected_category))
 
         option[chat_id] = selected_category
-        message = bot.send_message(chat_id, 'How much did you spend on {}? \n(Enter numeric values only)'.format(str(option[chat_id])))
+        message = bot.send_message(chat_id, 'How much money you want to add in {} account? \n(Enter numeric values only)'.format(str(option[chat_id])))
         bot.register_next_step_handler(message, post_amount_input, bot, selected_category)
     except Exception as e:
         logging.exception(str(e))
@@ -48,58 +48,38 @@ def post_amount_input(message, bot, selected_category):
         chat_id = message.chat.id
         amount_entered = message.text
         amount_value = helper.validate_entered_amount(amount_entered)  # validate
+        option[selected_category] = amount_value
+        print("For {}.{}".format(chat_id, amount_value))
         if amount_value == 0:  # cannot be $0 spending
             raise Exception("Spent amount has to be a non-zero number.")
 
-        acc_type = helper.get_account_type(message)
-        acc_balance = helper.get_account_balance(message, "", acc_type)
-
-
-        if is_Valid_expense(message, float(amount_value)) == False:
-            raise Exception("Expenses exceed balance in {} account. Current Balance is {}.".format(acc_type, acc_balance))
-
-        helper.write_json(update_balance(message, amount_value))
         date_of_entry = datetime.today().strftime(helper.getDateFormat() + ' ' + helper.getTimeFormat())
-        date_str, category_str, amount_str = str(date_of_entry), str(option[chat_id]), str(amount_value)
-        helper.write_json(add_user_record(chat_id, "{},{},{}".format(date_str, category_str, amount_str)))
-        helper.write_json(add_user_balance_record(chat_id, "{}.{}.Outflow {}".format(date_str, acc_type, amount_value)))
-        bot.send_message(chat_id, 'The following expenditure has been recorded: You have spent ${} for {} on {} from {} account'.format(amount_str, category_str, date_str, acc_type))
-        helper.display_remaining_budget(message, bot, selected_category)
+        account_str = option[selected_category]
+        amount_str = str(amount_value)
+        date_str = str(date_of_entry)
+
+        helper.write_json(add_user_record(chat_id, "{},{},Inflow {}".format(date_str, selected_category, amount_str)))
+        helper.write_json(update_account_balance_add(chat_id, selected_category, amount_value))
+        bot.send_message(chat_id, 'The following expenditure has been recorded: You have Added ${} to {} account on {}'.format(amount_str, account_str, date_str))
+        bot.send_message(chat_id, 'New Balance in {} account is: {}'.format(selected_category, helper.get_account_balance(message, bot, selected_category)))
+        helper.display_account_balance(message, bot, selected_category)
     except Exception as e:
         logging.exception(str(e))
         bot.reply_to(message, 'Oh no. ' + str(e))
 
-
-# By default, we will use checkings account.
-# Only if there was a previous configuration of account change to savings, we will use that.
-def is_Valid_expense(message, amount):
-    acc_type = helper.get_account_type(message)
-
-    if (float(helper.get_account_balance(message, "", acc_type)) < amount):
-        return False
-    else:
-        return True
-
-def update_balance(message, amount):
-    cur_balance = float(helper.get_account_balance(message, "", helper.get_account_type(message)))
-    cur_balance -= float(amount)
-
-    acc_type = helper.get_account_type(message)
-
-    user_list = helper.read_json()
-    user_list[str(message.chat.id)]["balance"][acc_type] = str(cur_balance)
-    return user_list
-
-# Contains step to on user record addition
-def add_user_record(chat_id, record_to_be_added):
+def update_account_balance_add(chat_id, cat, val):
     user_list = helper.read_json()
     if str(chat_id) not in user_list:
         user_list[str(chat_id)] = helper.createNewUserRecord()
 
-    user_list[str(chat_id)]['data'].append(record_to_be_added)
+    if user_list[str(chat_id)]['balance'][cat] is None:
+        user_list[str(chat_id)]['balance'][cat] = str(val)
+    else:
+        user_list[str(chat_id)]['balance'][cat] = str(float(val) + float(user_list[str(chat_id)]['balance'][cat]))
     return user_list
 
-def add_user_balance_record(chat_id, record_to_be_added):
+# Contains step to on user record addition
+def add_user_record(chat_id, record_to_be_added):
     user_list = helper.read_json()
     if str(chat_id) not in user_list:
         user_list[str(chat_id)] = helper.createNewUserRecord()
