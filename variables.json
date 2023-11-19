@@ -21,10 +21,11 @@
         },
         "data_format" : {
             "balance": {
-                "checkings": null,
-                "savings": null
+                "Checking": null,
+                "Savings": null
             },
             "data": [],
+            "balance_data": [],
             "budget": {
                 "overall": null,
                 "category": null

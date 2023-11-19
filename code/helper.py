@@ -147,6 +147,26 @@ def isCategoryBudgetByCategoryAvailable(chatId, cat):
         return False
     return cat in data.keys()
 
+def isBalanceAvailable(chat_id, cat):
+    data = getUserData(chat_id)
+    if data['balance'][cat] is None:
+        return False
+    else:
+        return data['balance'][cat]
+
+def get_account_balance(message, bot, cat):
+    if isBalanceAvailable(message.chat.id, cat):
+        return float(isBalanceAvailable(message.chat.id, cat))
+    else:
+        return 0
+
+def display_account_balance(message, bot, cat):
+    chat_id = message.chat.id
+    if get_account_balance(message, bot, cat) != 0:
+        print("Balance in {} account is: {}.".format(cat, float(get_account_balance(message, bot, cat))))
+    else:
+        print("This Account category has no existing balance")
+
 # function to display remaining budget
 def display_remaining_budget(message, bot, cat):
     chat_id = message.chat.id
