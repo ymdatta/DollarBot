@@ -17,6 +17,7 @@ import category
 import download_csv
 import add_recurring
 import delete_expense
+import account
 from datetime import datetime
 from jproperties import Properties
 from telebot import types
@@ -61,7 +62,8 @@ menu_commands = [
     ("budget", "Add/Update/View/Delete budget"),
     ("category", "Add/Delete/Show custom categories in telegram bot"),
     ("csv", "To download your history in csv format"),
-    ("set_reminder", "Create a reminder for your purchases or bills")
+    ("set_reminder", "Create a reminder for your purchases or bills"),
+    ("select_expenses_account", "Select account to use for expenses")
 ]
 
 bot.set_my_commands([
@@ -108,6 +110,8 @@ def handle_menu_command(message):
         category.run(message, bot)
     elif command == 'csv':
         download_csv.run(message, bot)
+    elif command == 'select_expenses_account':
+        account.run(message, bot)
     elif command == 'set_reminder':
         print('Setting reminder')
         reminder.run(message, bot)
