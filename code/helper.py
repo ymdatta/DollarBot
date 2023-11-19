@@ -147,6 +147,7 @@ def isCategoryBudgetByCategoryAvailable(chatId, cat):
         return False
     return cat in data.keys()
 
+# function to check if there's balance in a particular account type
 def isBalanceAvailable(chat_id, cat):
     data = getUserData(chat_id)
     if data['balance'][cat] is None:
@@ -154,12 +155,22 @@ def isBalanceAvailable(chat_id, cat):
     else:
         return data['balance'][cat]
 
+# function to get balance in a particular category account.
 def get_account_balance(message, bot, cat):
     if isBalanceAvailable(message.chat.id, cat):
         return float(isBalanceAvailable(message.chat.id, cat))
     else:
         return 0
 
+# function to get the current active account for expenses.
+def get_account_type(message):
+    data = getUserData(message.chat.id)
+    if data['account']['Checking'] == "True":
+        return 'Checking'
+    else:
+        return 'Savings'
+
+# function to display balance in a particular category account.
 def display_account_balance(message, bot, cat):
     chat_id = message.chat.id
     if get_account_balance(message, bot, cat) != 0:

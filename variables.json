@@ -20,6 +20,10 @@
             "category": "Category-Wise Budget"
         },
         "data_format" : {
+            "account" : {
+                "Checking": "True",
+                "Savings": "False"
+            },
             "balance": {
                 "Checking": null,
                 "Savings": null
