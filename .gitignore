@@ -136,3 +136,10 @@ expense_record.json
 
 # API keys
 user.properties
+
+# Virtual environment files
+myenv/*
+
+# Don't include patch reject files or patches
+*.rej
+*.patch

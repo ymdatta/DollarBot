@@ -7,6 +7,7 @@ with open('variables.json') as variables:
     variables_data = json.load(variables)
 
 spend_categories = variables_data["variables"]["spend_categories"]
+account_categories = variables_data["variables"]["account_categories"]
 choices = variables_data["variables"]["choices"]
 plot = variables_data["variables"]["plot"]
 spend_display_option = variables_data["variables"]["spend_display_option"]
@@ -218,6 +219,9 @@ def getSpendCategories():
     with open("categories.txt", "r") as tf:
         spend_categories = tf.read().split(',')
     return spend_categories
+
+def getAccountCategories():
+    return account_categories 
 
 # function to get plot
 def getplot():

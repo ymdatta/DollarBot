@@ -11,6 +11,7 @@ from reminder import check_reminders
 import estimate
 import delete
 import add
+import add_balance
 import budget
 import category
 import download_csv
@@ -48,6 +49,7 @@ bot.set_update_listener(listener)
 
 # Define your list of commands and descriptions
 menu_commands = [
+    ("add_balance", "Add balance to a specific account"),
     ("add", "Record/Add a new spending"),
     ("add_recurring", "Record the recurring expenses"),
     ("display", "Show sum of expenditure"),
@@ -84,6 +86,8 @@ def handle_menu_command(message):
     command = message.text[1:]  # Remove the '/' character from the command
     if command == "add":
         add.run(message, bot)
+    elif command == "add_balance":
+        add_balance.run(message, bot)
     elif command == "display":
         display.run(message, bot)
     elif command == 'estimate':
