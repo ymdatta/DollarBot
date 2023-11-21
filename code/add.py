@@ -63,6 +63,11 @@ def post_amount_input(message, bot, selected_category):
         helper.write_json(add_user_record(chat_id, "{},{},{},{} Account".format(date_str, category_str, amount_str, acc_type)))
         helper.write_json(add_user_balance_record(chat_id, "{}.{}.Outflow {}".format(date_str, acc_type, amount_value)))
         bot.send_message(chat_id, 'The following expenditure has been recorded: You have spent ${} for {} on {} from {} account'.format(amount_str, category_str, date_str, acc_type))
+
+
+        if (helper.get_account_balance(message, "", acc_type) < 100):
+            bot.send_message(chat_id, 'ALERT: Balance in {} account is less than 100$'.format(acc_type))
+
         helper.display_remaining_budget(message, bot, selected_category)
     except Exception as e:
         logging.exception(str(e))
