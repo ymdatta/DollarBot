@@ -144,3 +144,8 @@ myenv/*
 *.rej
 *.patch
 *.test_log
+
+# Don't include csv/pdf files
+*data.csv
+expense_history.pdf
+histo.png

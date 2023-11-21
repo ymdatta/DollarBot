@@ -5,8 +5,7 @@ from matplotlib import pyplot as plt
 # Constants
 TOP_MARGIN = 0.8
 LINE_HEIGHT = 0.15
-FONT_SIZE_TITLE = 20
-FONT_SIZE_TEXT = 14
+FONT_SIZE_TEXT = 8
 
 def generate_expense_history_plot(user_history):
     """
@@ -30,16 +29,16 @@ def generate_expense_history_plot(user_history):
                 horizontalalignment="left",
                 verticalalignment="center",
                 transform=ax.transAxes,
-                fontsize=FONT_SIZE_TITLE,
+                fontsize=FONT_SIZE_TEXT,
             )
         else:
             for rec in user_history:
                 try:
-                    date, category, amount = rec.split(",")
+                    date, category, amount, account = rec.split(",")
                 except ValueError as ve:
                     raise ValueError(f"Error parsing user history data: {ve}")
 
-                rec_str = f"{amount}$ {category} expense on {date}"
+                rec_str = f"{category} expense on {date} with {account} account is {amount}$."
                 ax.text(
                     0,
                     top,

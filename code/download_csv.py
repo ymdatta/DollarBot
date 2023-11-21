@@ -15,8 +15,8 @@ def run(message, bot):
             bot.send_message(chat_id, "you have no history to generate CSV file.")
             return None
 
-        file_path = 'code/data.csv'
-        column_names = ['Date and Time', 'Category', 'Amount']
+        file_path = 'code/Expenses_Data.csv'
+        column_names = ['Date and Time', 'Category', 'Amount', 'Account Type']
 
         with open(file_path, mode='w', newline='') as file:
             writer = csv.writer(file)

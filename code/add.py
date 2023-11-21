@@ -60,7 +60,7 @@ def post_amount_input(message, bot, selected_category):
         helper.write_json(update_balance(message, amount_value))
         date_of_entry = datetime.today().strftime(helper.getDateFormat() + ' ' + helper.getTimeFormat())
         date_str, category_str, amount_str = str(date_of_entry), str(option[chat_id]), str(amount_value)
-        helper.write_json(add_user_record(chat_id, "{},{},{}".format(date_str, category_str, amount_str)))
+        helper.write_json(add_user_record(chat_id, "{},{},{},{} Account".format(date_str, category_str, amount_str, acc_type)))
         helper.write_json(add_user_balance_record(chat_id, "{}.{}.Outflow {}".format(date_str, acc_type, amount_value)))
         bot.send_message(chat_id, 'The following expenditure has been recorded: You have spent ${} for {} on {} from {} account'.format(amount_str, category_str, date_str, acc_type))
         helper.display_remaining_budget(message, bot, selected_category)
