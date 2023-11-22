@@ -17,6 +17,12 @@ SENDER_PASSWORD = "ogrigybfufihnkcc"
 extract_complete = threading.Event()
 
 def connect_to_smtp_server():
+    """
+    Connect to the SMTP server using the provided credentials.
+
+    Returns:
+        smtplib.SMTP: Connected SMTP server.
+    """
     try:
         logging.info("Connecting to SMTP server...")
         smtp_server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
@@ -29,6 +35,16 @@ def connect_to_smtp_server():
         raise
 
 def send_email(smtp_server, recipient_email, email_subject, email_body, attachment_path):
+    """
+    Send an email with an attachment.
+
+    Args:
+        smtp_server (smtplib.SMTP): Connected SMTP server.
+        recipient_email (str): Email address of the recipient.
+        email_subject (str): Subject of the email.
+        email_body (str): Body of the email.
+        attachment_path (str): Path to the attachment file.
+    """
     try:
         body = email_body
         msg = MIMEMultipart()
@@ -56,11 +72,26 @@ def send_email(smtp_server, recipient_email, email_subject, email_body, attachme
     except IOError as e:
         logging.error(f"IOError: {str(e)}")
         raise
+    except smtplib.SMTPRecipientsRefused as e:
+        logging.error(f"SMTP Recipients Refused: {str(e)}")
+        raise
+    except smtplib.SMTPSenderRefused as e:
+        logging.error(f"SMTP Sender Refused: {str(e)}")
+        raise
+    except smtplib.SMTPException as e:
+        logging.error(f"SMTP Exception: {str(e)}")
+        raise
     except Exception as e:
         logging.error(f"An unexpected error occurred: {str(e)}")
         raise
 
 def close_smtp_connection(smtp_server):
+    """
+    Close the connection to the SMTP server.
+
+    Args:
+        smtp_server (smtplib.SMTP): Connected SMTP server.
+    """
     try:
         smtp_server.quit()
     except Exception as e:
@@ -68,6 +99,13 @@ def close_smtp_connection(smtp_server):
         raise
 
 def run(message, bot):
+    """
+    Run the main process for handling user input.
+
+    Args:
+        message: User input message.
+        bot: Telegram bot instance.
+    """
     try:
         chat_id = message.chat.id
         message = bot.send_message(chat_id, 'Enter the email address to which you want to send your spend history')
@@ -76,6 +114,13 @@ def run(message, bot):
         logging.error(f"An error occurred: {str(e)}")
 
 def handle_email_input(message, bot):
+    """
+    Handle user input for the email address and initiate the email sending process.
+
+    Args:
+        message: User input message.
+        bot: Telegram bot instance.
+    """
     try:
         chat_id = message.chat.id
         user_email = message.text
@@ -95,6 +140,9 @@ def handle_email_input(message, bot):
         close_smtp_connection(smtp_server)
         message = bot.send_message(chat_id, 'Your Email has been sent successfully!')
 
+    except extract.ExtractError as e:
+        logging.error(f"Error during data extraction: {str(e)}")
+        message = bot.send_message(chat_id, 'Error during data extraction. Please try again.')
     except Exception as e:
         logging.error(f"An error occurred: {str(e)}")
         raise
