@@ -16,6 +16,7 @@ import budget
 import category
 import download_csv
 import download_pdf
+import email_history
 import add_recurring
 import delete_expense
 import account
@@ -64,6 +65,7 @@ menu_commands = [
     ("category", "Add/Delete/Show custom categories in telegram bot"),
     ("csv", "To download your history in csv format"),
     ("pdf", "Generates a PDF file containing the user's expense history plot"),
+    ("email_history", "your spend history will be sent to provided email address"),
     ("set_reminder", "Create a reminder for your purchases or bills"),
     ("select_expenses_account", "Select account to use for expenses")
 ]
@@ -112,6 +114,8 @@ def handle_menu_command(message):
         category.run(message, bot)
     elif command == 'csv':
         download_csv.run(message, bot)
+    elif command == 'email_history':
+        email_history.run(message, bot)
     elif command == 'select_expenses_account':
         account.run(message, bot)
     elif command == 'pdf':
