@@ -6,6 +6,7 @@ coverage==7.3.2
 cycler==0.12.1
 flake8==6.1.0
 fonttools==4.44.3
+forex-python==1.8
 h11==0.14.0
 httpcore==1.0.2
 httpx==0.25.1
