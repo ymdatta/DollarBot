@@ -8,6 +8,7 @@ with open('variables.json') as variables:
 
 spend_categories = variables_data["variables"]["spend_categories"]
 account_categories = variables_data["variables"]["account_categories"]
+currencies = variables_data["variables"]["currencies"]
 choices = variables_data["variables"]["choices"]
 plot = variables_data["variables"]["plot"]
 spend_display_option = variables_data["variables"]["spend_display_option"]
@@ -253,6 +254,12 @@ def getSpendCategories():
 
 def getAccountCategories():
     return account_categories 
+
+#function to get different currencies
+def getCurrencies():
+    with open("currencies.txt", "r") as tf:
+        currencies = tf.read().split(',')
+    return currencies
 
 # function to get plot
 def getplot():
