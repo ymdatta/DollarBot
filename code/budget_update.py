@@ -1,12 +1,14 @@
 import helper
 import logging
 from telebot import types
+from forex_python.converter import CurrencyRates
 
+currencies = CurrencyRates(force_decimal = False)
 
 def run(message, bot):
     chat_id = message.chat.id
     if (not (helper.isOverallBudgetAvailable(chat_id)) and (helper.isCategoryBudgetAvailable(chat_id))):
-        update_overall_budget(chat_id, bot)
+        update_overall_budget(message, bot)
     elif (not (helper.isCategoryBudgetAvailable(chat_id)) and (helper.isOverallBudgetAvailable(chat_id))):
         update_category_budget(message, bot)
     else:
@@ -18,7 +20,6 @@ def run(message, bot):
         msg = bot.reply_to(message, 'Select Budget Type', reply_markup=markup)
         bot.register_next_step_handler(msg, post_type_selection, bot)
 
-
 def post_type_selection(message, bot):
     try:
         chat_id = message.chat.id
@@ -28,27 +29,53 @@ def post_type_selection(message, bot):
             bot.send_message(chat_id, 'Invalid', reply_markup=types.ReplyKeyboardRemove())
             raise Exception("Sorry I don't recognise this operation \"{}\"!".format(op))
         if op == options['overall']:
-            update_overall_budget(chat_id, bot)
+            update_overall_budget(message, bot)
         elif op == options['category']:
             update_category_budget(message, bot)
     except Exception as e:
         helper.throw_exception(e, message, bot, logging)
 
+def update_overall_budget(message, bot):
+    markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
+    curr = helper.getCurrencies()
+    markup.row_width = 2
+    for c in curr:
+        markup.add(c)
+    msg = bot.reply_to(message, 'Select Currency', reply_markup=markup)
+    print('currency = ' + msg.text)
+    bot.register_next_step_handler(msg, post_currency_selection, bot)
 
-def update_overall_budget(chat_id, bot):
-    if (helper.isOverallBudgetAvailable(chat_id)):
-        currentBudget = helper.getOverallBudget(chat_id)
-        msg_string = 'Current Budget is ${}\n\nHow much is your new monthly budget? \n(Enter numeric values only)'
-        message = bot.send_message(chat_id, msg_string.format(currentBudget))
-    else:
-        message = bot.send_message(chat_id, 'How much is your monthly budget? \n(Enter numeric values only)')
-    bot.register_next_step_handler(message, post_overall_amount_input, bot)
+def post_currency_selection(message, bot):
+    try:
+        chat_id = message.chat.id
+        selected_currency = message.text
+        if selected_currency not in helper.getCurrencies():
+            bot.send_message(chat_id, 'Invalid', reply_markup=types.ReplyKeyboardRemove())
+            raise Exception("Sorry I don't recognize this currency \"{}\"!".format(selected_currency))
+        if (helper.isOverallBudgetAvailable(chat_id)):
+            currentBudget = helper.getOverallBudget(chat_id)
+            msg_string = 'Current Budget is ${}\n\nHow much is your new monthly budget? \n(Enter numeric values only)'
+            msg = bot.send_message(chat_id, msg_string.format(currentBudget))
+        else:
+            msg = bot.send_message(chat_id, 'How much is your monthly budget? \n(Enter numeric values only)')
+        bot.register_next_step_handler(msg, post_overall_amount_input, bot, selected_currency)
+    except Exception as e:
+        logging.exception(str(e))
+        bot.reply_to(message, 'Oh no! ' + str(e))
+        display_text = ""
+        commands = helper.getCommands()
+        for c in commands:  # generate help text out of the commands dictionary defined at the top
+            display_text += "/" + c + ": "
+            display_text += commands[c] + "\n"
+        bot.send_message(chat_id, 'Please select a menu option from below:')
+        bot.send_message(chat_id, display_text)
 
-
-def post_overall_amount_input(message, bot):
+def post_overall_amount_input(message, bot, selected_currency):
     try:
         chat_id = message.chat.id
         amount_value = helper.validate_entered_amount(message.text)
+        amount_value = currencies.convert(selected_currency,'USD',float(amount_value))
+        amount_value = str(round(float(amount_value), 2))
         if amount_value == 0:
             raise Exception("Invalid amount.")
         user_list = helper.read_json()
@@ -69,6 +96,7 @@ def update_category_budget(message, bot):
     for c in categories:
         markup.add(c)
     msg = bot.reply_to(message, 'Select Category', reply_markup=markup)
+    print('category = ' + msg.text)
     bot.register_next_step_handler(msg, post_category_selection, bot)
 
 
@@ -80,21 +108,44 @@ def post_category_selection(message, bot):
         if selected_category not in categories:
             bot.send_message(chat_id, 'Invalid', reply_markup=types.ReplyKeyboardRemove())
             raise Exception("Sorry I don't recognise this category \"{}\"!".format(selected_category))
+        markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
+        markup.row_width = 2
+        print("Currencies:")
+        for c in helper.getCurrencies():
+            print("\t", c)
+            markup.add(c)
+        msg = bot.reply_to(message, 'Select Currency', reply_markup=markup)
+        print('category = ' + selected_category)
+        bot.register_next_step_handler(msg, post_currency_selection_for_category_update, bot, selected_category)
+    except Exception as e:
+        helper.throw_exception(e, message, bot, logging)
+
+def post_currency_selection_for_category_update(message, bot, selected_category):
+    try:
+        chat_id = message.chat.id
+        # selected_category = message.text
+        # curr = helper.getCurrencies()
+        selected_currency = message.text
+        print('currency = ' + selected_currency)
+        if selected_currency not in helper.getCurrencies():
+            bot.send_message(chat_id, 'Invalid', reply_markup=types.ReplyKeyboardRemove())
+            raise Exception("Sorry I don't recognise this currency \"{}\"!".format(selected_currency))
         if helper.isCategoryBudgetByCategoryAvailable(chat_id, selected_category):
             currentBudget = helper.getCategoryBudgetByCategory(chat_id, selected_category)
             msg_string = 'Current monthly budget for {} is {}\n\nEnter monthly budget for {}\n(Enter numeric values only)'
             message = bot.send_message(chat_id, msg_string.format(selected_category, currentBudget, selected_category))
         else:
             message = bot.send_message(chat_id, 'Enter monthly budget for ' + selected_category + '\n(Enter numeric values only)')
-        bot.register_next_step_handler(message, post_category_amount_input, bot, selected_category)
+        bot.register_next_step_handler(message, post_category_amount_input, bot, selected_category, selected_currency)
     except Exception as e:
         helper.throw_exception(e, message, bot, logging)
 
-
-def post_category_amount_input(message, bot, category):
+def post_category_amount_input(message, bot, category, currency):
     try:
         chat_id = message.chat.id
         amount_value = helper.validate_entered_amount(message.text)
+        amount_value = currencies.convert(currency,'USD',float(amount_value))
+        amount_value = str(round(float(amount_value), 2))
         if amount_value == 0:
             raise Exception("Invalid amount.")
         user_list = helper.read_json()
