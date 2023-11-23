@@ -5,9 +5,9 @@ from telebot import types
 
 def run(message, bot):
     chat_id = message.chat.id
-    if helper.isOverallBudgetAvailable(chat_id):
+    if (not (helper.isOverallBudgetAvailable(chat_id)) and (helper.isCategoryBudgetAvailable(chat_id))):
         update_overall_budget(chat_id, bot)
-    elif helper.isCategoryBudgetAvailable(chat_id):
+    elif (not (helper.isCategoryBudgetAvailable(chat_id)) and (helper.isOverallBudgetAvailable(chat_id))):
         update_category_budget(message, bot)
     else:
         markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
