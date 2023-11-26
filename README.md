@@ -148,13 +148,13 @@ Please refer this [CONTRIBUTING.md](CONTRIBUTING.md) file.
 
 By contributing to DollarBot, you agree that your contributions will be licensed under the project's open-source license. It's important to understand and respect the licensing terms before contributing. The specific license terms for this project can be found in the [LICENSE](LICENSE) file.
 
-## Acknowledgements
+## :handshake: Contributors
 
-Here is a part where we will acknowledge the contributors for this project (sorted alphabetically)
-- Ajay
-- Jainam
-- Keerthana
-- Rahul
+(in alphabetical order)
+
+1. Mohan Yelugoti (myelugo@ncsu.edu)
+2. Rishabh Kala (rkala@ncsu.edu)
+3. Sreehith Yachamaneni (syacham@ncsu.edu)
 
 ## Support
 
@@ -194,4 +194,4 @@ You can view the demo [here](https://youtu.be/EX9CTIBbOuc)
 <p>Title:'DollarBot'</p>
 <p>Version: </p>
 <p>Description: 'An easy to use Telegram bot to track everyday expenses'</p>
-<p>Authors:'Ajay, Jainam, Keerthana, Rahul'</p>
+<p>Authors:'Mohan, Rishabh, Sreehith'</p>
