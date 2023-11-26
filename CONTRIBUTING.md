@@ -23,7 +23,7 @@ Follow the set of guidelines below to contribute to DollarBot!
 
 Please note that we have a [Code of Conduct](CODE_OF_CONDUCT.md) that all contributors are expected to follow. It ensures that our community is welcoming and inclusive.
 
-By participating, you are expected to uphold this code. Please report unacceptable behavior to rrajpur@ncsu.edu
+By participating, you are expected to uphold this code. Please report unacceptable behavior to dollarbot38@googlegroups.com
 (This project is a part of CSC510, Software Engineering at NC State for Fall'23, Group #67)
 
 ## Getting Started
@@ -102,9 +102,6 @@ Any suggesting enhancements like adding new features or improving existing funct
 3. Once ready, on GitHub, navigate to your fork of the repository and click the "New Pull Request" button. Fill in the details, briefly explaining what the PR does and if, how it addresses the issue or feature.
 4. Your PR then will be reviewed by at least one project maintainer. Please be prepared to respond to any feedback or requests for changes. You might have to make adjustments and push additional commits as needed.
 5. License: By contributing to DollarBot, you agree that your contributions will be licensed under the project's [LICENSE](LICENSE.md).
-
-### Pull Request Template
-(UNDER CONSTRUCTION)
 
 ## LICENSE
 
