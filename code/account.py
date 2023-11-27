@@ -7,6 +7,14 @@ option = {}
 
 # Main run function
 def run(message, bot):
+    """
+    This function takes 2 arguments for processing.
+
+    - **message** which is the message from the user on Telegram.
+    - **bot** which is the telegram bot object from the main code.py function.
+
+    This is the starting function in the implementation of account feature. It pops up a menu on the telegram asking the user to chose from two different account types, after which control is given to post_category_selection(message, bot) for further processing.
+    """
     helper.read_json()
     chat_id = message.chat.id
     option.pop(chat_id, None)  # remove temp choice
@@ -21,6 +29,16 @@ def run(message, bot):
 
 # Contains step to run after the category is selected
 def post_category_selection(message, bot):
+    """
+    This function takes 2 arguments for processing.
+
+    - **message** which is the message from the user on Telegram.
+    - **bot** which is the telegram bot object from the run(message, bot) function.
+
+    This is the function which gets executed once an account type is selected. It changes current account used for expenses to the one input by the user.
+
+    If an invalid account is selected, it erros out raising an exception indicating that the right category needs to be selected and it provides list of commands to start the next iteration.
+    """
     try:
         chat_id = message.chat.id
         selected_category = message.text
@@ -43,6 +61,14 @@ def post_category_selection(message, bot):
         bot.send_message(chat_id, display_text)
 
 def add_account_record(chat_id, type):
+    """
+    This function takes 2 arguments for processing.
+
+    - **chat_id** which is the unique ID for a user provided by Telegram.
+    - **type** which is the account type user selected for future purchases.
+
+    This function is a helper function, which creates user record if it's a new user. It then updates the account type for expenses based on the inputs from the user.
+    """
     user_list = helper.read_json()
     if str(chat_id) not in user_list:
         user_list[str(chat_id)] = helper.createNewUserRecord()
