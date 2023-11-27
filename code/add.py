@@ -3,6 +3,7 @@ import logging
 from telebot import types
 from datetime import datetime
 from forex_python.converter import CurrencyRates
+import pytest
 
 option = {}
 currencies = CurrencyRates(force_decimal = False)
@@ -80,7 +81,7 @@ def post_amount_input(message, bot, selected_category, selected_currency):
         amount_value = helper.validate_entered_amount(amount_entered)  # validate
         amount_value = currencies.convert(selected_currency,'USD',float(amount_value))
         amount_value = str(round(float(amount_value), 2))
-        if amount_value == 0:  # cannot be $0 spending
+        if float(amount_value) == 0:  # cannot be $0 spending
             raise Exception("Spent amount has to be a non-zero number.")
 
         acc_type = helper.get_account_type(message)

@@ -3,8 +3,8 @@ import json
 from mock.mock import patch
 from telebot import types
 from code import add
-from mock import ANY
-
+from mock import Mock
+import pytest
 
 dateFormat = '%d-%b-%Y'
 timeFormat = '%H:%M'
@@ -53,6 +53,19 @@ def test_post_amount_input_working(mock_telebot, mocker):
     add.post_category_selection(message, mc)
     assert (mc.send_message.called)
 
+@patch('telebot.telebot')
+@patch('code.helper.validate_entered_amount', Mock(return_value=0))
+def test_post_amount_input_failing_with_zero_amount(mock_telebot, mocker):
+    with pytest.raises(Exception) as e_info:
+        raise Exception('It failed')
+
+    mc = mock_telebot.return_value
+    mc.send_message.return_value = True
+
+    message = create_message("hello from testing!")
+    add.post_amount_input(message, mc, "DummyCategory", "USD")
+    assert str(e_info.value) == 'It failed'
+    assert (mc.reply_to.called)
 
 @patch('telebot.telebot')
 def test_post_amount_input_working_withdata(mock_telebot, mocker):
