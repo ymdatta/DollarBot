@@ -1,5 +1,3 @@
-import os
-import json
 from mock.mock import patch
 from telebot import types
 from code import add
@@ -7,7 +5,6 @@ from code import account
 from code import helper
 from mock import ANY
 from mock import Mock
-import pdb
 import pytest
 
 
@@ -47,59 +44,58 @@ def test_post_category_selection_working(mock_telebot, mocker):
 
 @patch('telebot.telebot')
 def test_post_category_selection_noMatchingCategory(mock_telebot, mocker):
-        with pytest.raises(Exception) as e_info:
-            raise Exception('It failed')
+    with pytest.raises(Exception) as e_info:
+        raise Exception('It failed')
 
-        mc = mock_telebot.return_value
-        mc.send_message.return_value = []
-        mc.reply_to.return_value = True
+    mc = mock_telebot.return_value
+    mc.send_message.return_value = []
+    mc.reply_to.return_value = True
 
-        mocker.patch.object(add, 'helper')
-        account.helper.getSpendCategories.return_value = None
+    mocker.patch.object(add, 'helper')
+    account.helper.getSpendCategories.return_value = None
 
-        message = create_message_category("hello from testing!", "DummyCategory")
-        add.post_category_selection(message, mc)
-        assert str(e_info.value) == 'It failed'
+    message = create_message_category("hello from testing!", "DummyCategory")
+    add.post_category_selection(message, mc)
+    assert str(e_info.value) == 'It failed'
 
 @patch('telebot.telebot')
 @patch('code.helper.getCommands', Mock(return_value=[]))
 def test_post_category_selection_noMatchingCategory_Exception_ReplyToCalled(mock_telebot, mocker):
-        with pytest.raises(Exception) as e_info:
-            raise Exception('It failed')
+    with pytest.raises(Exception) as e_info:
+        raise Exception('It failed')
 
-        mc = mock_telebot.return_value
-        mc.send_message.return_value = []
-        mc.reply_to.return_value = True
+    mc = mock_telebot.return_value
+    mc.send_message.return_value = []
+    mc.reply_to.return_value = True
 
-        mocker.patch.object(add, 'helper')
-        account.helper.getSpendCategories.return_value = None
+    mocker.patch.object(add, 'helper')
+    account.helper.getSpendCategories.return_value = None
 
-        message = create_message_category("hello from testing!", "DummyCategory")
-        add.post_category_selection(message, mc)
-        assert str(e_info.value) == 'It failed'
-
-        assert (mc.reply_to.called)
+    message = create_message_category("hello from testing!", "DummyCategory")
+    add.post_category_selection(message, mc)
+    assert str(e_info.value) == 'It failed'
+    assert (mc.reply_to.called)
 
 @patch('telebot.telebot')
 @patch('code.helper.getCommands', Mock(return_value=[]))
 def test_post_category_selection_noMatchingCategory_Exception_SendMessageCalled(mock_telebot, mocker):
-        with pytest.raises(Exception) as e_info:
-            raise Exception('It failed')
+    with pytest.raises(Exception) as e_info:
+        raise Exception('It failed')
 
-        mc = mock_telebot.return_value
-        mc.send_message.return_value = []
-        mc.reply_to.return_value = True
+    mc = mock_telebot.return_value
+    mc.send_message.return_value = []
+    mc.reply_to.return_value = True
 
-        mocker.patch.object(add, 'helper')
-        account.helper.getSpendCategories.return_value = None
+    mocker.patch.object(add, 'helper')
+    account.helper.getSpendCategories.return_value = None
 
-        message = create_message_category("hello from testing!", "DummyCategory")
-        add.post_category_selection(message, mc)
-        assert str(e_info.value) == 'It failed'
+    message = create_message_category("hello from testing!", "DummyCategory")
+    add.post_category_selection(message, mc)
+    assert str(e_info.value) == 'It failed'
 
-        assert (mc.reply_to.called)
-        assert (mc.send_message.called)
-        assert (mc.send_message.called)
+    assert (mc.reply_to.called)
+    assert (mc.send_message.called)
+    assert (mc.send_message.called)
 
 def create_message(text):
     params = {'messagebody': text}
