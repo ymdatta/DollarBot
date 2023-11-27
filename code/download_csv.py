@@ -10,7 +10,7 @@ def run(message, bot):
     try:
         chat_id = message.chat.id
         user_history = helper.getUserHistory(chat_id)
-        
+
         if not user_history:
             bot.send_message(chat_id, "you have no history to generate CSV file.")
             return None
@@ -21,7 +21,7 @@ def run(message, bot):
         with open(file_path, mode='w', newline='') as file:
             writer = csv.writer(file)
             writer.writerow(column_names)
-            writer.writerows(csv.reader(user_history, delimiter=','))
+            writer.writerows(user_history) # write the list of lists directly
 
         with open(file_path, 'rb') as file:
             try:
