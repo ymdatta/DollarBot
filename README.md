@@ -15,10 +15,21 @@
 ![Fork](https://img.shields.io/github/forks/deekay2310/MyDollarBot?style=social)
 <hr>
 
-# 💰 DollarBot - Budgeting	 On The Go 💰
+# 💰 DollarBot v2.0 - Budgeting	 On The Go 💰
 
-DollarBot is an easy-to-use Telegram Bot that assists you in recording your daily expenses on a local system without any hassle 
-With simple commands. This bot helps you you maintain and manage your expenses. This bot allows you to:
+<hr>
+<p align="center">
+<a><img  height=260 width=260
+  src="./logo.jpeg" alt="Expense tracking made easy!"></a>
+</p>
+
+# Description
+
+DollarBot is an easy-to-use Telegram bot that assists you in recording daily expenses on a local system without any hassle 
+With simple commands. This bot helps you to maintain and manage your expenses. This bot has following functionalities:
+
+## What DollarBot Can Do?
+
 - Add/Record a new spending
 - Calculate the sum of your expenditure for the current day/month
 - Display your spending history
@@ -34,17 +45,31 @@ With simple commands. This bot helps you you maintain and manage your expenses. 
   Added pie charts, bar graphs with and without budget lines for the user to have a look at the spending history in a better manner
   Added bar graph in the /history command to see spending across different categories
   User can see the daily and monthly expenses for spending history
-
-## What's New?!
 - Delete particular expenses.
 - Set a daily reminder to track your expenses for either the current day or the current month.
 - Menu button to improve the UI.
 
-<hr>
-<p align="center">
-<a><img  height=260 width=260
-  src="./logo.jpeg" alt="Expense tracking made easy!"></a>
-</p>
+## What's new in V2.0!!
+- Maintain two types of accounts for spending purposes.
+  - Checking Account
+  - Savings Account
+- Change type of account before making a purchase.
+- Log expenses in multiple currencies (USD, INR, GBP, EUR, CAD, and JPY).
+- Get alerts when your balance falls below a threshold value.
+- Get errors if you are spending more money than what's available in your account.
+- Download your expenses record in CSV, PDF format on the go.
+- Send your expenses record to any email address in CSV format.
+- User studies of the application.
+- Detailed documentation for each code file.
+
+## Use Case
+* One can use DollarBot to save time one would otherwise spend manually inputting numbers into a spreadsheet -- all the whil encouraging you to spend less and save more with budgeting feature. 
+
+## Punch Line
+
+* "If you can't measure it, you can't improve it." - Peter Drucker
+
+  Use DollarBot to measure your expenses and spend wisely.
 
 ## Table of Contents
 
@@ -64,7 +89,9 @@ With simple commands. This bot helps you you maintain and manage your expenses. 
 - [Changelogs](#changelogs)
 - [Code of Conduct](#code-of-conduct)
 
+## Demo
 
+[![Link to Demo](https://img.youtube.com/vi/E7EAHumVHhk/0.jpg)](https://www.youtube.com/watch?v=E7EAHumVHhk)
 
 ## Installation
 
@@ -185,7 +212,3 @@ Please note that we have a [Code of Conduct](CODE_OF_CONDUCT.md) that all contri
 
 ## What more can be done?
 Please refer to the issue list available [here](https://github.com/rrajpuro/MyDollarBot-BOTGo/issues) to see what more can be done to make MyDollarBot better. Please refer to the MyDollarBot project present [here](https://github.com/rrajpuro/MyDollarBot-BOTGo/projects) to have a look at the tasks to be done, tasks currently in progress and tasks already done.
-
-## Demo
-
-You can view the demo [here](https://youtu.be/EX9CTIBbOuc)
