@@ -128,10 +128,10 @@ def handle_email_input(message, bot):
         email_subject = "Your DollarBot Spend History"
         email_body = f"Hello {user_email},\n\nPlease find the attachment of your spend history"
 
-        file_exist = os.path.isfile('code/data.csv')
+        file_exist = os.path.isfile('code/Expenses_Data.csv')
         if file_exist:
             smtp_server = connect_to_smtp_server()
-            send_email(smtp_server, user_email, email_subject, email_body, 'code/data.csv')
+            send_email(smtp_server, user_email, email_subject, email_body, 'code/Expenses_Data.csv')
         else:
             file_path = extract.run(message, bot)
             smtp_server = connect_to_smtp_server()
