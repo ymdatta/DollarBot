@@ -163,6 +163,10 @@ The below instructions can be followed in order to set-up communication with the
   python -m pytest test/
   ```
 
+  Currently we have over **155** tests covering all functionalities of the bot. See the below output for more details.
+
+  ![Tests output](docs/images/tests.png)
+
 ### Code Coverage
 
 Code coverage is part of the build. Every time new code is pushed to the repository, the build is run, and along with it, code coverage is computed. This can be viewed by selecting the build, and then choosing the codecov pop-up on hover.
