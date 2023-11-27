@@ -148,21 +148,19 @@ def test_add_user_balance_record_working(mocker):
     if (len(MOCK_USER_DATA) + 1 == len(addeduserrecord)):
         assert True
 
-@patch('telebot.telebot')
 @patch('code.add.helper.get_account_type', Mock(return_value='Savings'))
 @patch('code.add.helper.get_account_balance', Mock(return_value=10))
 def test_is_valid_resource_true(mocker):
 
     return_val = add.is_Valid_expense("DummyMsg", 5)
-    assert(return_val == True)
+    assert (return_val == True)
 
-@patch('telebot.telebot')
 @patch('code.add.helper.get_account_type', Mock(return_value='Savings'))
 @patch('code.add.helper.get_account_balance', Mock(return_value=100))
 def test_is_valid_resource_false(mocker):
 
     return_val = add.is_Valid_expense("DummyMsg", 105)
-    assert(return_val == False)
+    assert (return_val == False)
 
 def create_message(text):
     params = {'messagebody': text}
