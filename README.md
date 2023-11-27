@@ -42,8 +42,8 @@ With simple commands. This bot helps you you maintain and manage your expenses. 
 
 <hr>
 <p align="center">
-<a><img  height=360 width=600
-  src="./log.jpeg" alt="Expense tracking made easy!"></a>
+<a><img  height=260 width=260
+  src="./logo.jpeg" alt="Expense tracking made easy!"></a>
 </p>
 
 ## Table of Contents
