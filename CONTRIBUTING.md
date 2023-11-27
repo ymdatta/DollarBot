@@ -42,7 +42,7 @@ Pre-requisites required before starting this project
 To contribute, we recommend to fork the DollarBot repository to your GitHub account. This will create a copy of the project under your account.
 Once forked, clone the repository from your account to your local machine.
 ```bash
-git clone https://github.com/rrajpuro/DollarBot.git
+git clone https://github.com/ymdatta/DollarBot.git
 cd DollarBot
 ```
 ## Contributing Guidelines

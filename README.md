@@ -25,8 +25,7 @@
 
 # Description
 
-DollarBot is an easy-to-use Telegram bot that assists you in recording daily expenses on a local system without any hassle 
-With simple commands. This bot helps you to maintain and manage your expenses. This bot has following functionalities:
+DollarBot is an easy-to-use Telegram bot that assists you in recording and managing daily expenses on a local system without any hassle with simple commands. This bot has following functionalities:
 
 ## What DollarBot Can Do?
 
@@ -74,6 +73,8 @@ With simple commands. This bot helps you to maintain and manage your expenses. T
 ## Table of Contents
 
 - [Demo](#demo)
+- [Tech Stack](#techstack)
+- [Development Tools](#development-tools) 
 - [Installation](#installation)
   - [Pre-requisites](#pre-requisites)
   - [Actual installation](#actual-installation)
@@ -93,25 +94,44 @@ With simple commands. This bot helps you to maintain and manage your expenses. T
 
 [![Link to Demo](https://img.youtube.com/vi/E7EAHumVHhk/0.jpg)](https://www.youtube.com/watch?v=E7EAHumVHhk)
 
+## Techstack
+
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+
+Starting from the external library dependencies to the testing of the application, everything is done in **Python 3**.
+
+Python specific tools used:
+
+- flake8
+- codecov
+- pytest
+
+## Development tools 
+
+![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white) ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white) ![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white) ![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white)
+
 ## Installation
 
-### Pre-requisites
+### Pre-requisite Tasks
 
-Here are some pre-requisites that you'll have to take care of before starting installation:
+Here are some pre-requisite tasks that you'll have to take complete before starting installation:
+
 1. In Telegram App/Desktop, search for "BotFather". Click on "Start", and enter the following command:
 ```
   /newbot
 ```
 2. Follow the instructions on screen:
-    a. Choose a name for your bot. 
-    b. Select a username for your bot that ends with "bot". (this is a rule from Telegram's side)
+
+    * Choose a name for your bot. 
+    * Select a username for your bot that ends with "bot" (this is a rule Telegram enforces).
 
 3. BotFather will confirm the creation of your bot and provide a HTTP API access token.
 4. Copy and save this token for future use.
 
 ### Actual Installation
 
-The below instructions can be followed in order to set-up this bot at your end in a span of few minutes! Let's get started:
+The below instructions can be followed in order to set-up communication with the bot from your end in a span of few minutes! Let's get started:
+
 1. Clone this repository to your local system.
 2. Start a terminal session in the directory where the project has been cloned. Run the following command to install the required dependencies:
 ```
@@ -127,19 +147,21 @@ The below instructions can be followed in order to set-up this bot at your end i
 ```
 4. It will ask you to paste the API token you received from Telegram in pre-requisites step 4.
 5. A successful run will generate a message on your terminal that says "TeleBot: Started polling." 
-
-6. In the Telegram app, search for your newly created bot by entering the username and open the same. Now, on Telegram, enter the "/start" or "/menu" command, and you are all set to track your expenses!
+6. In the Telegram app, search for your newly created bot by entering the username and open the same.
+  
+   Now, on Telegram, enter the "/start" or "/menu" command, and you are all set to track your expenses with DollarBot!
 
 ### Testing
 
-We use pytest to perform testing on all unit tests together. The command needs to be run from the home directory of the project. The command is:
-```
-python run -m pytest test/
-```
-(OR)
-```
-python -m pytest test/
-```
+  We use pytest to perform testing on all unit tests together. The command needs to be run from the home directory of the project. The command is:
+
+  ```
+  python run -m pytest test/
+  ```
+  (OR)
+  ```
+  python -m pytest test/
+  ```
 
 ### Code Coverage
 
