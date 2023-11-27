@@ -4,6 +4,7 @@ charset-normalizer==3.3.2
 contourpy==1.2.0
 coverage==7.3.2
 cycler==0.12.1
+Extract==1.0
 flake8==6.1.0
 fonttools==4.44.3
 forex-python==1.8
