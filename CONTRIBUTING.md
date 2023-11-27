@@ -24,7 +24,7 @@ Follow the set of guidelines below to contribute to DollarBot!
 Please note that we have a [Code of Conduct](CODE_OF_CONDUCT.md) that all contributors are expected to follow. It ensures that our community is welcoming and inclusive.
 
 By participating, you are expected to uphold this code. Please report unacceptable behavior to dollarbot38@googlegroups.com
-(This project is a part of CSC510, Software Engineering at NC State for Fall'23, Group #67)
+(This project is a part of CSC510, Software Engineering at NC State for Fall'23, Group #38)
 
 ## Getting Started
 
@@ -67,11 +67,11 @@ Before Submitting A Bug Report
 
 ## Submitting a Bug
 
-We appreciate your efforts in helping us improve DollarBot by reporting bugs. Before you create a new issue, please take a moment to check if the bug has already been reported in our [Issues](https://github.com/rrajpuro/DollarBot/issues) section.
+We appreciate your efforts in helping us improve DollarBot by reporting bugs. Before you create a new issue, please take a moment to check if the bug has already been reported in our [Issues](https://github.com/ymdatta/DollarBot/issues) section.
 
 If you're certain that it's a new issue or have additional information to provide, follow these steps:
 
-1. **Check the Issue Tracker**: Search our [Issues](https://github.com/rrajpuro/DollarBot/issues) to see if a similar issue has already been reported. If you find one that resonates with your observation, we recommend you to add relevant details/updates/observations to that existing issue.
+1. **Check the Issue Tracker**: Search our [Issues](https://github.com/ymdatta/DollarBot/issues) to see if a similar issue has already been reported. If you find one that resonates with your observation, we recommend you to add relevant details/updates/observations to that existing issue.
 
 2. **Create a New Issue**: If you can't find an existing bug matching the problem you've encountered, click on the "New Issue" button and select a template to create a new issue.
 
