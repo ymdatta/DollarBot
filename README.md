@@ -62,7 +62,7 @@ DollarBot is an easy-to-use Telegram bot that assists you in recording and manag
 - Detailed documentation for each code file.
 
 ## Use Case
-* One can use DollarBot to save time one would otherwise spend manually inputting numbers into a spreadsheet -- all the whil encouraging you to spend less and save more with budgeting feature. 
+* One can use DollarBot to save time one would otherwise spend manually inputting numbers into a spreadsheet -- all the while encouraging you to spend less and save more with budgeting feature. 
 
 ## Punch Line
 
@@ -78,10 +78,11 @@ DollarBot is an easy-to-use Telegram bot that assists you in recording and manag
 - [Installation](#installation)
   - [Pre-requisites](#pre-requisites)
   - [Actual installation](#actual-installation)
-  - [Testing](#testing)
-  - [Code Coverage](#code-coverage)
+- [Testing](#testing)
+- [Code Coverage](#code-coverage)
 - [Usage](#usage)
 - [Configuration](#configuration)
+- [Road Map](#roadmap)
 - [Contributing](#contributing)
 - [License](#license)
 - [Acknowledgements](#acknowledgements)
@@ -151,7 +152,7 @@ The below instructions can be followed in order to set-up communication with the
   
    Now, on Telegram, enter the "/start" or "/menu" command, and you are all set to track your expenses with DollarBot!
 
-### Testing
+## Testing
 
   We use pytest to perform testing on all unit tests together. The command needs to be run from the home directory of the project. The command is:
 
@@ -167,7 +168,7 @@ The below instructions can be followed in order to set-up communication with the
 
   ![Tests output](docs/images/tests.png)
 
-### Code Coverage
+## Code Coverage
 
 Code coverage is part of the build. Every time new code is pushed to the repository, the build is run, and along with it, code coverage is computed. This can be viewed by selecting the build, and then choosing the codecov pop-up on hover.
 
@@ -182,6 +183,8 @@ coverage report
 
 We have tried to make this application (bot) as easy as possible. It's pretty self explanatory. You can use this bot to manage and track you daily expenses and not worry about loosing track of your expenses. As we also have given in a functionality of graphing and plotting and history of expenses, it becomes easy for the user to track expenses.
 
+Link to feedback on DollarBot usage from users: [DollarBot Feedback Details](https://docs.google.com/document/d/1-2Ymohz238M43vACZSaMJzciNv_69CRBKFgrELbd-Bg/edit)
+
 ## Configuration
 
 As a user, there's no need to configure any parameters
@@ -190,6 +193,10 @@ As a contributor, we have tried to make the system as decoupled as possible so t
 2. Removing categories,
 3. Graphing changes,
 4. Changing Telegram bot names etc.
+
+## Roadmap
+
+  ### Link to Project Board: [DollarBot Project Board](https://github.com/users/ymdatta/projects/3)
 
 ## Contributing
 

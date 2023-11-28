@@ -3,15 +3,15 @@ scorecard
 | Rubric | Assesment| Evidence |
 | ----------- | ----------- | -- |
 | Total |  |  | 
-| Video | 3  |  | 
+| Video | 3  | https://www.youtube.com/watch?v=E7EAHumVHhk | 
 | Workload is spread over the whole team (one team member is often Xtimes more productive than the others...but nevertheless, here is a track record that everyone is contributing a lot) | 3 | https://github.com/ymdatta/DollarBot/graphs/contributors |
 | Number of commits | 3 | https://github.com/ymdatta/DollarBot/commits/main | 
 | Number of commits: by different people | 3 | https://github.com/ymdatta/DollarBot/graphs/contributors |
 | Issues reports: there are many | 3 | https://github.com/ymdatta/DollarBot/issues |
 | Issues are being closed | 3 | https://github.com/ymdatta/DollarBot/issues?q=is%3Aissue+is%3Aclosed| 
-| DOI badge: exists | 3 |  |
+| DOI badge: exists | 3 | https://github.com/ymdatta/DollarBot/blob/main/README.md, https://zenodo.org/records/10210342 |
 | Docs: doco generated, format not ugly | 3 | https://github.com/ymdatta/DollarBot/tree/main/docs |
-| Docs: what: point descriptions of each class/function (in isolation) | 3 |  | 
+| Docs: what: point descriptions of each class/function (in isolation) | 3 | https://github.com/ymdatta/DollarBot/tree/main/docs | 
 | Docs: how: for common use cases X,Y,Z mini-tutorials showing worked examples on how to do X,Y,Z | 3 |  | 
 | Docs: why: docs tell a story, motivate the whole thing, deliver a punchline that makes you want to rush out and use the thing | 3 |  |
 | Docs: short video, animated, hosted on your repo. That convinces people why they want to work on your code | 3 | |
@@ -30,7 +30,7 @@ scorecard
 | Evidence that the whole team is using the same tools (e.g. config files in the repo, updated by lots of different people | 3 | everone has multiple commits to this repository: https://github.com/ymdatta/DollarBot/pulse |
 | Evidence that the whole team is using the same tools (e.g. tutor can ask anyone to share screen, they demonstrate the system running on their computer | 3 | everone has muliplt commits to this repository: https://github.com/ymdatta/DollarBot/pulse |
 | Evidence that the members of the team are working across multiple places in the code base | 3 | https://github.com/ymdatta/DollarBot/commits/main/code/helper.py, https://github.com/ymdatta/DollarBot/commits/main/code/code.py |
-| Short release cycles | 3 |  |
+| Short release cycles | 3 | https://github.com/ymdatta/DollarBot/releases |
 | Does your website and documentation provide a clear, high-level overview of your software? | 3 | https://github.com/ymdatta/DollarBot/blob/main/README.md, https://github.com/ymdatta/DollarBot/tree/main/docs |
 | Does your website and documentation clearly describe the type of user who should use your software? | 3 | https://github.com/ymdatta/DollarBot/tree/main#usage |
 | Do you publish case studies to show how your software has been used by yourself and others? | 3 | https://docs.google.com/document/d/1-2Ymohz238M43vACZSaMJzciNv_69CRBKFgrELbd-Bg/edit?usp=sharing | 
@@ -45,7 +45,7 @@ scorecard
 | If you provide more extensive documentation, does this provide clear, step-by-step instructions on how to deploy and use your software? | 3 | Yes: https://github.com/ymdatta/DollarBot#installation |
 | Do you provide a comprehensive guide to all your software’s commands, functions and options? | 3 | https://github.com/ymdatta/DollarBot/blob/main/README.md, https://github.com/ymdatta/DollarBot/tree/main/docs | 
 | Do you provide troubleshooting information that describes the symptoms and step-by-step solutions for problems and error messages? | 3 |  |
-| If your software can be used as a library, package or service by other software, do you provide comprehensive API documentation? | 3 |  |
+| If your software can be used as a library, package or service by other software, do you provide comprehensive API documentation? | 3 | https://github.com/ymdatta/DollarBot/tree/main/docs |
 | Do you store your documentation under revision control with your source code? | 3 | https://github.com/ymdatta/DollarBot | 
 | Do you publish your release history e.g. release data, version numbers, key features of each release etc. on your web site or in your documentation? | 3 | Yes: https://github.com/ymdatta/DollarBot/blob/main/README.md |
 | Does your software describe how a user can get help with using your software? | 3 | https://github.com/ymdatta/DollarBot/tree/main#usage |
@@ -62,8 +62,8 @@ scorecard
 | Does your software adhere to appropriate accessibility conventions or standards? | 3 | https://github.com/ymdatta/DollarBot/blob/main/README.md |
 | Does your documentation adhere to appropriate accessibility conventions or standards? | 3 | https://github.com/ymdatta/DollarBot/tree/main/docs |
 | Is your source code stored in a repository under revision control? | 3 | Yes, on github: https://github.com/ymdatta/DollarBot |
-| Is each source code release a snapshot of the repository? | 3 |  |
-| Are releases tagged in the repository? | 3 |  |
+| Is each source code release a snapshot of the repository? | 3 | https://github.com/ymdatta/DollarBot/releases |
+| Are releases tagged in the repository? | 3 | https://github.com/ymdatta/DollarBot/releases |
 | Is there a branch of the repository that is always stable? (i.e. tests always pass, code always builds successfully) | 3 | Yes, the main: https://github.com/ymdatta/DollarBot/tree/main |
 | Do you back-up your repository? | 3 | Every one in the team has forked the repo and has it in their local machine https://github.com/ymdatta/DollarBot |
 | Do you provide publicly-available instructions for building your software from the source code? | 3 | Yes: https://github.com/ymdatta/DollarBot/tree/main#installation | 
@@ -76,7 +76,7 @@ scorecard
 | Do you have an automated test suite for your software? | 3 | https://github.com/ymdatta/DollarBot/blob/main/.github/workflows/testCases.yml |
 | Do you have a framework to periodically (e.g. nightly) run your tests on the latest version of the source code? | 3 | https://github.com/ymdatta/DollarBot/blob/main/.github/workflows/testCases.yml |
 | Do you use continuous integration, automatically running tests whenever changes are made to your source code? | 3 | https://github.com/ymdatta/DollarBot/blob/main/.github/workflows/testCases.yml|
-| Are your test results publicly visible? | 3 |  |
+| Are your test results publicly visible? | 3 | https://github.com/ymdatta/DollarBot/actions/workflows/testCases.yml |
 | Are all manually-run tests documented? | 3 | https://github.com/ymdatta/DollarBot/blob/main/.github/workflows/testCases.yml |
 | Does your project have resources (e.g. blog, Twitter, RSS feed, Facebook page, wiki, mailing list) that are regularly updated with information about your software? | 3 | https://github.com/nainisha-b/MyExpenseBot/blob/main/README.md |
 | Does your website state how many projects and users are associated with your project? | 3 | https://github.com/ymdatta/DollarBot/projects?query=is%3Aopen |
@@ -96,9 +96,9 @@ scorecard
 | Is your software released under an open source licence? | 3 | https://github.com/ymdatta/DollarBot/blob/main/LICENSE |
 | Is your software released under an OSI-approved open-source licence? | 3 | https://github.com/ymdatta/DollarBot/blob/main/LICENSE |
 | Does each of your source code files include a licence header? | 3 |  |
-| Do you have a recommended citation for your software? | 3 |  |
+| Do you have a recommended citation for your software? | 3 | https://github.com/ymdatta/DollarBot/blob/main/CITATION.md |
 | Does your website or documentation include a project roadmap (a list of project and development milestones for the next 3, 6 and 12 months)? | 3 |  |
 | Does your website or documentation describe how your project is funded, and the period over which funding is guaranteed? | NA | Not Applicable |
 | Do you make timely announcements of the deprecation of components, APIs, etc.? | NA | Not Applicable | 
 
-Link to video:
+Link to demo video: https://www.youtube.com/watch?v=E7EAHumVHhk
