@@ -207,6 +207,15 @@ As a contributor, we have tried to make the system as decoupled as possible so t
 3. Graphing changes,
 4. Changing Telegram bot names etc.
 
+## :interrobang: Troubleshooting
+
+
+1) Ensure that you have a valid bot token. You can obtain a token by creating a new bot on Telegram through the BotFather.
+2) Double-check that the token is correctly inserted into your bot's code or configuration.
+3) Make sure your bot has the necessary permissions to perform the actions you've programmed it for.
+4) If the issue still persists, please consider writing us at dollarbot38@googlegroups.com and we will get back to you as soon as possible.
+5) You're also free to report a bug in our repository and clearly stating the issue that you're facing. Please make sure to follow the guidelines mentioned in [CONTRIBUTING.md](https://github.com/ymdatta/DollarBot/blob/main/CONTRIBUTING.md)
+
 ## Roadmap
 
 ### Phase 1:
