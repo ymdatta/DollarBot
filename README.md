@@ -19,7 +19,7 @@
 
 <hr>
 <p align="center">
-<a><img  height=260 width=260
+<a><img  height=280 width=480
   src="./DollarBot.gif" alt="Expense tracking made easy!"></a>
 </p>
 
