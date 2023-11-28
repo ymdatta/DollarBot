@@ -12,8 +12,8 @@ scorecard
 | DOI badge: exists | 3 | https://github.com/ymdatta/DollarBot/blob/main/README.md, https://zenodo.org/records/10210342 |
 | Docs: doco generated, format not ugly | 3 | https://github.com/ymdatta/DollarBot/tree/main/docs |
 | Docs: what: point descriptions of each class/function (in isolation) | 3 | https://github.com/ymdatta/DollarBot/tree/main/docs | 
-| Docs: how: for common use cases X,Y,Z mini-tutorials showing worked examples on how to do X,Y,Z | 3 |  | 
-| Docs: why: docs tell a story, motivate the whole thing, deliver a punchline that makes you want to rush out and use the thing | 3 |  |
+| Docs: how: for common use cases X,Y,Z mini-tutorials showing worked examples on how to do X,Y,Z | 3 | https://github.com/ymdatta/DollarBot/tree/main/docs | 
+| Docs: why: docs tell a story, motivate the whole thing, deliver a punchline that makes you want to rush out and use the thing | 3 | https://github.com/ymdatta/DollarBot/tree/main/docs |
 | Docs: short video, animated, hosted on your repo. That convinces people why they want to work on your code | 3 | |
 | Use of version control tools | 3 | https://github.com/ymdatta/DollarBot |
 | Use of style checkers | 3 | https://github.com/ymdatta/DollarBot/blob/main/.github/workflows/styleChecker.yml |
