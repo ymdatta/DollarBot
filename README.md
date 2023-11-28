@@ -20,7 +20,7 @@
 <hr>
 <p align="center">
 <a><img  height=260 width=260
-  src="./logo.jpeg" alt="Expense tracking made easy!"></a>
+  src="./DollarBot.gif" alt="Expense tracking made easy!"></a>
 </p>
 
 # Description
