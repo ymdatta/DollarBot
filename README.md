@@ -272,6 +272,7 @@ By contributing to DollarBot, you agree that your contributions will be licensed
 ## Support
 
 Please feel free to reach us at <dollarbot38@googlegroups.com> if you face any issues or for giving feedback in general. 
+If you have used our Dollar Bot, feel free to give your feedback https://forms.gle/W354pePL3xw74jj76
 
 ## FAQs
 
