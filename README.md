@@ -60,6 +60,7 @@ DollarBot is an easy-to-use Telegram bot that assists you in recording and manag
 - Send your expenses record to any email address in CSV format.
 - User studies of the application.
 - Detailed documentation for each code file.
+- New and improved test cases for the code base.
 
 ## Use Case
 * One can use DollarBot to save time one would otherwise spend manually inputting numbers into a spreadsheet -- all the while encouraging you to spend less and save more with budgeting feature. 
