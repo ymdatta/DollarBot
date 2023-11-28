@@ -91,7 +91,7 @@ scorecard
 | Is your contributions' policy publicly available? | 3 | https://github.com/ymdatta/DollarBot/blob/main/CONTRIBUTING.md |
 | Do contributors keep the copyright/IP of their contributions? | 3 | https://github.com/ymdatta/DollarBot/blob/main/LICENSE |
 | Does your website and documentation clearly state the copyright owners of your software and documentation? | 3 | https://github.com/ymdatta/DollarBot/blob/main/LICENSEE |
-| Does each of your source code files include a copyright statement? | 3 |  |
+| Does each of your source code files include a copyright statement? | 3 | yes, https://github.com/ymdatta/DollarBot/blob/main/code/add.py, https://github.com/ymdatta/DollarBot/blob/main/code/code.py |
 | Does your website and documentation clearly state the licence of your software? | 3 | https://github.com/ymdatta/DollarBot/blob/main/LICENSE |
 | Is your software released under an open source licence? | 3 | https://github.com/ymdatta/DollarBot/blob/main/LICENSE |
 | Is your software released under an OSI-approved open-source licence? | 3 | https://github.com/ymdatta/DollarBot/blob/main/LICENSE |
