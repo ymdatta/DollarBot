@@ -53,7 +53,8 @@ DollarBot is an easy-to-use Telegram bot that assists you in recording and manag
   - Checking Account
   - Savings Account
 - Change type of account before making a purchase.
-- Log expenses in multiple currencies (USD, INR, GBP, EUR, CAD, and JPY).
+- Log spending expenses and balances in multiple currencies (USD, INR, GBP, EUR, CAD, and JPY).
+- Ability to add new or update overall/category-wise budget in multiple currencies.
 - Get alerts when your balance falls below a threshold value.
 - Get errors if you are spending more money than what's available in your account.
 - Download your expenses record in CSV, PDF format on the go.
@@ -207,6 +208,46 @@ As a contributor, we have tried to make the system as decoupled as possible so t
 4. Changing Telegram bot names etc.
 
 ## Roadmap
+
+### Phase 1:
+
+- [x] Add/Record a new spending
+- [x] Calculate the sum of your expenditure for the current day/month
+- [x] Display your spending history
+- [x] Clear/Erase all your records or individual expenses and edit/change any spending details if you wish to
+- [x] Add a recurring expense that adds a certain amount every month to the user's spending, for any given category.
+- [x] User can add a new category and delete an existing category as per the needs
+- [x] User can see the budget value for the total expense and/or for each of the existing categories in the /display function
+- [x] Added pie charts, bar graphs
+- [x] Set a daily reminder to track your expenses for either the current day or the current month.
+- [x] Menu button to improve the UI.
+
+
+### Phase 2
+
+- [x] Maintain two types of accounts for spending purposes - Checking Account and Savings Account
+- [x] Change type of account before making a purchase.
+- [x] Log spending expenses and balances in multiple currencies (USD, INR, GBP, EUR, CAD, and JPY).
+- [x] Ability to add new or update overall/category-wise budget in multiple currencies.
+- [x] Get alerts when your balance falls below a threshold value.
+- [x] Get errors if you are spending more money than what's available in your account.
+- [x] Download your expenses record in CSV, PDF format on the go.
+- [x] Send your expenses record to any email address in CSV format.
+- [x] User studies of the application.
+- [x] Detailed documentation for each code file.
+- [x] New and improved test cases for the code base.
+
+
+### Future Enhancements
+
+- [ ] Ability to add expenses of multiple users.
+- [ ] Ability to manage expenses among multiple users to calculate aggregate sum owed.
+- [ ] Adding a more robust cloud database.
+- [ ] Aggregation of an AI/ML based estimator that takes into account inflation.
+- [ ] Improve User Interface design.
+- [ ] Adding normal conversational abilities to the chatbot.
+- [ ] Ability to store pictures of physical bills tied to expenses for user reference.
+
 
   ### Link to Project Board: [DollarBot Project Board](https://github.com/users/ymdatta/projects/3)
 
