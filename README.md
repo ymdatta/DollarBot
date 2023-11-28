@@ -211,30 +211,29 @@ By contributing to DollarBot, you agree that your contributions will be licensed
 
 ## Support
 
-[Add here]
+Please feel free to reach us at <dollarbot38@googlegroups.com> if you face any issues or for giving feedback in general. 
 
 ## FAQs
 
 1. Will we need a Telegram account to run this?
+
     A. Yes
-
 2. Will we have to run multiple instances of the server for multiple clients?
+
     A. No
-
 3. How can we reach out to the developers/contributors?
-    A. Look out for the contributors/active developers and contact them.
 
+    A. Check the support section for details on reaching the developers.
 4. What if I encounter a bug/have a feature request?
-    A. File in an Issue and then we can discuss further!
+
+    A. Please raise an issue with the appropriate label to start a discussion and move forward.
 
 ## Changelogs
 
-[Add here]
+Please refer the following link for [CHANGELOG.md](CHANGELOG.md).
 
 ## Code of Conduct
 
 Please note that we have a [Code of Conduct](CODE_OF_CONDUCT.md) that all contributors are expected to follow. It ensures that our community is welcoming and inclusive.
 
-
-## What more can be done?
-Please refer to the issue list available [here](https://github.com/rrajpuro/MyDollarBot-BOTGo/issues) to see what more can be done to make MyDollarBot better. Please refer to the MyDollarBot project present [here](https://github.com/rrajpuro/MyDollarBot-BOTGo/projects) to have a look at the tasks to be done, tasks currently in progress and tasks already done.
+***Enjoy using DollarBot. Make sure to follow the page for any new updates!***
