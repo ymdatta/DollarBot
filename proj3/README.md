@@ -2,7 +2,7 @@ scorecard
 
 | Rubric | Assesment| Evidence |
 | ----------- | ----------- | -- |
-| Total |  |  | 
+| Total |  | 279 | 
 | Video | 3  | https://www.youtube.com/watch?v=E7EAHumVHhk | 
 | Workload is spread over the whole team (one team member is often Xtimes more productive than the others...but nevertheless, here is a track record that everyone is contributing a lot) | 3 | https://github.com/ymdatta/DollarBot/graphs/contributors |
 | Number of commits | 3 | https://github.com/ymdatta/DollarBot/commits/main | 
@@ -14,7 +14,7 @@ scorecard
 | Docs: what: point descriptions of each class/function (in isolation) | 3 | https://github.com/ymdatta/DollarBot/tree/main/docs | 
 | Docs: how: for common use cases X,Y,Z mini-tutorials showing worked examples on how to do X,Y,Z | 3 | https://github.com/ymdatta/DollarBot/tree/main/docs | 
 | Docs: why: docs tell a story, motivate the whole thing, deliver a punchline that makes you want to rush out and use the thing | 3 | https://github.com/ymdatta/DollarBot/tree/main/docs |
-| Docs: short video, animated, hosted on your repo. That convinces people why they want to work on your code | 3 | |
+| Docs: short video, animated, hosted on your repo. That convinces people why they want to work on your code | 3 | https://github.com/ymdatta/DollarBot/blob/main/README.md#description |
 | Use of version control tools | 3 | https://github.com/ymdatta/DollarBot |
 | Use of style checkers | 3 | https://github.com/ymdatta/DollarBot/blob/main/.github/workflows/styleChecker.yml |
 | Use of code formatters | 3 | https://github.com/ymdatta/DollarBot/blob/main/.flake8 |
