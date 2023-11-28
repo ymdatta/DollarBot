@@ -69,9 +69,9 @@ scorecard
 | Do you provide publicly-available instructions for building your software from the source code? | 3 | Yes: https://github.com/ymdatta/DollarBot/tree/main#installation | 
 | Can you build, or package, your software using an automated tool? | 3 | https://github.com/ymdatta/DollarBot/blob/main/.flake8 |
 | Do you provide publicly-available instructions for deploying your software? | 3 | Yes: https://github.com/ymdatta/DollarBot/tree/main#installation |
-| Does your documentation list all third-party dependencies? | 3 | https://github.com/nainisha-b/MyExpenseBot/blob/main/README.md |
-| Does your documentation list the version number for all third-party dependencies? | 3 | https://github.com/nainisha-b/MyExpenseBot/blob/main/README.md |
-| Can you download dependencies using a dependency management tool or package manager? | 3 | https://github.com/nainisha-b/MyExpenseBot/blob/main/README.md, https://github.com/ymdatta/DollarBot/tree/main#installation |
+| Does your documentation list all third-party dependencies? | 3 | https://github.com/ymdatta/DollarBot/blob/main/README.md |
+| Does your documentation list the version number for all third-party dependencies? | 3 | https://github.com/ymdatta/DollarBot/blob/main/README.md |
+| Can you download dependencies using a dependency management tool or package manager? | 3 | https://github.com/ymdatta/DollarBot/blob/main/README.md, https://github.com/ymdatta/DollarBot/tree/main#installation |
 | Do you have tests that can be run after your software has been built or deployed to show whether the build or deployment has been successful? | 3 | https://github.com/ymdatta/DollarBot/blob/main/.github/workflows/testCases.yml |
 | Do you have an automated test suite for your software? | 3 | https://github.com/ymdatta/DollarBot/blob/main/.github/workflows/testCases.yml |
 | Do you have a framework to periodically (e.g. nightly) run your tests on the latest version of the source code? | 3 | https://github.com/ymdatta/DollarBot/blob/main/.github/workflows/testCases.yml |
