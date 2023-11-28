@@ -2,7 +2,7 @@ scorecard
 
 | Rubric | Assesment| Evidence |
 | ----------- | ----------- | -- |
-| Total |  | 279 | 
+| Total | 279 |  | 
 | Video | 3  | https://www.youtube.com/watch?v=E7EAHumVHhk | 
 | Workload is spread over the whole team (one team member is often Xtimes more productive than the others...but nevertheless, here is a track record that everyone is contributing a lot) | 3 | https://github.com/ymdatta/DollarBot/graphs/contributors |
 | Number of commits | 3 | https://github.com/ymdatta/DollarBot/commits/main | 
