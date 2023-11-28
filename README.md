@@ -222,7 +222,6 @@ As a contributor, we have tried to make the system as decoupled as possible so t
 - [x] Set a daily reminder to track your expenses for either the current day or the current month.
 - [x] Menu button to improve the UI.
 
-
 ### Phase 2
 
 - [x] Maintain two types of accounts for spending purposes - Checking Account and Savings Account
@@ -237,7 +236,6 @@ As a contributor, we have tried to make the system as decoupled as possible so t
 - [x] Detailed documentation for each code file.
 - [x] New and improved test cases for the code base.
 
-
 ### Future Enhancements
 
 - [ ] Ability to add expenses of multiple users.
@@ -248,8 +246,7 @@ As a contributor, we have tried to make the system as decoupled as possible so t
 - [ ] Adding normal conversational abilities to the chatbot.
 - [ ] Ability to store pictures of physical bills tied to expenses for user reference.
 
-
-  ### Link to Project Board: [DollarBot Project Board](https://github.com/users/ymdatta/projects/3)
+ ### Link to Project Board: [DollarBot Project Board](https://github.com/users/ymdatta/projects/3)
 
 ## Contributing
 
