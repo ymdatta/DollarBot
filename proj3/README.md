@@ -97,7 +97,7 @@ scorecard
 | Is your software released under an OSI-approved open-source licence? | 3 | https://github.com/ymdatta/DollarBot/blob/main/LICENSE |
 | Does each of your source code files include a licence header? | 3 |  |
 | Do you have a recommended citation for your software? | 3 | https://github.com/ymdatta/DollarBot/blob/main/CITATION.md |
-| Does your website or documentation include a project roadmap (a list of project and development milestones for the next 3, 6 and 12 months)? | 3 |  |
+| Does your website or documentation include a project roadmap (a list of project and development milestones for the next 3, 6 and 12 months)? | 3 | https://github.com/ymdatta/DollarBot#roadmap |
 | Does your website or documentation describe how your project is funded, and the period over which funding is guaranteed? | NA | Not Applicable |
 | Do you make timely announcements of the deprecation of components, APIs, etc.? | NA | Not Applicable | 
 
