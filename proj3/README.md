@@ -44,7 +44,7 @@ scorecard
 | Does your documentation include a "quick start" guide, that provides a short overview of how to use your software with some basic examples of use? | 3 | Yes https://github.com/ymdatta/DollarBot#-dollarbot---budgeting-on-the-go-|
 | If you provide more extensive documentation, does this provide clear, step-by-step instructions on how to deploy and use your software? | 3 | Yes: https://github.com/ymdatta/DollarBot#installation |
 | Do you provide a comprehensive guide to all your software’s commands, functions and options? | 3 | https://github.com/ymdatta/DollarBot/blob/main/README.md, https://github.com/ymdatta/DollarBot/tree/main/docs | 
-| Do you provide troubleshooting information that describes the symptoms and step-by-step solutions for problems and error messages? | 3 |  |
+| Do you provide troubleshooting information that describes the symptoms and step-by-step solutions for problems and error messages? | 3 | https://github.com/ymdatta/DollarBot/tree/main#interrobang-troubleshooting |
 | If your software can be used as a library, package or service by other software, do you provide comprehensive API documentation? | 3 | https://github.com/ymdatta/DollarBot/tree/main/docs |
 | Do you store your documentation under revision control with your source code? | 3 | https://github.com/ymdatta/DollarBot | 
 | Do you publish your release history e.g. release data, version numbers, key features of each release etc. on your web site or in your documentation? | 3 | Yes: https://github.com/ymdatta/DollarBot/blob/main/README.md |
