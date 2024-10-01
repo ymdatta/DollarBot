@@ -18,7 +18,7 @@
 # Money Manager
 
 Taken over and hosted at: [https://t.me/mm_gsgp_bot](https://t.me/mm_gsgp_bot)
-
+![](https://github.com/gitsetgopack/MoneyManager/blob/main/docs/images/new-logo.png)
 
 # Description
 
