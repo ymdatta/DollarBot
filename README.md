@@ -15,13 +15,10 @@
 ![Fork](https://img.shields.io/github/forks/deekay2310/MyDollarBot?style=social)
 <hr>
 
-# 💰 DollarBot v2.0 - Budgeting	 On The Go 💰
+# Money Manager
 
-<hr>
-<p align="center">
-<a><img  height=280 width=480
-  src="./DollarBot.gif" alt="Expense tracking made easy!"></a>
-</p>
+Taken over and hosted at: [https://t.me/mm_gsgp_bot](https://t.me/mm_gsgp_bot)
+
 
 # Description
 
