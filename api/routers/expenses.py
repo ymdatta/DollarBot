@@ -8,7 +8,7 @@ import datetime
 from jose import JWTError, jwt
 from pydantic import BaseModel
 from typing import Optional
-from .config import MONGO_URI
+from ..config import MONGO_URI
 from fastapi import Header
 from rich import inspect
 # Constants for authentication
