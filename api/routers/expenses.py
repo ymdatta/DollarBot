@@ -11,6 +11,11 @@ from typing import Optional
 from .config import MONGO_URI
 from fastapi import Header
 from rich import inspect
+from forex_python.converter import CurrencyRates
+from currency_converter import CurrencyConverter
+
+currency_converter = CurrencyConverter()
+
 # Constants for authentication
 SECRET_KEY = "your_secret_key"
 ALGORITHM = "HS256"
@@ -79,8 +84,8 @@ async def create_user(user: UserCreate):
 
     # Create default accounts for the user
     default_accounts = [
-        {"user_id": str(user_id), "account_type": "Checking", "balance": 1000.0},
-        {"user_id": str(user_id), "account_type": "Savings", "balance": 5000.0}
+        {"user_id": str(user_id), "account_type": "Checking", "balance": 1000.0, "currency":"USD"},
+        {"user_id": str(user_id), "account_type": "Savings", "balance": 5000.0, "currency":"USD"}
     ]
     
     await accounts_collection.insert_many(default_accounts)
@@ -111,29 +116,38 @@ def create_access_token(data: dict, expires_delta: datetime.timedelta = None):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
+
+def convert_currency(amount, from_cur, to_cur):
+    if from_cur == to_cur:
+        return amount
+    currency_converter.convert(amount, from_cur, to_cur)
+    try:
+        return currency_converter.convert(amount, from_cur, to_cur)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Currency conversion failed: {str(e)}")
+
 # Endpoint to add a new expense
 @router.post("/add/")
 async def add_expense(amount: float, currency: str, category: str, description: str = None, account_type: str = "Checking", token: str = Header(None)):
     user_id = verify_token(token)
     account = await accounts_collection.find_one({"user_id": user_id, "account_type": account_type})
     user = await users_collection.find_one({"_id": ObjectId(user_id)})
-    print(user)
-    inspect(user_id)
     if not account:
         raise HTTPException(status_code=400, detail="Invalid account type")
 
-    if account["balance"] < amount:
-        raise HTTPException(status_code=400, detail="Insufficient balance in {} account".format(account_type))
-    
     currency = currency.upper()
     if currency not in user["currencies"]:
         raise HTTPException(status_code=400, detail=f"Currency type is not added to user account. Available currencies are {user['currencies']}")
+    converted_amount = convert_currency(amount, currency, account["currency"])
+    
+    if account["balance"] < converted_amount:
+        raise HTTPException(status_code=400, detail="Insufficient balance in {} account".format(account_type))
     
     if category not in user["categories"]:
         raise HTTPException(status_code=400, detail=f"Category is not present in the user account. Available categories are {user['categories']}")
 
     # Deduct amount from user's account balance
-    new_balance = account["balance"] - amount
+    new_balance = account["balance"] - converted_amount
     await accounts_collection.update_one({"_id": account["_id"]}, {"$set": {"balance": new_balance}})
 
     # Record the expense
@@ -155,21 +169,25 @@ async def add_expense(amount: float, currency: str, category: str, description: 
 
 # Endpoint to get all expenses for a user
 @router.get("/")
-async def get_expenses(token: str = Depends(oauth2_scheme)):
+async def get_expenses(token: str = Header(None)):
     user_id = verify_token(token)
     expenses = await expenses_collection.find({"user_id": user_id}).to_list(1000)
     return {"expenses": [format_id(expense) for expense in expenses]}
 
 # Endpoint to delete an expense by ID
 @router.delete("/delete/{expense_id}")
-async def delete_expense(expense_id: str, token: str = Depends(oauth2_scheme)):
+async def delete_expense(expense_id: str, token: str = Header(None)):
     user_id = verify_token(token)
-    expense = await expenses_collection.find_one({"_id": ObjectId(expense_id)})
+    try:
+        expense = await expenses_collection.find_one({"_id": ObjectId(expense_id)})
+    except:
+        raise HTTPException(status_code=404, detail="Expense could not be retrieved")
+
     if not expense or expense["user_id"] != user_id:
         raise HTTPException(status_code=404, detail="Expense not found")
 
     account_type = expense["account_type"]
-    amount = expense["amount"]
+    amount = convert_currency(expense["amount"])
 
     # Refund the amount to user's account
     account = await accounts_collection.find_one({"user_id": user_id, "account_type": account_type})
@@ -186,30 +204,48 @@ async def delete_expense(expense_id: str, token: str = Depends(oauth2_scheme)):
 
 # Endpoint to update an expense by ID
 @router.put("/update/{expense_id}")
-async def update_expense(expense_id: str, amount: float = None, category: str = None, description: str = None, token: str = Depends(oauth2_scheme)):
+async def update_expense(expense_id: str, amount: float = None, currency:str=None, category: str = None, description: str = None, token: str = Header(None)):
     user_id = verify_token(token)
-    expense = await expenses_collection.find_one({"_id": ObjectId(expense_id)})
+    user = await users_collection.find_one({"_id": ObjectId(user_id)})
+    try:
+        expense = await expenses_collection.find_one({"_id": ObjectId(expense_id)})
+    except:
+        raise HTTPException(status_code=404, detail="Expense could not be retrieved")
     if not expense or expense["user_id"] != user_id:
         raise HTTPException(status_code=404, detail="Expense not found")
 
     update_fields = {}
+
+    if currency is not None:
+        currency = currency.upper()
+        if currency not in user["currencies"]:
+            raise HTTPException(status_code=400, detail=f"Currency type is not added to user account. Available currencies are {user['currencies']}")
+        elif currency is not None:
+            update_fields["currency"] = currency
+
+    account_type = expense["account_type"]
+    account = await accounts_collection.find_one({"user_id": user_id, "account_type": account_type})
     if amount is not None:
         update_fields["amount"] = amount
-        account_type = expense["account_type"]
-        account = await accounts_collection.find_one({"user_id": user_id, "account_type": account_type})
+        converted_amount = convert_currency(amount)
         if not account:
             raise HTTPException(status_code=404, detail="Account not found")
 
         # Adjust the user's balance
+        cur = currency or expense["currency"]
         original_amount = expense["amount"]
-        difference = amount - original_amount
-        if account["balance"] < difference:
+        new_amount = original_amount - converted_amount(original_amount, expense["currency"], account["current"]) + convert_currency(amount, cur, account["current"])
+        if new_amount < 0:
             raise HTTPException(status_code=400, detail="Insufficient balance to update the expense")
-        new_balance = account["balance"] - difference
-        await accounts_collection.update_one({"_id": account["_id"]}, {"$set": {"balance": new_balance}})
+        await accounts_collection.update_one({"_id": account["_id"]}, {"$set": {"balance": new_amount}})
 
+    
     if category is not None:
-        update_fields["category"] = category
+        if category not in user["categories"]:
+            raise HTTPException(status_code=400, detail=f"Category is not present in the user account. Available categories are {user['categories']}")
+        elif category is not None:
+            update_fields["category"] = category
+        
     if description is not None:
         update_fields["description"] = description
 
