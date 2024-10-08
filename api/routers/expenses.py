@@ -19,7 +19,7 @@ currency_converter = CurrencyConverter()
 # Constants for authentication
 SECRET_KEY = "your_secret_key"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = 30*24*60
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 
@@ -38,10 +38,11 @@ def format_id(document):
     return document
 
 def verify_token(token: str):
+    if token is None:
+        raise HTTPException(status_code=401, detail="Token is missing")
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         user_id: str = payload.get("sub")
-        print(payload)
         if user_id is None:
             raise HTTPException(status_code=401, detail="User not found")
         token_exists = tokens_collection.find_one({"user_id": user_id, "token": token})
@@ -120,7 +121,6 @@ def create_access_token(data: dict, expires_delta: datetime.timedelta = None):
 def convert_currency(amount, from_cur, to_cur):
     if from_cur == to_cur:
         return amount
-    currency_converter.convert(amount, from_cur, to_cur)
     try:
         return currency_converter.convert(amount, from_cur, to_cur)
     except Exception as e:
@@ -163,7 +163,7 @@ async def add_expense(amount: float, currency: str, category: str, description: 
     result = await expenses_collection.insert_one(expense)
 
     if result.inserted_id:
-        return {"message": "Expense added successfully", "expense": format_id(expense), "new_balance":new_balance}
+        return {"message": "Expense added successfully", "expense": format_id(expense), "balance":new_balance}
     else:
         raise HTTPException(status_code=500, detail="Failed to add expense")
 
@@ -187,10 +187,10 @@ async def delete_expense(expense_id: str, token: str = Header(None)):
         raise HTTPException(status_code=404, detail="Expense not found")
 
     account_type = expense["account_type"]
-    amount = convert_currency(expense["amount"])
+    account = await accounts_collection.find_one({"user_id": user_id, "account_type": account_type})
+    amount = convert_currency(expense["amount"], expense["currency"], account["currency"])
 
     # Refund the amount to user's account
-    account = await accounts_collection.find_one({"user_id": user_id, "account_type": account_type})
     new_balance = account["balance"] + amount
     await accounts_collection.update_one({"_id": account["_id"]}, {"$set": {"balance": new_balance}})
 
@@ -198,7 +198,7 @@ async def delete_expense(expense_id: str, token: str = Header(None)):
     result = await expenses_collection.delete_one({"_id": ObjectId(expense_id)})
 
     if result.deleted_count == 1:
-        return {"message": "Expense deleted successfully"}
+        return {"message": "Expense deleted successfully", "balance":new_balance}
     else:
         raise HTTPException(status_code=500, detail="Failed to delete expense")
 
@@ -227,17 +227,20 @@ async def update_expense(expense_id: str, amount: float = None, currency:str=Non
     account = await accounts_collection.find_one({"user_id": user_id, "account_type": account_type})
     if amount is not None:
         update_fields["amount"] = amount
-        converted_amount = convert_currency(amount)
         if not account:
             raise HTTPException(status_code=404, detail="Account not found")
 
         # Adjust the user's balance
-        cur = currency or expense["currency"]
-        original_amount = expense["amount"]
-        new_amount = original_amount - converted_amount(original_amount, expense["currency"], account["current"]) + convert_currency(amount, cur, account["current"])
-        if new_amount < 0:
+        # Convert old and new amounts to the account currency to determine balance adjustment
+        original_amount_converted = convert_currency(expense["amount"], expense["currency"], account["currency"])
+        new_amount_converted = convert_currency(amount, currency or expense["currency"], account["currency"])
+        
+        difference = new_amount_converted - original_amount_converted
+        new_balance = account["balance"] - difference
+
+        if new_balance < 0:
             raise HTTPException(status_code=400, detail="Insufficient balance to update the expense")
-        await accounts_collection.update_one({"_id": account["_id"]}, {"$set": {"balance": new_amount}})
+        await accounts_collection.update_one({"_id": account["_id"]}, {"$set": {"balance": new_balance}})
 
     
     if category is not None:
@@ -255,6 +258,6 @@ async def update_expense(expense_id: str, amount: float = None, currency:str=Non
     result = await expenses_collection.update_one({"_id": ObjectId(expense_id)}, {"$set": update_fields})
     if result.modified_count == 1:
         updated_expense = await expenses_collection.find_one({"_id": ObjectId(expense_id)})
-        return {"message": "Expense updated successfully", "updated_expense": format_id(updated_expense)}
+        return {"message": "Expense updated successfully", "updated_expense": format_id(updated_expense), "balance":new_balance}
     else:
         raise HTTPException(status_code=500, detail="Failed to update expense")
