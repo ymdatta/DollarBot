@@ -180,112 +180,31 @@ async def delete_expense(expense_id: str, token: str = Header(None)):
     user_id = verify_token(token)
     try:
         expense = await expenses_collection.find_one({"_id": ObjectId(expense_id)})
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to retrieve the expense: {str(e)}")
+    except:
+        raise HTTPException(status_code=404, detail="Expense could not be retrieved")
 
-    if not expense:
-        raise HTTPException(status_code=404, detail=f"Expense with ID {expense_id} not found.")
-
-    if expense["user_id"] != user_id:
-        raise HTTPException(status_code=403, detail="You do not have permission to delete this expense.")
+    if not expense or expense["user_id"] != user_id:
+        raise HTTPException(status_code=404, detail="Expense not found")
 
     account_type = expense["account_type"]
-    try:
-        account = await accounts_collection.find_one({"user_id": user_id, "account_type": account_type})
-        if not account:
-            raise HTTPException(status_code=404, detail=f"Account of type '{account_type}' not found for user.")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to retrieve account information: {str(e)}")
-
-    try:
-        amount = convert_currency(expense["amount"], expense["currency"], account["currency"])
-    except HTTPException as e:
-        raise HTTPException(status_code=400, detail=f"Failed to convert currency: {e.detail}")
+    account = await accounts_collection.find_one({"user_id": user_id, "account_type": account_type})
+    amount = convert_currency(expense["amount"], expense["currency"], account["currency"])
 
     # Refund the amount to user's account
     new_balance = account["balance"] + amount
-    try:
-        await accounts_collection.update_one({"_id": account["_id"]}, {"$set": {"balance": new_balance}})
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to update account balance: {str(e)}")
+    await accounts_collection.update_one({"_id": account["_id"]}, {"$set": {"balance": new_balance}})
 
     # Delete the expense
     result = await expenses_collection.delete_one({"_id": ObjectId(expense_id)})
+
     if result.deleted_count == 1:
-        return {"message": "Expense deleted successfully", "balance": new_balance}
+        return {"message": "Expense deleted successfully", "balance":new_balance}
     else:
-        raise HTTPException(status_code=500, detail="Failed to delete expense from the database.")
+        raise HTTPException(status_code=500, detail="Failed to delete expense")
 
 # Endpoint to update an expense by ID
 @router.put("/update/{expense_id}")
-async def update_expense(expense_id: str, amount: float = None, currency: str = None, category: str = None, description: str = None, token: str = Header(None)):
-    user_id = verify_token(token)
-    try:
-        expense = await expenses_collection.find_one({"_id": ObjectId(expense_id)})
-        if not expense:
-            raise HTTPException(status_code=404, detail=f"Expense with ID {expense_id} not found.")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to retrieve the expense: {str(e)}")
-
-    if expense["user_id"] != user_id:
-        raise HTTPException(status_code=403, detail="You do not have permission to update this expense.")
-
-    account_type = expense["account_type"]
-    try:
-        account = await accounts_collection.find_one({"user_id": user_id, "account_type": account_type})
-        if not account:
-            raise HTTPException(status_code=404, detail=f"Account of type '{account_type}' not found for user.")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to retrieve account information: {str(e)}")
-
-    update_fields = {}
-    if amount is not None:
-        try:
-            original_amount_converted = convert_currency(expense["amount"], expense["currency"], account["currency"])
-            new_amount_converted = convert_currency(amount, currency or expense["currency"], account["currency"])
-        except HTTPException as e:
-            raise HTTPException(status_code=400, detail=f"Failed to convert currency for amount update: {e.detail}")
-
-        difference = new_amount_converted - original_amount_converted
-        new_balance = account["balance"] - difference
-
-        if new_balance < 0:
-            raise HTTPException(status_code=400, detail="Insufficient balance to update the expense.")
-
-        try:
-            await accounts_collection.update_one({"_id": account["_id"]}, {"$set": {"balance": new_balance}})
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=f"Failed to update account balance: {str(e)}")
-
-        update_fields["amount"] = amount
-
-    if currency is not None:
-        currency = currency.upper()
-        if currency not in user["currencies"]:
-            raise HTTPException(status_code=400, detail=f"Currency type '{currency}' is not added to user account. Available currencies are {user['currencies']}")
-        update_fields["currency"] = currency
-
-    if category is not None:
-        if category not in user["categories"]:
-            raise HTTPException(status_code=400, detail=f"Category '{category}' is not present in the user account. Available categories are {user['categories']}")
-        update_fields["category"] = category
-
-    if description is not None:
-        update_fields["description"] = description
-
-    if not update_fields:
-        raise HTTPException(status_code=400, detail="No fields to update.")
-
-    try:
-        result = await expenses_collection.update_one({"_id": ObjectId(expense_id)}, {"$set": update_fields})
-        if result.modified_count == 1:
-            updated_expense = await expenses_collection.find_one({"_id": ObjectId(expense_id)})
-            return {"message": "Expense updated successfully", "updated_expense": format_id(updated_expense), "balance": new_balance}
-        else:
-            raise HTTPException(status_code=500, detail="Failed to update expense in the database.")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to update expense: {str(e)}")
-
+async def update_expense(expense_id: str, amount: float = None, currency:str=None, category: str = None, description: str = None, token: str = Header(None)):
     user_id = verify_token(token)
     user = await users_collection.find_one({"_id": ObjectId(user_id)})
     try:
