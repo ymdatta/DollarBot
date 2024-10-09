@@ -6,7 +6,7 @@ from pydantic import BaseModel
 from jose import JWTError, jwt
 from typing import Optional
 import datetime
-from .config import MONGO_URI
+from api.config import MONGO_URI
 from bson import ObjectId
 
 SECRET_KEY = "your_secret_key"
@@ -36,7 +36,7 @@ def format_id(document):
 # Function to create an access token
 def create_access_token(data: dict, expires_delta: Optional[datetime.timedelta] = None):
     to_encode = data.copy()
-    expire = datetime.datetime.utcnow() + expires_delta
+    expire = datetime.datetime.now(datetime.UTC) + expires_delta
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
@@ -60,7 +60,7 @@ def verify_token(token: str):
         raise HTTPException(status_code=401, detail="Invalid authentication credentials")
 
 # Endpoint to create a demo user
-@router.post("/create_user/")
+@router.post("/")
 async def create_user(user: UserCreate):
     # Check if the user already exists
     existing_user = await users_collection.find_one({"username": user.username})
@@ -104,13 +104,13 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 
     # Save the token in the database
     await tokens_collection.insert_one(
-        {"user_id": str(user["_id"]), "token": access_token, "expires_at": datetime.datetime.utcnow() + access_token_expires, "token_type": "bearer"},
+        {"user_id": str(user["_id"]), "token": access_token, "expires_at": datetime.datetime.now(datetime.UTC) + access_token_expires, "token_type": "bearer"},
     )
 
     return {"access_token": access_token, "token_type": "bearer"}
 
 # Endpoint to get user details
-@router.get("/details/")
+@router.get("/")
 async def get_user_details(token: str = Depends(oauth2_scheme)):
     user_id = verify_token(token)
     user = await users_collection.find_one({"_id": ObjectId(user_id)})

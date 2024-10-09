@@ -2,7 +2,7 @@
 from fastapi import APIRouter, HTTPException, Depends, Header
 from motor.motor_asyncio import AsyncIOMotorClient
 from bson import ObjectId
-from .config import MONGO_URI
+from api.config import MONGO_URI
 from . import users
 from currency_converter import CurrencyConverter
 import datetime
@@ -31,7 +31,7 @@ def convert_currency(amount, from_cur, to_cur):
         raise HTTPException(status_code=400, detail=f"Currency conversion failed: {str(e)}")
 
 # Endpoint to add a new expense
-@router.post("/add/")
+@router.post("/")
 async def add_expense(amount: float, currency: str, category: str, description: str = None, account_type: str = "Checking", token: str = Header(None)):
     user_id = user.verify_token(token)
     account = await accounts_collection.find_one({"user_id": user_id, "account_type": account_type})
@@ -62,7 +62,7 @@ async def add_expense(amount: float, currency: str, category: str, description: 
         "category": category,
         "description": description,
         "account_type": account_type,
-        "date": datetime.datetime.now()
+        "date": datetime.datetime.now(datetime.UTC)
     }
     result = await expenses_collection.insert_one(expense)
 
@@ -79,7 +79,7 @@ async def get_expenses(token: str = Header(None)):
     return {"expenses": [format_id(expense) for expense in expenses]}
 
 # Endpoint to delete an expense by ID
-@router.delete("/delete/{expense_id}")
+@router.delete("/{expense_id}")
 async def delete_expense(expense_id: str, token: str = Header(None)):
     user_id = users.verify_token(token)
     try:
@@ -107,7 +107,7 @@ async def delete_expense(expense_id: str, token: str = Header(None)):
         raise HTTPException(status_code=500, detail="Failed to delete expense")
 
 # Endpoint to update an expense by ID
-@router.put("/update/{expense_id}")
+@router.put("/{expense_id}")
 async def update_expense(expense_id: str, amount: float = None, currency: str = None, category: str = None, description: str = None, token: str = Header(None)):
     user_id = user.verify_token(token)
     user = await users_collection.find_one({"_id": ObjectId(user_id)})

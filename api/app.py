@@ -1,6 +1,6 @@
 # app.py
 from fastapi import FastAPI
-from routers import expenses, users
+from api.routers import expenses, users
 import uvicorn
 
 app = FastAPI()
