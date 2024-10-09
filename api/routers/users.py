@@ -29,6 +29,11 @@ class UserCreate(BaseModel):
     username: str
     password: str
 
+class UserUpdate(BaseModel):
+    password: Optional[str] = None
+    categories: Optional[list] = None
+    currencies: Optional[list] = None
+
 def format_id(document):
     document["_id"] = str(document["_id"])
     return document
@@ -117,3 +122,43 @@ async def get_user_details(token: str = Depends(oauth2_scheme)):
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return format_id(user)
+
+@router.put("/")
+async def update_user_details(user_update: UserUpdate, token: str = Depends(oauth2_scheme)):
+    user_id = verify_token(token)
+    update_fields = user_update.dict(exclude_unset=True)
+    existing_user = await users_collection.find_one({"_id": ObjectId(user_id)})
+
+    if "password" in update_fields and update_fields["password"]:
+        # In a real application, you should hash the password
+        update_fields["password"] = update_fields["password"]
+
+    if "categories" in update_fields and isinstance(update_fields["categories"], list):
+        new_categories = list(set(existing_user.get("categories", []) + update_fields["categories"]))
+        update_fields["categories"] = new_categories
+
+    if "currencies" in update_fields and isinstance(update_fields["currencies"], list):
+        new_currencies = list(set(existing_user.get("currencies", []) + update_fields["currencies"]))
+        update_fields["currencies"] = new_currencies
+
+    result = await users_collection.update_one({"_id": ObjectId(user_id)}, {"$set": update_fields})
+    if result.modified_count == 1:
+        updated_user = await users_collection.find_one({"_id": ObjectId(user_id)})
+        return {"message": "User updated successfully", "updated_user": format_id(updated_user)}
+    else:
+        raise HTTPException(status_code=500, detail="Failed to update user")
+
+# Endpoint to delete a user
+@router.delete("/")
+async def delete_user(token: str = Depends(oauth2_scheme)):
+    user_id = verify_token(token)
+    # Delete user tokens
+    await tokens_collection.delete_many({"user_id": user_id})
+    # Delete user accounts
+    await accounts_collection.delete_many({"user_id": user_id})
+    # Delete user
+    result = await users_collection.delete_one({"_id": ObjectId(user_id)})
+    if result.deleted_count == 1:
+        return {"message": "User deleted successfully"}
+    else:
+        raise HTTPException(status_code=500, detail="Failed to delete user")
