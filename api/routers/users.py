@@ -1,16 +1,14 @@
 # user.py
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Header
 from motor.motor_asyncio import AsyncIOMotorClient
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pydantic import BaseModel
 from jose import JWTError, jwt
 from typing import Optional
 import datetime
-from api.config import MONGO_URI
+from api.config import MONGO_URI, TOKEN_SECRET_KEY, TOKEN_ALGORITHM
 from bson import ObjectId
 
-SECRET_KEY = "your_secret_key"
-ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30 * 24 * 60
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
@@ -43,24 +41,22 @@ def create_access_token(data: dict, expires_delta: Optional[datetime.timedelta] 
     to_encode = data.copy()
     expire = datetime.datetime.now(datetime.UTC) + expires_delta
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    encoded_jwt = jwt.encode(to_encode, TOKEN_SECRET_KEY, algorithm=TOKEN_ALGORITHM)
     return encoded_jwt
 
-def verify_token(token: str):
+async def verify_token(token: str):
     if token is None:
         raise HTTPException(status_code=401, detail="Token is missing")
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(token, TOKEN_SECRET_KEY, algorithms=[TOKEN_ALGORITHM])
         user_id: str = payload.get("sub")
-        if user_id is None:
-            raise HTTPException(status_code=401, detail="User not found")
-        token_exists = tokens_collection.find_one({"user_id": user_id, "token": token})
+        token_exists = await tokens_collection.find_one({"user_id": user_id, "token": token})
         if not token_exists:
             raise HTTPException(status_code=401, detail="Token does not exist")
         return user_id
     except JWTError as e:
         if "Signature has expired" in str(e):
-            tokens_collection.delete_one({"token": token})
+            await tokens_collection.delete_one({"token": token})
             raise HTTPException(status_code=401, detail="Token has expired")
         raise HTTPException(status_code=401, detail="Invalid authentication credentials")
 
@@ -71,7 +67,8 @@ async def create_user(user: UserCreate):
     existing_user = await users_collection.find_one({"username": user.username})
     if existing_user:
         raise HTTPException(status_code=400, detail="Username already exists")
-
+    if not user.username or not user.password:
+        raise HTTPException(status_code=422, detail="Invalid credential")
     default_categories = ["Food", "Groceries", "Utilities", "Transport", "Shopping", "Miscellaneous"]
     default_currencies = ["USD", "INR", "GBP", "EUR"]
 
@@ -99,16 +96,16 @@ async def create_user(user: UserCreate):
 
 # Endpoint to get user details
 @router.get("/")
-async def get_user(token: str = Depends(oauth2_scheme)):
-    user_id = verify_token(token)
+async def get_user(token: str = Header(None)):
+    user_id = await verify_token(token)
     user = await users_collection.find_one({"_id": ObjectId(user_id)})
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return format_id(user)
 
 @router.put("/")
-async def update_user(user_update: UserUpdate, token: str = Depends(oauth2_scheme)):
-    user_id = verify_token(token)
+async def update_user(user_update: UserUpdate, token: str = Header(None)):
+    user_id = await verify_token(token)
     update_fields = user_update.dict(exclude_unset=True)
     existing_user = await users_collection.find_one({"_id": ObjectId(user_id)})
 
@@ -123,18 +120,23 @@ async def update_user(user_update: UserUpdate, token: str = Depends(oauth2_schem
     if "currencies" in update_fields and isinstance(update_fields["currencies"], list):
         new_currencies = list(set(existing_user.get("currencies", []) + update_fields["currencies"]))
         update_fields["currencies"] = new_currencies
-
-    result = await users_collection.update_one({"_id": ObjectId(user_id)}, {"$set": update_fields})
-    if result.modified_count == 1:
-        updated_user = await users_collection.find_one({"_id": ObjectId(user_id)})
-        return {"message": "User updated successfully", "updated_user": format_id(updated_user)}
-    else:
+    try:
+        result = await users_collection.update_one({"_id": ObjectId(user_id)}, {"$set": update_fields})
+        from rich import inspect
+        inspect(user_update)
+        inspect(result)
+        if result.modified_count == 1:
+            updated_user = await users_collection.find_one({"_id": ObjectId(user_id)})
+            return {"message": "User updated successfully", "updated_user": format_id(updated_user)}
+        else:
+            raise Exception("Nothing to modify")
+    except:
         raise HTTPException(status_code=500, detail="Failed to update user")
 
 # Endpoint to delete a user
 @router.delete("/")
-async def delete_user(token: str = Depends(oauth2_scheme)):
-    user_id = verify_token(token)
+async def delete_user(token: str = Header(None)):
+    user_id = await verify_token(token)
     # Delete user tokens
     await tokens_collection.delete_many({"user_id": user_id})
     # Delete user accounts
@@ -165,18 +167,16 @@ async def create_token(form_data: OAuth2PasswordRequestForm = Depends(), token_e
 
 # Endpoint to get current token details
 @router.get("/token/")
-async def get_token(token: str = Depends(oauth2_scheme)):
-    user_id = verify_token(token)
+async def get_token(token: str = Header(None)):
+    user_id = await verify_token(token)
     token_data = await tokens_collection.find_one({"user_id": user_id, "token": token})
-    if not token_data:
-        raise HTTPException(status_code=404, detail="Token not found")
     return format_id(token_data)
 
 
 # Endpoint to update token expiration time
 @router.put("/token/")
-async def update_token(token_expires: int, token: str = Depends(oauth2_scheme)):
-    user_id = verify_token(token)
+async def update_token(token_expires: int, token: str = Header(None)):
+    user_id = await verify_token(token)
     updated_expiry = datetime.timedelta(minutes=token_expires)
     new_expiry_time = datetime.datetime.now(datetime.UTC) + updated_expiry
 
@@ -188,10 +188,15 @@ async def update_token(token_expires: int, token: str = Depends(oauth2_scheme)):
 
 # Endpoint to delete a specific token
 @router.delete("/token/")
-async def delete_token(token: str = Depends(oauth2_scheme)):
-    user_id = verify_token(token)
+async def delete_token(token_to_delete:str, token: str = Header(None)):
+    user_id = await verify_token(token)
     result = await tokens_collection.delete_one({"user_id": user_id, "token": token})
     if result.deleted_count == 1:
         return {"message": "Token deleted successfully"}
     else:
         raise HTTPException(status_code=500, detail="Failed to delete token")
+
+# Shutdown function to close MongoClient
+@router.on_event("shutdown")
+async def shutdown_db_client():
+    client.close()
