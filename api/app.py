@@ -1,12 +1,13 @@
 # app.py
 from fastapi import FastAPI
-from routers import expenses#, budgets
+from routers import expenses, users
 import uvicorn
 
 app = FastAPI()
 
 # # Include routers for different functionalities
 app.include_router(expenses.router)
+app.include_router(users.router)
 # app.include_router(budgets.router)
 
 if __name__ == "__main__":
