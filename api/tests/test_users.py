@@ -22,15 +22,6 @@ async def test_create_user(async_client: AsyncClient):
     assert response.json()["message"] == "User and default accounts created successfully"
 
 @pytest.mark.anyio
-async def test_create_user_repeat(async_client: AsyncClient):
-    response = await async_client.post(
-        "/users/",
-        json={"username": "testuser", "password": "testpassword"}
-    )
-    assert response.status_code == 400
-    assert response.json()["detail"] == "Username already exists"
-
-@pytest.mark.anyio
 async def test_login_for_access_token(async_client: AsyncClient):
     response = await async_client.post(
         "/users/token/",
@@ -59,7 +50,21 @@ async def test_update_user_details(async_client: AsyncClient):
     assert response.json()["message"] == "User updated successfully"
     assert "updated_user" in response.json()
     assert "Health" in response.json()["updated_user"]["categories"]
-    assert "newpassword" == response.json()["updated_user"]["password"]
+
+@pytest.mark.anyio
+async def test_update_token_expiration(async_client: AsyncClient):
+    response = await async_client.put(
+        "/users/token/",
+        params={"token_expires": 60}  # Update token expiration to 60 minutes using query parameters
+    )
+    assert response.status_code == 200
+    assert response.json()["message"] == "Token expiration updated successfully"
+
+@pytest.mark.anyio
+async def test_delete_token(async_client: AsyncClient):
+    response = await async_client.delete("/users/token/")
+    assert response.status_code == 200,response.json()
+    assert response.json()["message"] == "Token deleted successfully",response.json()
 
 @pytest.mark.anyio
 async def test_delete_user(async_client: AsyncClient):

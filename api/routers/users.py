@@ -97,26 +97,9 @@ async def create_user(user: UserCreate):
 
     return {"message": "User and default accounts created successfully"}
 
-# Endpoint to generate a token for a user
-@router.post("/token/")
-async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), token_expires: Optional[int] = ACCESS_TOKEN_EXPIRE_MINUTES):
-    user = await users_collection.find_one({"username": form_data.username})
-    if not user or user["password"] != form_data.password:
-        raise HTTPException(status_code=401, detail="Incorrect username or password")
-
-    access_token_expires = datetime.timedelta(minutes=token_expires)
-    access_token = create_access_token(data={"sub": str(user["_id"]), "username": user["username"]}, expires_delta=access_token_expires)
-
-    # Save the token in the database
-    await tokens_collection.insert_one(
-        {"user_id": str(user["_id"]), "token": access_token, "expires_at": datetime.datetime.now(datetime.UTC) + access_token_expires, "token_type": "bearer"},
-    )
-
-    return {"access_token": access_token, "token_type": "bearer"}
-
 # Endpoint to get user details
 @router.get("/")
-async def get_user_details(token: str = Depends(oauth2_scheme)):
+async def get_user(token: str = Depends(oauth2_scheme)):
     user_id = verify_token(token)
     user = await users_collection.find_one({"_id": ObjectId(user_id)})
     if not user:
@@ -124,7 +107,7 @@ async def get_user_details(token: str = Depends(oauth2_scheme)):
     return format_id(user)
 
 @router.put("/")
-async def update_user_details(user_update: UserUpdate, token: str = Depends(oauth2_scheme)):
+async def update_user(user_update: UserUpdate, token: str = Depends(oauth2_scheme)):
     user_id = verify_token(token)
     update_fields = user_update.dict(exclude_unset=True)
     existing_user = await users_collection.find_one({"_id": ObjectId(user_id)})
@@ -162,3 +145,53 @@ async def delete_user(token: str = Depends(oauth2_scheme)):
         return {"message": "User deleted successfully"}
     else:
         raise HTTPException(status_code=500, detail="Failed to delete user")
+
+# Endpoint to generate a token for a user
+@router.post("/token/")
+async def create_token(form_data: OAuth2PasswordRequestForm = Depends(), token_expires: Optional[int] = ACCESS_TOKEN_EXPIRE_MINUTES):
+    user = await users_collection.find_one({"username": form_data.username})
+    if not user or user["password"] != form_data.password:
+        raise HTTPException(status_code=401, detail="Incorrect username or password")
+
+    access_token_expires = datetime.timedelta(minutes=token_expires)
+    access_token = create_access_token(data={"sub": str(user["_id"]), "username": user["username"]}, expires_delta=access_token_expires)
+
+    # Save the token in the database
+    await tokens_collection.insert_one(
+        {"user_id": str(user["_id"]), "token": access_token, "expires_at": datetime.datetime.now(datetime.UTC) + access_token_expires, "token_type": "bearer"},
+    )
+
+    return {"access_token": access_token, "token_type": "bearer"}
+
+# Endpoint to get current token details
+@router.get("/token/")
+async def get_token(token: str = Depends(oauth2_scheme)):
+    user_id = verify_token(token)
+    token_data = await tokens_collection.find_one({"user_id": user_id, "token": token})
+    if not token_data:
+        raise HTTPException(status_code=404, detail="Token not found")
+    return format_id(token_data)
+
+
+# Endpoint to update token expiration time
+@router.put("/token/")
+async def update_token(token_expires: int, token: str = Depends(oauth2_scheme)):
+    user_id = verify_token(token)
+    updated_expiry = datetime.timedelta(minutes=token_expires)
+    new_expiry_time = datetime.datetime.now(datetime.UTC) + updated_expiry
+
+    result = await tokens_collection.update_one({"user_id": user_id, "token": token}, {"$set": {"expires_at": new_expiry_time}})
+    if result.modified_count == 1:
+        return {"message": "Token expiration updated successfully"}
+    else:
+        raise HTTPException(status_code=500, detail="Failed to update token expiration")
+
+# Endpoint to delete a specific token
+@router.delete("/token/")
+async def delete_token(token: str = Depends(oauth2_scheme)):
+    user_id = verify_token(token)
+    result = await tokens_collection.delete_one({"user_id": user_id, "token": token})
+    if result.deleted_count == 1:
+        return {"message": "Token deleted successfully"}
+    else:
+        raise HTTPException(status_code=500, detail="Failed to delete token")
