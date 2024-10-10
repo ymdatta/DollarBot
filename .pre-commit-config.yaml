@@ -1,56 +1,46 @@
 repos:
-  - repo: https://github.com/pre-commit/mirrors-isort
-    rev: "v5.10.1"  # You can replace this with the latest version
-    hooks:
-      - id: isort
-
   - repo: https://github.com/psf/black
-    rev: "24.10.0"  # You can replace this with the latest version
+    rev: 23.7.0
     hooks:
       - id: black
 
+  - repo: https://github.com/pre-commit/mirrors-isort
+    rev: v5.10.1
+    hooks:
+      - id: isort
+
   - repo: https://github.com/pre-commit/mirrors-pylint
-    rev: "v3.0.0a5"  # You can replace this with the latest version
+    rev: v2.17.2
     hooks:
       - id: pylint
 
+  - repo: https://github.com/pycqa/flake8
+    rev: 6.0.0
+    hooks:
+      - id: flake8
+
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.3.0  # Replace with the latest version
+    rev: v1.3.0
     hooks:
       - id: mypy
 
   - repo: https://github.com/PyCQA/bandit
-    rev: 1.7.4  # Replace with the latest version
+    rev: 1.7.4
     hooks:
       - id: bandit
 
   - repo: https://github.com/pyupio/safety
-    rev: v2.0.0  # Replace with the latest version
+    rev: v2.0.0
     hooks:
       - id: safety
 
-  - repo: https://github.com/rubik/radon
-    rev: 5.0.0  # Replace with the latest version
-    hooks:
-      - id: radon
-        args: ["cc", "-nc"]  # Arguments for cyclomatic complexity check
-
   - repo: https://github.com/adrienverge/yamllint
-    rev: v1.30.0  # Replace with the latest version
+    rev: v1.30.0
     hooks:
       - id: yamllint
 
-  - repo: https://github.com/pre-commit/pytest
-    rev: v2.0.0  # Replace with the latest version
-    hooks:
-      - id: pytest
-
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0  # Replace with the latest version
+    rev: v4.4.0
     hooks:
       - id: trailing-whitespace
-
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0  # Replace with the latest version
-    hooks:
       - id: end-of-file-fixer
