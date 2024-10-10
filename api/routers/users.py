@@ -7,6 +7,7 @@ from typing import Optional
 
 from bson import ObjectId
 from fastapi import APIRouter, Depends, Header, HTTPException
+from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -211,7 +212,7 @@ async def create_token(
         expires_delta=access_token_expires,
     )
 
-    await tokens_collection.insert_one(
+    token = await tokens_collection.insert_one(
         {
             "user_id": str(user["_id"]),
             "token": access_token,
@@ -219,43 +220,115 @@ async def create_token(
             "token_type": "bearer",
         },
     )
-
-    return {"access_token": access_token, "token_type": "bearer"}
+    if token.inserted_id:
+        token = await tokens_collection.find_one({"_id": token.inserted_id})
+        return {
+            "message": "Token created successfully",
+            "result": format_id(token),
+        }
 
 
 @router.get("/token/")
-async def get_token(token: str = Header(None)):
-    """Get current token details."""
+async def get_tokens(token: str = Header(None)):
+    """
+    Get all tokens for the authenticated user.
+
+    Args:
+        token (str): Authentication token.
+
+    Returns:
+        dict: List of all tokens for the user.
+    """
     user_id = await verify_token(token)
-    token_data = await tokens_collection.find_one({"user_id": user_id, "token": token})
-    return format_id(token_data)
+    tokens = await tokens_collection.find({"user_id": user_id}).to_list(1000)
+    formatted_tokens = [format_id(token) for token in tokens]
+    # Convert datetime to ISO format in each token document
+    for token in formatted_tokens:
+        if "expires_at" in token and isinstance(token["expires_at"], datetime.datetime):
+            token["expires_at"] = token["expires_at"].isoformat()
+
+    return {"tokens": formatted_tokens}
 
 
-@router.put("/token/")
-async def update_token(token_expires: int, token: str = Header(None)):
-    """Update the expiration time for the current token."""
+@router.get("/token/{token_id}")
+async def get_token(token_id: str, token: str = Header(None)) -> dict:
+    """
+    Get a specific token's details.
+
+    Args:
+        token_id (str): The ID of the token.
+        token (str): Authentication token.
+
+    Returns:
+        dict: Details of the specified token.
+    """
     user_id = await verify_token(token)
-    updated_expiry = datetime.timedelta(minutes=token_expires)
+    token_data = await tokens_collection.find_one(
+        {"user_id": user_id, "_id": ObjectId(token_id)}
+    )
+    if not token_data:
+        raise HTTPException(status_code=404, detail="Token not found")
+
+    formatted_token = format_id(token_data)
+    # Convert datetime to ISO format
+    if "expires_at" in formatted_token and isinstance(
+        formatted_token["expires_at"], datetime.datetime
+    ):
+        formatted_token["expires_at"] = formatted_token["expires_at"].isoformat()
+
+    return formatted_token
+
+
+@router.put("/token/{token_id}")
+async def update_token(token_id: str, new_expiry: float, token: str = Header(None)):
+    """
+    Update the expiration time for the current token.
+
+    Args:
+        token_id (str): The ID of the token.
+        new_expiry (float): New expiry time in minutes.
+        token (str): Authentication token.
+
+    Returns:
+        dict: Success message or error.
+    """
+    user_id = await verify_token(token)
+    updated_expiry = datetime.timedelta(minutes=new_expiry)
     new_expiry_time = datetime.datetime.now(datetime.UTC) + updated_expiry
 
+    # Correct the filter to use _id for the token document
     result = await tokens_collection.update_one(
-        {"user_id": user_id, "token": token}, {"$set": {"expires_at": new_expiry_time}}
+        {"user_id": user_id, "_id": ObjectId(token_id)},
+        {"$set": {"expires_at": new_expiry_time}},
     )
+
     if result.modified_count == 1:
         return {"message": "Token expiration updated successfully"}
+
     raise HTTPException(status_code=500, detail="Failed to update token expiration")
 
 
-@router.delete("/token/")
-async def delete_token(token_to_delete: str, token: str = Header(None)):
-    """Delete a specific token."""
+@router.delete("/token/{token_id}")
+async def delete_token(token_id: str, token: str = Header(None)):
+    """
+    Delete a specific token by its ID.
+
+    Args:
+        token_id (str): The ID of the token to be deleted.
+        token (str): Authentication token for verifying the user.
+
+    Returns:
+        dict: Message indicating whether the token was successfully deleted.
+    """
     user_id = await verify_token(token)
     result = await tokens_collection.delete_one(
-        {"user_id": user_id, "token": token_to_delete}
+        {"user_id": user_id, "_id": ObjectId(token_id)}
     )
+
     if result.deleted_count == 1:
         return {"message": "Token deleted successfully"}
-    raise HTTPException(status_code=500, detail="Failed to delete token")
+
+    raise HTTPException(status_code=404, detail="Token not found")
 
 
 @router.on_event("shutdown")

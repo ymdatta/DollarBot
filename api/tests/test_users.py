@@ -11,30 +11,26 @@ from api.config import TOKEN_ALGORITHM, TOKEN_SECRET_KEY
 
 
 @pytest.mark.anyio
-async def test_create_user_invalid_data(async_client: AsyncClient):
-    response = await async_client.post(
-        "/users/", json={"username": "", "password": ""}  # Invalid data
-    )
-    assert response.status_code == 422
-    assert response.json()["detail"] == "Invalid credential"
+class TestUserCreation:
+    async def test_invalid_data(self, async_client: AsyncClient):
+        response = await async_client.post(
+            "/users/", json={"username": "", "password": ""}  # Invalid data
+        )
+        assert response.status_code == 422
+        assert response.json()["detail"] == "Invalid credential"
 
+    async def test_valid(self, async_client: AsyncClient):
+        response = await async_client.post(
+            "/users/", json={"username": "usertestuser", "password": "usertestpassword"}
+        )
+        assert response.status_code == 200, response.json()
+        assert (
+            response.json()["message"]
+            == "User and default accounts created successfully"
+        )
 
-@pytest.mark.anyio
-async def test_create_user(async_client: AsyncClient):
-    response = await async_client.post(
-        "/users/", json={"username": "usertestuser", "password": "usertestpassword"}
-    )
-    assert response.status_code == 200, response.json()
-    assert (
-        response.json()["message"] == "User and default accounts created successfully"
-    )
-
-
-@pytest.mark.anyio
-async def test_create_user_repeat(async_client: AsyncClient):
-    async with AsyncClient(app=app, base_url="http://test") as client:
-
-        response = await client.post(
+    async def test_duplicate(self, async_client: AsyncClient):
+        response = await async_client.post(
             "/users/", json={"username": "usertestuser", "password": "usertestpassword"}
         )
         assert response.status_code == 400
@@ -51,17 +47,18 @@ async def test_create_token_invalid_credentials(async_client: AsyncClient):
 
 
 @pytest.mark.anyio
-async def test_verify_token_existence(async_client: AsyncClient):
+async def test_verify_token_non_existence(async_client: AsyncClient):
     response = await async_client.post(
         "/users/token/",
         data={"username": "usertestuser", "password": "usertestpassword"},
     )
-    assert response.status_code == 200
-    token = response.json()["access_token"]
+    assert response.status_code == 200, response
+    token_id = response.json()["result"]["_id"]
+    token = response.json()["result"]["token"]
     response = await async_client.delete(
-        "/users/token/", params={"token_to_delete": token}, headers={"token": token}
+        f"/users/token/{token_id}", headers={"token": token}
     )
-    assert response.status_code == 200
+    assert response.status_code == 200, response
     response = await async_client.get("/users/", headers={"token": token})
     assert response.status_code == 401, response.json()
     assert response.json()["detail"] == "Token does not exist"
@@ -92,11 +89,11 @@ async def test_create_token(async_client: AsyncClient):
         data={"username": "usertestuser", "password": "usertestpassword"},
     )
     assert response.status_code == 200
-    assert "access_token" in response.json()
-    assert response.json()["token_type"] == "bearer"
+    assert "_id" in response.json()["result"]
+    assert response.json()["result"]["token_type"] == "bearer"
     # Save token for future tests
-    # async_client.headers.update({"Authorization": f"Bearer {response.json()['access_token']}"})
-    async_client.headers.update({"token": response.json()["access_token"]})
+    # async_client.headers.update({"Authorization": f"Bearer {response.json()['result']['token']}"})
+    async_client.headers.update({"token": response.json()["result"]["token"]})
 
 
 @pytest.mark.anyio
@@ -106,12 +103,14 @@ async def test_delete_token(async_client: AsyncClient):
         data={"username": "usertestuser", "password": "usertestpassword"},
     )
     assert response.status_code == 200
-    token = response.json()["access_token"]
-    response = await async_client.delete(
-        "/users/token/", params={"token_to_delete": token}
-    )
+    token_id = response.json()["result"]["_id"]
+    response = await async_client.delete(f"/users/token/{token_id}")
     assert response.status_code == 200, response
     assert response.json()["message"] == "Token deleted successfully", response.json()
+
+    response = await async_client.get(f"/users/token/{token_id}")
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Token not found"
 
 
 @pytest.mark.anyio
@@ -123,11 +122,21 @@ async def test_get_user(async_client: AsyncClient):
 
 
 @pytest.mark.anyio
+async def test_get_tokens(async_client: AsyncClient):
+    response = await async_client.get("/users/token/")
+    assert response.status_code == 200
+    assert "tokens" in response.json()
+    assert isinstance(response.json()["tokens"], list)
+
+
+@pytest.mark.anyio
 async def test_get_token(async_client: AsyncClient):
     response = await async_client.get("/users/token/")
     assert response.status_code == 200
-    assert "token" in response.json()
-    assert response.json()["token"] == async_client.headers["token"]
+    token_id = response.json()["tokens"][0]["_id"]
+    response = await async_client.get(f"/users/token/{token_id}")
+    assert response.status_code == 200
+    assert response.json()["_id"] == token_id
 
 
 @pytest.mark.anyio
@@ -162,13 +171,13 @@ async def test_update_user(async_client: AsyncClient):
 
 @pytest.mark.anyio
 async def test_update_token_expiration(async_client: AsyncClient):
-    response = await async_client.put(
-        "/users/token/",
-        params={
-            "token_expires": 60
-        },  # Update token expiration to 60 minutes using query parameters
-    )
+    response = await async_client.get("/users/token/")
     assert response.status_code == 200
+    token_id = response.json()["tokens"][0]["_id"]
+    response = await async_client.put(
+        f"/users/token/{token_id}", params={"new_expiry": 60}
+    )
+    assert response.status_code == 200, response.json()
     assert response.json()["message"] == "Token expiration updated successfully"
 
 
