@@ -207,8 +207,7 @@ async def update_expense(
                 status_code=400,
                 detail=f"Category is not present in the user account. Available categories are {user['categories']}",
             )
-        elif category is not None:
-            update_fields["category"] = category
+        update_fields["category"] = category
 
     if description is not None:
         update_fields["description"] = description
