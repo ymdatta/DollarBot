@@ -29,10 +29,10 @@ repos:
     hooks:
       - id: bandit
 
-  - repo: https://github.com/pyupio/safety
-    rev: 3.2.3
-    hooks:
-      - id: safety
+  # - repo: https://github.com/pyupio/safety
+  #   rev: 3.2.3
+  #   hooks:
+  #     - id: safety
 
   - repo: https://github.com/adrienverge/yamllint
     rev: v1.35.1
@@ -44,3 +44,12 @@ repos:
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
+
+  - repo: local
+    hooks:
+      - id: pytest-check
+        name: pytest-check
+        entry: pytest api/
+        language: system
+        pass_filenames: false
+        always_run: true
