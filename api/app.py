@@ -1,8 +1,10 @@
 # app.py
-from fastapi import FastAPI
-from api.routers import expenses, users
-import uvicorn
 import asyncio
+
+import uvicorn
+from fastapi import FastAPI
+
+from api.routers import expenses, users
 
 app = FastAPI()
 
