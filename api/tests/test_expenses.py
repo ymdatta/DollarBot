@@ -71,7 +71,7 @@ def test_convert_currency_failure(mock_convert):
 async def test_add_expense(async_client_auth: AsyncClient):
     response = await async_client_auth.post(
         "/expenses/",
-        params={
+        json={
             "amount": 50.0,
             "currency": "USD",
             "category": "Food",
@@ -88,7 +88,7 @@ async def test_add_expense(async_client_auth: AsyncClient):
 async def test_add_expense_invalid_currency(async_client_auth: AsyncClient):
     response = await async_client_auth.post(
         "/expenses/",
-        params={"amount": 100.0, "currency": "INVALID", "category": "Food"},
+        json={"amount": 100.0, "currency": "INVALID", "category": "Food"},
     )
     assert response.status_code == 400
     assert response.json()["detail"].startswith(
@@ -100,7 +100,7 @@ async def test_add_expense_invalid_currency(async_client_auth: AsyncClient):
 async def test_add_expense_insufficient_balance(async_client_auth: AsyncClient):
     response = await async_client_auth.post(
         "/expenses/",
-        params={"amount": 1000000.0, "currency": "USD", "category": "Food"},
+        json={"amount": 1000000.0, "currency": "USD", "category": "Food"},
     )
     assert response.status_code == 400
     assert response.json()["detail"].startswith("Insufficient balance")
@@ -110,7 +110,7 @@ async def test_add_expense_insufficient_balance(async_client_auth: AsyncClient):
 async def test_add_expense_invalid_category(async_client_auth: AsyncClient):
     response = await async_client_auth.post(
         "/expenses/",
-        params={"amount": 50.0, "currency": "USD", "category": "InvalidCategory"},
+        json={"amount": 50.0, "currency": "USD", "category": "InvalidCategory"},
     )
     assert response.status_code == 400
     assert response.json()["detail"].startswith(
@@ -122,7 +122,7 @@ async def test_add_expense_invalid_category(async_client_auth: AsyncClient):
 async def test_add_expense_invalid_account(async_client_auth: AsyncClient):
     response = await async_client_auth.post(
         "/expenses/",
-        params={
+        json={
             "amount": 50.0,
             "currency": "USD",
             "category": "Food",
@@ -146,7 +146,7 @@ async def test_update_expense(async_client_auth: AsyncClient):
     # First, add an expense
     add_response = await async_client_auth.post(
         "/expenses/",
-        params={
+        json={
             "amount": 30.0,
             "currency": "USD",
             "category": "Transport",
@@ -154,12 +154,13 @@ async def test_update_expense(async_client_auth: AsyncClient):
             "account_type": "Checking",
         },
     )
+    assert add_response.status_code == 200, add_response.json()
     expense_id = add_response.json()["expense"]["_id"]
 
     # Update the expense
     response = await async_client_auth.put(
         f"/expenses/{expense_id}",
-        params={
+        json={
             "amount": 40.0,
             "description": "Updated taxi fare",
             "category": "Transport",
@@ -175,7 +176,7 @@ async def test_update_expense_empty(async_client_auth: AsyncClient):
     # First, add an expense
     add_response = await async_client_auth.post(
         "/expenses/",
-        params={
+        json={
             "amount": 30.0,
             "currency": "USD",
             "category": "Transport",
@@ -183,21 +184,13 @@ async def test_update_expense_empty(async_client_auth: AsyncClient):
             "account_type": "Checking",
         },
     )
+    assert add_response.status_code == 200, add_response.json()
     expense_id = add_response.json()["expense"]["_id"]
 
     # Update the expense
-    response = await async_client_auth.put(f"/expenses/{expense_id}", params={})
+    response = await async_client_auth.put(f"/expenses/{expense_id}", json={})
     assert response.status_code == 400
     assert response.json()["detail"] == "No fields to update"
-
-
-@pytest.mark.anyio
-async def test_update_expense_not_found(async_client_auth: AsyncClient):
-    response = await async_client_auth.put(
-        "/expenses/507f1f77bcf86cd799439011", params={"amount": 100.0}
-    )
-    assert response.status_code == 404
-    assert response.json()["detail"] == "Expense not found"
 
 
 @pytest.mark.anyio
@@ -205,7 +198,7 @@ async def test_update_expense_currency_404(async_client_auth: AsyncClient):
     # First, add an expense
     add_response = await async_client_auth.post(
         "/expenses/",
-        params={
+        json={
             "amount": 30.0,
             "currency": "USD",
             "category": "Food",
@@ -213,11 +206,12 @@ async def test_update_expense_currency_404(async_client_auth: AsyncClient):
             "account_type": "Checking",
         },
     )
+    assert add_response.status_code == 200, add_response.json()
     expense_id = add_response.json()["expense"]["_id"]
     # Update the expense
     response = await async_client_auth.put(
         f"/expenses/{expense_id}",
-        params={"amount": 40.0, "currency": "InvalidCurrency"},
+        json={"amount": 40.0, "currency": "InvalidCurrency"},
     )
     assert response.status_code == 400
     assert response.json()["detail"].startswith(
@@ -230,7 +224,7 @@ async def test_update_expense_category_404(async_client_auth: AsyncClient):
     # First, add an expense
     add_response = await async_client_auth.post(
         "/expenses/",
-        params={
+        json={
             "amount": 30.0,
             "currency": "USD",
             "category": "Food",
@@ -238,11 +232,12 @@ async def test_update_expense_category_404(async_client_auth: AsyncClient):
             "account_type": "Checking",
         },
     )
+    assert add_response.status_code == 200, add_response.json()
     expense_id = add_response.json()["expense"]["_id"]
     # Update the expense
     response = await async_client_auth.put(
         f"/expenses/{expense_id}",
-        params={"amount": 40.0, "category": "InvalidCategory"},
+        json={"amount": 40.0, "category": "InvalidCategory"},
     )
     assert response.status_code == 400
     assert response.json()["detail"].startswith(
@@ -255,7 +250,7 @@ async def test_update_expense_account_404(async_client_auth: AsyncClient):
     # First, add an expense
     add_response = await async_client_auth.post(
         "/expenses/",
-        params={
+        json={
             "amount": 30.0,
             "currency": "USD",
             "category": "Food",
@@ -263,6 +258,7 @@ async def test_update_expense_account_404(async_client_auth: AsyncClient):
             "account_type": "Checking",
         },
     )
+    assert add_response.status_code == 200, add_response.json()
     expense_id = add_response.json()["expense"]["_id"]
     await expenses_collection.update_one(
         {"_id": ObjectId(expense_id)}, {"$set": {"account_type": "InvalidAccount"}}
@@ -270,7 +266,7 @@ async def test_update_expense_account_404(async_client_auth: AsyncClient):
     # Update the expense
     response = await async_client_auth.put(
         f"/expenses/{expense_id}",
-        params={"amount": 40.0, "account_type": "InvalidAccount"},
+        json={"amount": 40.0, "account_type": "InvalidAccount"},
     )
     assert response.status_code == 404
     assert response.json()["detail"] == "Account not found"
@@ -281,7 +277,7 @@ async def test_update_expense_insufficient_balance(async_client_auth: AsyncClien
     # First, add an expense
     add_response = await async_client_auth.post(
         "/expenses/",
-        params={
+        json={
             "amount": 30.0,
             "currency": "USD",
             "category": "Food",
@@ -289,11 +285,12 @@ async def test_update_expense_insufficient_balance(async_client_auth: AsyncClien
             "account_type": "Checking",
         },
     )
+    assert add_response.status_code == 200, add_response.json()
     expense_id = add_response.json()["expense"]["_id"]
     # Update the expense
     response = await async_client_auth.put(
         f"/expenses/{expense_id}",
-        params={"amount": 400000.0},
+        json={"amount": 400000.0},
     )
     assert response.status_code == 400
     assert response.json()["detail"] == "Insufficient balance to update the expense"
@@ -304,7 +301,7 @@ async def test_delete_expense(async_client_auth: AsyncClient):
     # First, add an expense
     add_response = await async_client_auth.post(
         "/expenses/",
-        params={
+        json={
             "amount": 20.0,
             "currency": "USD",
             "category": "Shopping",
@@ -312,6 +309,7 @@ async def test_delete_expense(async_client_auth: AsyncClient):
             "account_type": "Checking",
         },
     )
+    assert add_response.status_code == 200, add_response.json()
     expense_id = add_response.json()["expense"]["_id"]
 
     # Delete the expense
@@ -330,9 +328,9 @@ async def test_delete_expense_not_found(async_client_auth: AsyncClient):
 @pytest.mark.anyio
 async def test_update_expense_not_found(async_client_auth: AsyncClient):
     response = await async_client_auth.put(
-        "/expenses/507f1f77bcf86cd799439011", params={"amount": 100.0}
+        "/expenses/507f1f77bcf86cd799439011", json={"amount": 100.0}
     )
-    assert response.status_code == 404
+    assert response.status_code == 404, response.json()
     assert response.json()["detail"] == "Expense not found"
 
 
@@ -340,7 +338,7 @@ async def test_update_expense_not_found(async_client_auth: AsyncClient):
 async def test_currency_conversion(async_client_auth: AsyncClient):
     response = await async_client_auth.post(
         "/expenses/",
-        params={
+        json={
             "amount": 50,
             "currency": "USD",
             "category": "Food",
@@ -351,7 +349,7 @@ async def test_currency_conversion(async_client_auth: AsyncClient):
     balance = response.json()["balance"]
     response = await async_client_auth.post(
         "/expenses/",
-        params={
+        json={
             "amount": 1000,
             "currency": "INR",
             "category": "Food",
@@ -365,7 +363,7 @@ async def test_currency_conversion(async_client_auth: AsyncClient):
     expense_id = response.json()["expense"]["_id"]
     # update
     response = await async_client_auth.put(
-        f"/expenses/{expense_id}", params={"amount": 50, "currency": "USD"}
+        f"/expenses/{expense_id}", json={"amount": 50, "currency": "USD"}
     )
     assert response.status_code == 200
     # delete
