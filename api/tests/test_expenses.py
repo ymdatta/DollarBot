@@ -121,11 +121,67 @@ class TestExpenseAdd:
 
 @pytest.mark.anyio
 class TestExpenseGet:
-    async def test_get_expenses(self, async_client_auth: AsyncClient):
+    async def test_get_all_expenses(self, async_client_auth: AsyncClient):
+        """
+        Test to retrieve all expenses for a user.
+        """
+        # Create a new expense first to ensure there is something to retrieve
+        response = await async_client_auth.post(
+            "/expenses/",
+            json={
+                "amount": 50.0,
+                "currency": "USD",
+                "category": "Food",
+                "description": "Grocery shopping",
+                "account_type": "Checking",
+            },
+        )
+        assert response.status_code == 200, response.json()
+        assert response.json()["message"] == "Expense added successfully"
+
+        # Test to get all expenses
         response = await async_client_auth.get("/expenses/")
-        assert response.status_code == 200
+        assert response.status_code == 200, response.json()
         assert "expenses" in response.json()
         assert isinstance(response.json()["expenses"], list)
+
+    async def test_get_specific_expense(self, async_client_auth: AsyncClient):
+        """
+        Test to retrieve a specific expense by its ID.
+        """
+        # Create a new expense
+        response = await async_client_auth.post(
+            "/expenses/",
+            json={
+                "amount": 100.0,
+                "currency": "USD",
+                "category": "Transport",
+                "description": "Taxi fare",
+                "account_type": "Checking",
+            },
+        )
+        assert response.status_code == 200, response.json()
+        assert response.json()["message"] == "Expense added successfully"
+
+        # Get the inserted expense ID
+        expense_id = response.json()["expense"]["_id"]
+
+        # Test to get the specific expense by ID
+        response = await async_client_auth.get(f"/expenses/{expense_id}")
+        assert response.status_code == 200, response.json()
+        assert "_id" in response.json()
+        assert response.json()["_id"] == expense_id
+
+    async def test_get_expense_not_found(self, async_client_auth: AsyncClient):
+        """
+        Test to retrieve an expense by a non-existent ID.
+        """
+        # Generate a random non-existent ObjectId
+        random_expense_id = str(ObjectId())
+
+        response = await async_client_auth.get(f"/expenses/{random_expense_id}")
+        assert response.status_code == 404, response.json()
+        assert response.json()["detail"] == "Expense not found"
 
 
 @pytest.mark.anyio

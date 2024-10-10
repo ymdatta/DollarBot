@@ -154,7 +154,29 @@ async def get_expenses(token: str = Header(None)):
     """
     user_id = await users.verify_token(token)
     expenses = await expenses_collection.find({"user_id": user_id}).to_list(1000)
-    return {"expenses": [format_id(expense) for expense in expenses]}
+    formatted_expenses = [format_id(expense) for expense in expenses]
+    return {"expenses": formatted_expenses}
+
+
+@router.get("/{expense_id}")
+async def get_expense(expense_id: str, token: str = Header(None)):
+    """
+    Get a specific expense by ID.
+
+    Args:
+        expense_id (str): ID of the expense.
+        token (str): Authentication token.
+
+    Returns:
+        dict: Details of the specified expense.
+    """
+    user_id = await users.verify_token(token)
+    expense = await expenses_collection.find_one(
+        {"user_id": user_id, "_id": ObjectId(expense_id)}
+    )
+    if not expense:
+        raise HTTPException(status_code=404, detail="Expense not found")
+    return format_id(expense)
 
 
 @router.delete("/{expense_id}")
