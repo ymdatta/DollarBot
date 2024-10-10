@@ -1,7 +1,5 @@
 # test_user_expenses.py
-import asyncio
 import datetime
-from asyncio import get_event_loop
 from copy import deepcopy
 
 import jwt

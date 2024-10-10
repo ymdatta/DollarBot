@@ -1,28 +1,35 @@
 repos:
-  - repo: https://github.com/psf/black
-    rev: 24.10.0
+  - repo: local
     hooks:
       - id: black
+        name: black
+        entry: black api/
+        language: system
+        pass_filenames: false
+        always_run: true
 
-  - repo: https://github.com/pre-commit/mirrors-isort
-    rev: v5.10.1
+  - repo: local
     hooks:
       - id: isort
+        name: isort
+        entry: isort api/
+        language: system
+        pass_filenames: false
+        always_run: true
 
-  - repo: https://github.com/pre-commit/mirrors-pylint
-    rev: v3.0.0a5
+  - repo: local
     hooks:
       - id: pylint
+        name: pylint
+        entry: pylint api/
+        language: system
+        pass_filenames: false
+        always_run: true
 
   - repo: https://github.com/pycqa/flake8
     rev: 7.1.1
     hooks:
       - id: flake8
-
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.11.2
-    hooks:
-      - id: mypy
 
   - repo: https://github.com/PyCQA/bandit
     rev: 1.7.10
@@ -50,6 +57,15 @@ repos:
       - id: pytest-check
         name: pytest-check
         entry: pytest api/
+        language: system
+        pass_filenames: false
+        always_run: true
+
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy
+        entry: mypy api/
         language: system
         pass_filenames: false
         always_run: true

@@ -3,6 +3,7 @@ This module provides endpoints for managing user expenses in the Money Manager a
 """
 
 import datetime
+from typing import Optional
 
 from bson import ObjectId
 from currency_converter import CurrencyConverter
@@ -19,7 +20,7 @@ currency_converter = CurrencyConverter()
 router = APIRouter(prefix="/expenses", tags=["Expenses"])
 
 # MongoDB setup
-client = AsyncIOMotorClient(MONGO_URI)
+client: AsyncIOMotorClient = AsyncIOMotorClient(MONGO_URI)
 db = client.mmdb
 users_collection = db.users
 expenses_collection = db.expenses
@@ -50,17 +51,17 @@ class ExpenseCreate(BaseModel):
     amount: float
     currency: str
     category: str
-    description: str = None
+    description: Optional[str] = None
     account_type: str = "Checking"
 
 
 class ExpenseUpdate(BaseModel):
     """Model for updating an expense."""
 
-    amount: float = None
-    currency: str = None
-    category: str = None
-    description: str = None
+    amount: Optional[float] = None
+    currency: Optional[str] = None
+    category: Optional[str] = None
+    description: Optional[str] = None
 
 
 @router.post("/")
@@ -235,7 +236,7 @@ async def update_expense(
         raise HTTPException(status_code=404, detail="Account not found")
 
     if expense_update.amount is not None:
-        update_fields["amount"] = expense_update.amount
+        update_fields["amount"] = float(expense_update.amount)
 
         # Adjust the user's balance
         # Convert old and new amounts to the account currency to determine balance adjustment

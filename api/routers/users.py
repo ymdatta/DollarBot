@@ -9,7 +9,7 @@ from bson import ObjectId
 from fastapi import APIRouter, Depends, Header, HTTPException
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
-from motor.motor_asyncio import AsyncIOMotorClient
+from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorCollection
 from pydantic import BaseModel
 
 from api.config import MONGO_URI, TOKEN_ALGORITHM, TOKEN_SECRET_KEY
@@ -21,7 +21,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 router = APIRouter(prefix="/users", tags=["Users"])
 
 # MongoDB setup
-client = AsyncIOMotorClient(MONGO_URI)
+client: AsyncIOMotorClient = AsyncIOMotorClient(MONGO_URI)
 db = client.mmdb
 users_collection = db.users
 tokens_collection = db.tokens
@@ -50,7 +50,7 @@ def format_id(document):
     return document
 
 
-def create_access_token(data: dict, expires_delta: Optional[datetime.timedelta] = None):
+def create_access_token(data: dict, expires_delta: datetime.timedelta):
     """Create an access token with an expiration time."""
     to_encode = data.copy()
     expire = datetime.datetime.now(datetime.UTC) + expires_delta
@@ -65,7 +65,7 @@ async def verify_token(token: str):
         raise HTTPException(status_code=401, detail="Token is missing")
     try:
         payload = jwt.decode(token, TOKEN_SECRET_KEY, algorithms=[TOKEN_ALGORITHM])
-        user_id: str = payload.get("sub")
+        user_id = payload.get("sub")
         token_exists = await tokens_collection.find_one(
             {"user_id": user_id, "token": token}
         )
@@ -148,7 +148,9 @@ async def update_user(user_update: UserUpdate, token: str = Header(None)):
     """Update user information such as password, categories, or currencies."""
     user_id = await verify_token(token)
     update_fields = user_update.dict(exclude_unset=True)
-    existing_user = await users_collection.find_one({"_id": ObjectId(user_id)})
+    existing_user: AsyncIOMotorCollection = await users_collection.find_one(
+        {"_id": ObjectId(user_id)}
+    )
 
     if "password" in update_fields and update_fields["password"]:
         # In a real application, you should hash the password
@@ -196,7 +198,7 @@ async def delete_user(token: str = Header(None)):
 @router.post("/token/")
 async def create_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
-    token_expires: Optional[int] = ACCESS_TOKEN_EXPIRE_MINUTES,
+    token_expires: float = ACCESS_TOKEN_EXPIRE_MINUTES,
 ):
     """Create an access token for a user."""
     user = await users_collection.find_one({"username": form_data.username})

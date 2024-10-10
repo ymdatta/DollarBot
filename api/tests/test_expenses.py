@@ -1,19 +1,13 @@
 # test_expenses.py
-import asyncio
-import datetime
-from asyncio import get_event_loop
-from datetime import datetime
-from unittest.mock import AsyncMock, patch
+from unittest.mock import patch
 
 import pytest
 from bson import ObjectId
-from currency_converter import CurrencyConverter
-from fastapi import APIRouter, Depends, Header, HTTPException
-from httpx import ASGITransport, AsyncClient
+from fastapi import HTTPException
+from httpx import AsyncClient
 from motor.motor_asyncio import AsyncIOMotorClient
 
 import api.routers.expenses
-from api.app import app
 from api.config import MONGO_URI
 
 # MongoDB setup
