@@ -34,7 +34,7 @@ async def async_client_auth():
         response = await client.post(
             "/users/token/", data={"username": "testuser", "password": "testpassword"}
         )
-        token = response.json()["access_token"]
+        token = response.json()["result"]["token"]
         client.headers.update({"token": token})
 
         yield client

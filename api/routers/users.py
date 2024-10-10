@@ -7,7 +7,6 @@ from typing import Optional
 
 from bson import ObjectId
 from fastapi import APIRouter, Depends, Header, HTTPException
-from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -212,7 +211,7 @@ async def create_token(
         expires_delta=access_token_expires,
     )
 
-    token = await tokens_collection.insert_one(
+    result = await tokens_collection.insert_one(
         {
             "user_id": str(user["_id"]),
             "token": access_token,
@@ -220,11 +219,12 @@ async def create_token(
             "token_type": "bearer",
         },
     )
-    if token.inserted_id:
-        token = await tokens_collection.find_one({"_id": token.inserted_id})
+
+    if result.inserted_id:
+        token_data = await tokens_collection.find_one({"_id": result.inserted_id})
         return {
             "message": "Token created successfully",
-            "result": format_id(token),
+            "result": format_id(token_data),
         }
 
 
@@ -243,9 +243,9 @@ async def get_tokens(token: str = Header(None)):
     tokens = await tokens_collection.find({"user_id": user_id}).to_list(1000)
     formatted_tokens = [format_id(token) for token in tokens]
     # Convert datetime to ISO format in each token document
-    for token in formatted_tokens:
-        if "expires_at" in token and isinstance(token["expires_at"], datetime.datetime):
-            token["expires_at"] = token["expires_at"].isoformat()
+    for tok in formatted_tokens:
+        if "expires_at" in tok and isinstance(tok["expires_at"], datetime.datetime):
+            tok["expires_at"] = tok["expires_at"].isoformat()
 
     return {"tokens": formatted_tokens}
 
