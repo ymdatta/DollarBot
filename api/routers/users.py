@@ -9,7 +9,7 @@ from bson import ObjectId
 from fastapi import APIRouter, Depends, Header, HTTPException
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
-from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorCollection
+from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel
 
 from api.config import MONGO_URI, TOKEN_ALGORITHM, TOKEN_SECRET_KEY

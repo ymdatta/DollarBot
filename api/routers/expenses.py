@@ -6,7 +6,7 @@ import datetime
 from typing import Optional
 
 from bson import ObjectId
-from currency_converter import CurrencyConverter
+from currency_converter import CurrencyConverter  # type: ignore
 from fastapi import APIRouter, Header, HTTPException
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel
@@ -80,10 +80,13 @@ async def add_expense(expense: ExpenseCreate, token: str = Header(None)):
     account = await accounts_collection.find_one(
         {"user_id": user_id, "account_type": expense.account_type}
     )
-    user = await users_collection.find_one({"_id": ObjectId(user_id)})
-
     if not account:
         raise HTTPException(status_code=400, detail="Invalid account type")
+
+    user = await users_collection.find_one({"_id": ObjectId(user_id)})
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
 
     expense.currency = expense.currency.upper()
     if expense.currency not in user["currencies"]:
@@ -176,6 +179,9 @@ async def delete_expense(expense_id: str, token: str = Header(None)):
     account = await accounts_collection.find_one(
         {"user_id": user_id, "account_type": account_type}
     )
+    if not account:
+        raise HTTPException(status_code=404, detail="Account not found")
+
     amount = convert_currency(
         expense["amount"], expense["currency"], account["currency"]
     )
@@ -211,11 +217,14 @@ async def update_expense(
     """
     user_id = await users.verify_token(token)
     user = await users_collection.find_one({"_id": ObjectId(user_id)})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
     expense = await expenses_collection.find_one({"_id": ObjectId(expense_id)})
     if not expense or expense["user_id"] != user_id:
         raise HTTPException(status_code=404, detail="Expense not found")
 
-    update_fields = {}
+    update_fields: dict[str, str | float] = {}
     if expense_update.currency:
         expense_update.currency = expense_update.currency.upper()
         if expense_update.currency not in user["currencies"]:
@@ -236,7 +245,7 @@ async def update_expense(
         raise HTTPException(status_code=404, detail="Account not found")
 
     if expense_update.amount is not None:
-        update_fields["amount"] = float(expense_update.amount)
+        update_fields["amount"] = expense_update.amount
 
         # Adjust the user's balance
         # Convert old and new amounts to the account currency to determine balance adjustment

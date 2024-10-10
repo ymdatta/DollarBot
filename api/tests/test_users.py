@@ -32,9 +32,7 @@ async def test_create_user(async_client: AsyncClient):
 
 @pytest.mark.anyio
 async def test_create_user_repeat(async_client: AsyncClient):
-    async with AsyncClient(
-        transport=ASGITransport(app=app), base_url="http://test"
-    ) as client:
+    async with AsyncClient(app=app, base_url="http://test") as client:
 
         response = await client.post(
             "/users/", json={"username": "usertestuser", "password": "usertestpassword"}

@@ -11,7 +11,7 @@ import api.routers.expenses
 from api.config import MONGO_URI
 
 # MongoDB setup
-client = AsyncIOMotorClient(MONGO_URI)
+client: AsyncIOMotorClient = AsyncIOMotorClient(MONGO_URI)
 db = client.mmdb
 users_collection = db.users
 expenses_collection = db.expenses
