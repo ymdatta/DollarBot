@@ -82,10 +82,7 @@ async def get_expenses(token: str = Header(None)):
 @router.delete("/{expense_id}")
 async def delete_expense(expense_id: str, token: str = Header(None)):
     user_id = await users.verify_token(token)
-    try:
-        expense = await expenses_collection.find_one({"_id": ObjectId(expense_id)})
-    except:
-        raise HTTPException(status_code=404, detail="Expense could not be retrieved")
+    expense = await expenses_collection.find_one({"_id": ObjectId(expense_id)})
 
     if not expense or expense["user_id"] != user_id:
         raise HTTPException(status_code=404, detail="Expense not found")
@@ -111,10 +108,7 @@ async def delete_expense(expense_id: str, token: str = Header(None)):
 async def update_expense(expense_id: str, amount: float = None, currency: str = None, category: str = None, description: str = None, token: str = Header(None)):
     user_id = await users.verify_token(token)
     user = await users_collection.find_one({"_id": ObjectId(user_id)})
-    try:
-        expense = await expenses_collection.find_one({"_id": ObjectId(expense_id)})
-    except:
-        raise HTTPException(status_code=404, detail="Expense could not be retrieved")
+    expense = await expenses_collection.find_one({"_id": ObjectId(expense_id)})
     if not expense or expense["user_id"] != user_id:
         raise HTTPException(status_code=404, detail="Expense not found")
 
@@ -129,10 +123,10 @@ async def update_expense(expense_id: str, amount: float = None, currency: str = 
 
     account_type = expense["account_type"]
     account = await accounts_collection.find_one({"user_id": user_id, "account_type": account_type})
+    if not account:
+        raise HTTPException(status_code=404, detail="Account not found")
     if amount is not None:
         update_fields["amount"] = amount
-        if not account:
-            raise HTTPException(status_code=404, detail="Account not found")
 
         # Adjust the user's balance
         # Convert old and new amounts to the account currency to determine balance adjustment

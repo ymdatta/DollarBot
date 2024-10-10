@@ -8,8 +8,21 @@ import asyncio
 from unittest.mock import patch, AsyncMock
 import api.routers.expenses
 from fastapi import APIRouter, HTTPException, Depends, Header
+from fastapi import APIRouter, HTTPException, Depends, Header
+from motor.motor_asyncio import AsyncIOMotorClient
+from bson import ObjectId
+from api.config import MONGO_URI
+from currency_converter import CurrencyConverter
+import datetime
 
 
+# MongoDB setup
+client = AsyncIOMotorClient(MONGO_URI)
+db = client.mmdb
+users_collection = db.users
+expenses_collection = db.expenses
+accounts_collection = db.accounts
+tokens_collection = db.tokens
 
 # Test case for when "from_cur" and "to_cur" are the same
 def test_convert_currency_same_currency():
@@ -149,6 +162,74 @@ async def test_update_expense(async_client_auth: AsyncClient):
     assert response.status_code == 200
     assert response.json()["message"] == "Expense updated successfully"
     assert response.json()["updated_expense"]["amount"] == 40.0
+
+@pytest.mark.anyio
+async def test_update_expense_not_found(async_client_auth: AsyncClient):
+    response = await async_client_auth.put(
+        "/expenses/507f1f77bcf86cd799439011",
+        params={"amount": 100.0}
+    )
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Expense not found"
+
+
+@pytest.mark.anyio
+async def test_update_expense_currency_404(async_client_auth: AsyncClient):
+    # First, add an expense
+    add_response = await async_client_auth.post(
+        "/expenses/",
+        params={
+            "amount": 30.0,
+            "currency": "USD",
+            "category": "Food",
+            "description": "Patel Bros",
+            "account_type": "Checking"
+        }
+    )
+    expense_id = add_response.json()["expense"]["_id"]
+    # Update the expense
+    response = await async_client_auth.put(
+        f"/expenses/{expense_id}",
+        params={"amount": 40.0,
+                "currency":"InvalidCurrency"}
+    )
+    assert response.status_code == 400
+    assert response.json()["detail"].startswith("Currency type is not added to user account")
+
+@pytest.mark.anyio
+async def test_update_expense_account_404(async_client_auth: AsyncClient):
+    # First, add an expense
+    add_response = await async_client_auth.post(
+        "/expenses/",
+        params={
+            "amount": 30.0,
+            "currency": "USD",
+            "category": "Food",
+            "description": "Patel Bros",
+            "account_type": "Checking"
+        }
+    )
+    expense_id = add_response.json()["expense"]["_id"]
+        # Step 2: Manually update the account_type for the expense in the database to an invalid one
+    update_result = await expenses_collection.update_one(
+        {"_id": ObjectId(expense_id)},
+        {"$set": {"account_type": "InvalidAccount"}}
+    )
+    breakpoint()
+    # Ensure that the update succeeded and affected one document
+    assert update_result.modified_count == 1, expense_id
+    
+    breakpoint()
+    # Update the expense
+    response = await async_client_auth.put(
+        f"/expenses/{expense_id}",
+        params={
+            "amount": 40.0,
+            "account_type": "InvalidAccount"
+        }
+    )
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Account not found"
 
 @pytest.mark.anyio
 async def test_delete_expense(async_client_auth: AsyncClient):

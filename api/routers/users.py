@@ -21,6 +21,7 @@ db = client.mmdb
 users_collection = db.users
 tokens_collection = db.tokens
 accounts_collection = db.accounts
+expenses_collection = db.expenses
 
 # Model for creating a user
 class UserCreate(BaseModel):
@@ -141,6 +142,8 @@ async def delete_user(token: str = Header(None)):
     await tokens_collection.delete_many({"user_id": user_id})
     # Delete user accounts
     await accounts_collection.delete_many({"user_id": user_id})
+    # Delete user expenses
+    await expenses_collection.delete_many({"user_id": user_id})
     # Delete user
     result = await users_collection.delete_one({"_id": ObjectId(user_id)})
     if result.deleted_count == 1:
