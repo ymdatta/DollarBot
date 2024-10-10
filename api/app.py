@@ -2,6 +2,7 @@
 from fastapi import FastAPI
 from api.routers import expenses, users
 import uvicorn
+import asyncio
 
 app = FastAPI()
 
@@ -14,7 +15,7 @@ app.include_router(users.router)
 @app.on_event("shutdown")
 async def shutdown_event():
     # Call the shutdown function for MongoDB client
-    users.shutdown_db_client()
+    await users.shutdown_db_client()
 
 
 if __name__ == "__main__":

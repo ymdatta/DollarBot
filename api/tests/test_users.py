@@ -4,18 +4,8 @@ from copy import deepcopy
 from httpx import AsyncClient, ASGITransport
 from api.app import app
 from api.config import TOKEN_SECRET_KEY, TOKEN_ALGORITHM
-
-@pytest.fixture(scope="session")
-def anyio_backend():
-    return "asyncio"
-
-@pytest.fixture(scope="session")
-async def async_client():
-    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-        yield client
-
-############################### TESTCASES
-
+from asyncio import get_event_loop
+import asyncio
 
 @pytest.mark.anyio
 async def test_create_user_invalid_data(async_client: AsyncClient):
@@ -30,25 +20,27 @@ async def test_create_user_invalid_data(async_client: AsyncClient):
 async def test_create_user(async_client: AsyncClient):
     response = await async_client.post(
         "/users/",
-        json={"username": "testuser", "password": "testpassword"}
+        json={"username": "usertestuser", "password": "usertestpassword"}
     )
-    assert response.status_code == 200
+    assert response.status_code == 200, response.json()
     assert response.json()["message"] == "User and default accounts created successfully"
 
 @pytest.mark.anyio
 async def test_create_user_repeat(async_client: AsyncClient):
-    response = await async_client.post(
-        "/users/",
-        json={"username": "testuser", "password": "testpassword"}
-    )
-    assert response.status_code == 400
-    assert response.json()["detail"] == "Username already exists"
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+    
+        response = await client.post(
+            "/users/",
+            json={"username": "usertestuser", "password": "usertestpassword"}
+        )
+        assert response.status_code == 400
+        assert response.json()["detail"] == "Username already exists"
 
 @pytest.mark.anyio
 async def test_create_token_invalid_credentials(async_client: AsyncClient):
     response = await async_client.post(
         "/users/token/",
-        data={"username": "testuser", "password": "wrongpassword"}
+        data={"username": "usertestuser", "password": "wrongpassword"}
     )
     assert response.status_code == 401
     assert response.json()["detail"] == "Incorrect username or password"
@@ -58,7 +50,7 @@ async def test_create_token_invalid_credentials(async_client: AsyncClient):
 async def test_verify_token_existence(async_client: AsyncClient):
     response = await async_client.post(
         "/users/token/",
-        data={"username": "testuser", "password": "testpassword"}
+        data={"username": "usertestuser", "password": "usertestpassword"}
     )
     assert response.status_code == 200
     token = response.json()['access_token']
@@ -92,7 +84,7 @@ async def test_token_expired(async_client: AsyncClient):
 async def test_create_token(async_client: AsyncClient):
     response = await async_client.post(
         "/users/token/",
-        data={"username": "testuser", "password": "testpassword"}
+        data={"username": "usertestuser", "password": "usertestpassword"}
     )
     assert response.status_code == 200
     assert "access_token" in response.json()
@@ -106,7 +98,7 @@ async def test_create_token(async_client: AsyncClient):
 async def test_delete_token(async_client: AsyncClient):
     response = await async_client.post(
         "/users/token/",
-        data={"username": "testuser", "password": "testpassword"}
+        data={"username": "usertestuser", "password": "usertestpassword"}
     )
     assert response.status_code == 200
     token = response.json()['access_token']
@@ -120,7 +112,7 @@ async def test_get_user(async_client: AsyncClient):
     response = await async_client.get("/users/")
     assert response.status_code == 200
     assert "username" in response.json()
-    assert response.json()["username"] == "testuser"
+    assert response.json()["username"] == "usertestuser"
 
 @pytest.mark.anyio
 async def test_get_token(async_client: AsyncClient):

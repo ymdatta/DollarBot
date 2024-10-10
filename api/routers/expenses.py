@@ -33,7 +33,7 @@ def convert_currency(amount, from_cur, to_cur):
 # Endpoint to add a new expense
 @router.post("/")
 async def add_expense(amount: float, currency: str, category: str, description: str = None, account_type: str = "Checking", token: str = Header(None)):
-    user_id = user.verify_token(token)
+    user_id = await users.verify_token(token)
     account = await accounts_collection.find_one({"user_id": user_id, "account_type": account_type})
     user = await users_collection.find_one({"_id": ObjectId(user_id)})
     if not account:
@@ -74,14 +74,14 @@ async def add_expense(amount: float, currency: str, category: str, description: 
 # Endpoint to get all expenses for a user
 @router.get("/")
 async def get_expenses(token: str = Header(None)):
-    user_id = users.verify_token(token)
+    user_id = await users.verify_token(token)
     expenses = await expenses_collection.find({"user_id": user_id}).to_list(1000)
     return {"expenses": [format_id(expense) for expense in expenses]}
 
 # Endpoint to delete an expense by ID
 @router.delete("/{expense_id}")
 async def delete_expense(expense_id: str, token: str = Header(None)):
-    user_id = users.verify_token(token)
+    user_id = await users.verify_token(token)
     try:
         expense = await expenses_collection.find_one({"_id": ObjectId(expense_id)})
     except:
@@ -109,7 +109,7 @@ async def delete_expense(expense_id: str, token: str = Header(None)):
 # Endpoint to update an expense by ID
 @router.put("/{expense_id}")
 async def update_expense(expense_id: str, amount: float = None, currency: str = None, category: str = None, description: str = None, token: str = Header(None)):
-    user_id = user.verify_token(token)
+    user_id = await users.verify_token(token)
     user = await users_collection.find_one({"_id": ObjectId(user_id)})
     try:
         expense = await expenses_collection.find_one({"_id": ObjectId(expense_id)})
