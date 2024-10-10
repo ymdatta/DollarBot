@@ -159,11 +159,16 @@ async def test_update_expense(async_client_auth: AsyncClient):
     # Update the expense
     response = await async_client_auth.put(
         f"/expenses/{expense_id}",
-        params={"amount": 40.0, "description": "Updated taxi fare","category": "Transport"},
+        params={
+            "amount": 40.0,
+            "description": "Updated taxi fare",
+            "category": "Transport",
+        },
     )
     assert response.status_code == 200
     assert response.json()["message"] == "Expense updated successfully"
     assert response.json()["updated_expense"]["amount"] == 40.0
+
 
 @pytest.mark.anyio
 async def test_update_expense_empty(async_client_auth: AsyncClient):
@@ -181,10 +186,7 @@ async def test_update_expense_empty(async_client_auth: AsyncClient):
     expense_id = add_response.json()["expense"]["_id"]
 
     # Update the expense
-    response = await async_client_auth.put(
-        f"/expenses/{expense_id}",
-        params={}
-    )
+    response = await async_client_auth.put(f"/expenses/{expense_id}", params={})
     assert response.status_code == 400
     assert response.json()["detail"] == "No fields to update"
 
@@ -221,6 +223,7 @@ async def test_update_expense_currency_404(async_client_auth: AsyncClient):
     assert response.json()["detail"].startswith(
         "Currency type is not added to user account"
     )
+
 
 @pytest.mark.anyio
 async def test_update_expense_category_404(async_client_auth: AsyncClient):

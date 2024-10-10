@@ -1,0 +1,10 @@
+repos:
+  - repo: https://github.com/pre-commit/mirrors-isort
+    rev: "v5.10.1"  # You can replace this with the latest version
+    hooks:
+      - id: isort
+
+  - repo: https://github.com/psf/black
+    rev: "23.7.0"  # You can replace this with the latest version
+    hooks:
+      - id: black
