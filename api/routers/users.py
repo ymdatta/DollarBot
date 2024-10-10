@@ -1,4 +1,7 @@
-# user.py
+"""
+This module provides user-related API routes for the Money Manager application.
+"""
+
 import datetime
 from typing import Optional
 
@@ -26,25 +29,29 @@ accounts_collection = db.accounts
 expenses_collection = db.expenses
 
 
-# Model for creating a user
 class UserCreate(BaseModel):
+    """Schema for creating a user."""
+
     username: str
     password: str
 
 
 class UserUpdate(BaseModel):
+    """Schema for updating user information."""
+
     password: Optional[str] = None
     categories: Optional[list] = None
     currencies: Optional[list] = None
 
 
 def format_id(document):
+    """Format the MongoDB document ID to string."""
     document["_id"] = str(document["_id"])
     return document
 
 
-# Function to create an access token
 def create_access_token(data: dict, expires_delta: Optional[datetime.timedelta] = None):
+    """Create an access token with an expiration time."""
     to_encode = data.copy()
     expire = datetime.datetime.now(datetime.UTC) + expires_delta
     to_encode.update({"exp": expire})
@@ -53,6 +60,7 @@ def create_access_token(data: dict, expires_delta: Optional[datetime.timedelta] 
 
 
 async def verify_token(token: str):
+    """Verify the validity of an access token."""
     if token is None:
         raise HTTPException(status_code=401, detail="Token is missing")
     try:
@@ -67,21 +75,21 @@ async def verify_token(token: str):
     except JWTError as e:
         if "Signature has expired" in str(e):
             await tokens_collection.delete_one({"token": token})
-            raise HTTPException(status_code=401, detail="Token has expired")
+            raise HTTPException(status_code=401, detail="Token has expired") from e
         raise HTTPException(
             status_code=401, detail="Invalid authentication credentials"
-        )
+        ) from e
 
 
-# Endpoint to create a demo user
 @router.post("/")
 async def create_user(user: UserCreate):
-    # Check if the user already exists
+    """Create a new user along with default accounts."""
     existing_user = await users_collection.find_one({"username": user.username})
     if existing_user:
         raise HTTPException(status_code=400, detail="Username already exists")
     if not user.username or not user.password:
         raise HTTPException(status_code=422, detail="Invalid credential")
+
     default_categories = [
         "Food",
         "Groceries",
@@ -125,9 +133,9 @@ async def create_user(user: UserCreate):
     return {"message": "User and default accounts created successfully"}
 
 
-# Endpoint to get user details
 @router.get("/")
 async def get_user(token: str = Header(None)):
+    """Get user details."""
     user_id = await verify_token(token)
     user = await users_collection.find_one({"_id": ObjectId(user_id)})
     if not user:
@@ -137,6 +145,7 @@ async def get_user(token: str = Header(None)):
 
 @router.put("/")
 async def update_user(user_update: UserUpdate, token: str = Header(None)):
+    """Update user information such as password, categories, or currencies."""
     user_id = await verify_token(token)
     update_fields = user_update.dict(exclude_unset=True)
     existing_user = await users_collection.find_one({"_id": ObjectId(user_id)})
@@ -160,46 +169,36 @@ async def update_user(user_update: UserUpdate, token: str = Header(None)):
         result = await users_collection.update_one(
             {"_id": ObjectId(user_id)}, {"$set": update_fields}
         )
-        from rich import inspect
-
-        inspect(user_update)
-        inspect(result)
         if result.modified_count == 1:
             updated_user = await users_collection.find_one({"_id": ObjectId(user_id)})
             return {
                 "message": "User updated successfully",
                 "updated_user": format_id(updated_user),
             }
-        else:
-            raise Exception("Nothing to modify")
-    except:
-        raise HTTPException(status_code=500, detail="Failed to update user")
+        raise HTTPException(status_code=400, detail="Nothing to modify")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Failed to update user") from e
 
 
-# Endpoint to delete a user
 @router.delete("/")
 async def delete_user(token: str = Header(None)):
+    """Delete a user and all associated accounts, tokens, and expenses."""
     user_id = await verify_token(token)
-    # Delete user tokens
     await tokens_collection.delete_many({"user_id": user_id})
-    # Delete user accounts
     await accounts_collection.delete_many({"user_id": user_id})
-    # Delete user expenses
     await expenses_collection.delete_many({"user_id": user_id})
-    # Delete user
     result = await users_collection.delete_one({"_id": ObjectId(user_id)})
     if result.deleted_count == 1:
         return {"message": "User deleted successfully"}
-    else:
-        raise HTTPException(status_code=500, detail="Failed to delete user")
+    raise HTTPException(status_code=500, detail="Failed to delete user")
 
 
-# Endpoint to generate a token for a user
 @router.post("/token/")
 async def create_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
     token_expires: Optional[int] = ACCESS_TOKEN_EXPIRE_MINUTES,
 ):
+    """Create an access token for a user."""
     user = await users_collection.find_one({"username": form_data.username})
     if not user or user["password"] != form_data.password:
         raise HTTPException(status_code=401, detail="Incorrect username or password")
@@ -210,7 +209,6 @@ async def create_token(
         expires_delta=access_token_expires,
     )
 
-    # Save the token in the database
     await tokens_collection.insert_one(
         {
             "user_id": str(user["_id"]),
@@ -223,17 +221,17 @@ async def create_token(
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-# Endpoint to get current token details
 @router.get("/token/")
 async def get_token(token: str = Header(None)):
+    """Get current token details."""
     user_id = await verify_token(token)
     token_data = await tokens_collection.find_one({"user_id": user_id, "token": token})
     return format_id(token_data)
 
 
-# Endpoint to update token expiration time
 @router.put("/token/")
 async def update_token(token_expires: int, token: str = Header(None)):
+    """Update the expiration time for the current token."""
     user_id = await verify_token(token)
     updated_expiry = datetime.timedelta(minutes=token_expires)
     new_expiry_time = datetime.datetime.now(datetime.UTC) + updated_expiry
@@ -243,22 +241,22 @@ async def update_token(token_expires: int, token: str = Header(None)):
     )
     if result.modified_count == 1:
         return {"message": "Token expiration updated successfully"}
-    else:
-        raise HTTPException(status_code=500, detail="Failed to update token expiration")
+    raise HTTPException(status_code=500, detail="Failed to update token expiration")
 
 
-# Endpoint to delete a specific token
 @router.delete("/token/")
 async def delete_token(token_to_delete: str, token: str = Header(None)):
+    """Delete a specific token."""
     user_id = await verify_token(token)
-    result = await tokens_collection.delete_one({"user_id": user_id, "token": token})
+    result = await tokens_collection.delete_one(
+        {"user_id": user_id, "token": token_to_delete}
+    )
     if result.deleted_count == 1:
         return {"message": "Token deleted successfully"}
-    else:
-        raise HTTPException(status_code=500, detail="Failed to delete token")
+    raise HTTPException(status_code=500, detail="Failed to delete token")
 
 
-# Shutdown function to close MongoClient
 @router.on_event("shutdown")
 async def shutdown_db_client():
+    """Shutdown event for MongoDB client."""
     client.close()
