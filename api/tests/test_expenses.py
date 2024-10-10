@@ -5,6 +5,46 @@ from api.app import app
 from datetime import datetime
 from asyncio import get_event_loop
 import asyncio
+from unittest.mock import patch, AsyncMock
+import api.routers.expenses
+from fastapi import APIRouter, HTTPException, Depends, Header
+
+
+
+# Test case for when "from_cur" and "to_cur" are the same
+def test_convert_currency_same_currency():
+    amount = 100
+    result = api.routers.expenses.convert_currency(100, "USD", "USD")
+    assert result == amount, "Conversion should return the original amount if currencies are the same"
+
+# Test case for successful conversion
+@patch('api.routers.expenses.currency_converter.convert')
+def test_convert_currency_success(mock_convert):
+    # Mock the currency converter to return a fixed value
+    mock_convert.return_value = 85.0
+
+    amount = 100
+    from_cur = "USD"
+    to_cur = "EUR"
+    result = api.routers.expenses.convert_currency(amount, from_cur, to_cur)
+
+    mock_convert.assert_called_once_with(amount, from_cur, to_cur)
+    assert result == 85.0, "Conversion should match the mocked return value"
+
+# Test case for failed conversion (e.g., unsupported currency)
+@patch('api.routers.expenses.currency_converter.convert')
+def test_convert_currency_failure(mock_convert):
+    # Simulate an exception being raised during conversion
+    mock_convert.side_effect = Exception("Unsupported currency")
+
+    amount = 100
+    from_cur = "USD"
+    to_cur = "XYZ"  # Assume "XYZ" is an unsupported currency
+    with pytest.raises(HTTPException) as exc_info:
+        api.routers.expenses.convert_currency(amount, from_cur, to_cur)
+
+    assert exc_info.value.status_code == 400
+    assert "Currency conversion failed" in str(exc_info.value.detail), "Exception message should indicate conversion failure"
 
 
 @pytest.mark.anyio
@@ -61,6 +101,20 @@ async def test_add_expense_invalid_category(async_client_auth: AsyncClient):
     )
     assert response.status_code == 400
     assert response.json()["detail"].startswith("Category is not present in the user account")
+
+@pytest.mark.anyio
+async def test_add_expense_invalid_account(async_client_auth: AsyncClient):
+    response = await async_client_auth.post(
+        "/expenses/",
+        params={
+            "amount": 50.0,
+            "currency": "USD",
+            "category": "Food",
+            "account_type": "InvalidAccount"
+        }
+    )
+    assert response.status_code == 400, response.json()
+    assert response.json()["detail"] == ("Invalid account type")
 
 @pytest.mark.anyio
 async def test_get_expenses(async_client_auth: AsyncClient):
