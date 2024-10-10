@@ -148,9 +148,9 @@ async def update_user(user_update: UserUpdate, token: str = Header(None)):
     """Update user information such as password, categories, or currencies."""
     user_id = await verify_token(token)
     update_fields = user_update.dict(exclude_unset=True)
-    existing_user: AsyncIOMotorCollection = await users_collection.find_one(
-        {"_id": ObjectId(user_id)}
-    )
+    user: Optional[dict] = await users_collection.find_one({"_id": ObjectId(user_id)})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
 
     if "password" in update_fields and update_fields["password"]:
         # In a real application, you should hash the password
@@ -158,13 +158,13 @@ async def update_user(user_update: UserUpdate, token: str = Header(None)):
 
     if "categories" in update_fields and isinstance(update_fields["categories"], list):
         new_categories = list(
-            set(existing_user.get("categories", []) + update_fields["categories"])
+            set(user.get("categories", []) + update_fields["categories"])
         )
         update_fields["categories"] = new_categories
 
     if "currencies" in update_fields and isinstance(update_fields["currencies"], list):
         new_currencies = list(
-            set(existing_user.get("currencies", []) + update_fields["currencies"])
+            set(user.get("currencies", []) + update_fields["currencies"])
         )
         update_fields["currencies"] = new_currencies
     try:
