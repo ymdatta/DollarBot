@@ -46,7 +46,7 @@ def post_operation_selection(message, bot):
         op = message.text
         options = helper.getCategoryOptions()
         markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
-        # Handle the exception of unknown operation 
+        # Handle the exception of unknown operation
         if op not in options.values():
             bot.send_message(chat_id, 'Invalid', reply_markup=types.ReplyKeyboardRemove())
             raise Exception("Sorry I don't recognise this operation \"{}\"!".format(op))
@@ -70,16 +70,16 @@ def post_operation_selection(message, bot):
         # print("hit exception")
         helper.throw_exception(e, message, bot, logging)
 
-# Use the funtion to add a new category 
+# Use the funtion to add a new category
 def category_add(message, bot):
     chat_id = message.chat.id
     category_name = message.text
     with open("categories.txt", "r") as tf:
         lines = tf.read().split(',')
         tf.close()
-    f = open("categories.txt", "a")   
+    f = open("categories.txt", "a")
     if lines == ['']:
-        f.write(category_name)    
+        f.write(category_name)
     else:
         f.write(',' + category_name)
     f.close()
@@ -103,7 +103,7 @@ def category_delete(message, bot):
         tf.close()
     for category in categories:
         if category == '':
-            categories.remove('')            
+            categories.remove('')
         if category == category_name:
             find_to_delete = True
             categories.remove(category)
@@ -111,11 +111,11 @@ def category_delete(message, bot):
     if not find_to_delete:
         bot.send_message(chat_id, 'Cannot find the category QAQ', reply_markup=types.ReplyKeyboardRemove())
     elif find_to_delete:
-        f = open("categories.txt", "w")   
+        f = open("categories.txt", "w")
         for category in categories:
             if category == categories[0]:
                 f.write(category)
-            else:   
+            else:
                 f.write("," + category)
         f.close()
         bot.send_message(chat_id, 'Delete category "{}" successfully!'.format(category_name))

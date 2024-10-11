@@ -107,4 +107,3 @@ def add_account_record(chat_id, type):
         user_list[str(chat_id)]['account']['Savings'] = "True"
 
     return user_list
-
