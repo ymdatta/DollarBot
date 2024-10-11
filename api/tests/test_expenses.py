@@ -1,4 +1,5 @@
 # test_expenses.py
+import datetime
 from unittest.mock import patch
 
 import pytest
@@ -117,6 +118,86 @@ class TestExpenseAdd:
         )
         assert response.status_code == 400, response.json()
         assert response.json()["detail"] == ("Invalid account type")
+
+    async def test_add_expense_no_date(self, async_client_auth: AsyncClient):
+        """
+        Test case when no date is provided, should default to current datetime.
+        """
+        response = await async_client_auth.post(
+            "/expenses/",
+            json={
+                "amount": 100.0,
+                "currency": "USD",
+                "category": "Food",
+                "description": "Grocery shopping",
+                "account_type": "Checking",
+            },
+        )
+        assert response.status_code == 200, response.json()
+        expense_date = response.json()["expense"]["date"]
+        assert isinstance(expense_date, str) and datetime.datetime.fromisoformat(
+            expense_date
+        ), "The date should be a valid ISO datetime"
+
+    async def test_add_expense_valid_date(self, async_client_auth: AsyncClient):
+        """
+        Test case when a valid ISO date is provided.
+        """
+        valid_date = "2024-10-06T12:00:00"
+        response = await async_client_auth.post(
+            "/expenses/",
+            json={
+                "amount": 50.0,
+                "currency": "USD",
+                "category": "Transport",
+                "description": "Bus fare",
+                "account_type": "Checking",
+                "date": valid_date,
+            },
+        )
+        assert response.status_code == 200, response.json()
+        expense_date = response.json()["expense"]["date"]
+        assert datetime.datetime.fromisoformat(
+            expense_date
+        ), "The date should be a valid ISO datetime"
+        assert (
+            expense_date == valid_date
+        ), "The date should match the user-provided date"
+
+    async def test_add_expense_invalid_date(self, async_client_auth: AsyncClient):
+        """
+        Test case when an invalid date format is provided.
+        """
+        invalid_date = "2024-10-96 90:00:00"  # Invalid format (missing 'T')
+        response = await async_client_auth.post(
+            "/expenses/",
+            json={
+                "amount": 75.0,
+                "currency": "USD",
+                "category": "Groceries",
+                "description": "Weekly groceries",
+                "account_type": "Checking",
+                "date": invalid_date,
+            },
+        )
+        assert response.status_code == 422, response.json()
+
+    async def test_add_expense_empty_string_date(self, async_client_auth: AsyncClient):
+        """
+        Test case when an invalid date format is provided.
+        """
+        response = await async_client_auth.post(
+            "/expenses/",
+            json={
+                "amount": 75.0,
+                "currency": "USD",
+                "category": "Groceries",
+                "description": "Weekly groceries",
+                "account_type": "Checking",
+                "date": "",
+            },
+        )
+        assert response.status_code == 422, response.json()
 
 
 @pytest.mark.anyio

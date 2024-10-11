@@ -53,6 +53,7 @@ class ExpenseCreate(BaseModel):
     category: str
     description: Optional[str] = None
     account_type: str = "Checking"
+    date: Optional[datetime.datetime] = None
 
 
 class ExpenseUpdate(BaseModel):
@@ -84,7 +85,6 @@ async def add_expense(expense: ExpenseCreate, token: str = Header(None)):
         raise HTTPException(status_code=400, detail="Invalid account type")
 
     user = await users_collection.find_one({"_id": ObjectId(user_id)})
-
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
@@ -122,17 +122,22 @@ async def add_expense(expense: ExpenseCreate, token: str = Header(None)):
         {"_id": account["_id"]}, {"$set": {"balance": new_balance}}
     )
 
+    # Convert date to datetime object or use current datetime if none is provided
+    expense_date = expense.date or datetime.datetime.now(datetime.timezone.utc)
     # Record the expense
     expense_data = expense.dict()
     expense_data.update(
         {
             "user_id": user_id,
-            "date": datetime.datetime.now(datetime.UTC),
+            "date": expense_date.isoformat(),
         }
     )
     result = await expenses_collection.insert_one(expense_data)
 
     if result.inserted_id:
+        expense_data["date"] = (
+            expense_date.isoformat()
+        )  # Ensure consistent formatting for response
         return {
             "message": "Expense added successfully",
             "expense": format_id(expense_data),
