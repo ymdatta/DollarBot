@@ -63,6 +63,8 @@ class ExpenseUpdate(BaseModel):
     currency: Optional[str] = None
     category: Optional[str] = None
     description: Optional[str] = None
+    # TODO: add account_type changing capability also
+    date: Optional[datetime.datetime] = None
 
 
 @router.post("/")
@@ -247,6 +249,7 @@ async def delete_expense(expense_id: str, token: str = Header(None)):
 
 
 @router.put("/{expense_id}")
+# pylint: disable=too-many-locals
 async def update_expense(
     expense_id: str, expense_update: ExpenseUpdate, token: str = Header(None)
 ):
@@ -270,19 +273,70 @@ async def update_expense(
     if not expense or expense["user_id"] != user_id:
         raise HTTPException(status_code=404, detail="Expense not found")
 
-    update_fields: dict[str, str | float] = {}
-    if expense_update.currency:
-        expense_update.currency = expense_update.currency.upper()
-        if expense_update.currency not in user["currencies"]:
-            raise HTTPException(
-                status_code=400,
-                detail=(
-                    f"Currency type is not added to user account. "
-                    f"Available currencies are {user['currencies']}"
-                ),
-            )
-        update_fields["currency"] = expense_update.currency
+    update_fields: dict[str, str | float | datetime.datetime] = {}
 
+    def validate_currency():
+        if expense_update.currency:
+            expense_update.currency = expense_update.currency.upper()
+            if expense_update.currency not in user["currencies"]:
+                raise HTTPException(
+                    status_code=400,
+                    detail=(
+                        f"Currency type is not added to user account. "
+                        f"Available currencies are {user['currencies']}"
+                    ),
+                )
+            update_fields["currency"] = expense_update.currency
+
+    async def validate_amount():
+        nonlocal new_balance
+        if expense_update.amount is not None:
+            update_fields["amount"] = expense_update.amount
+
+            # Adjust the user's balance
+            # Convert old and new amounts to the account currency to determine balance adjustment
+            original_amount_converted = convert_currency(
+                expense["amount"], expense["currency"], account["currency"]
+            )
+            new_amount_converted = convert_currency(
+                expense_update.amount,
+                expense_update.currency or expense["currency"],
+                account["currency"],
+            )
+
+            difference = new_amount_converted - original_amount_converted
+            new_balance = account["balance"] - difference
+
+            if new_balance < 0:
+                raise HTTPException(
+                    status_code=400, detail="Insufficient balance to update the expense"
+                )
+            await accounts_collection.update_one(
+                {"_id": account["_id"]}, {"$set": {"balance": new_balance}}
+            )
+
+    def validate_category():
+        if expense_update.category:
+            if expense_update.category not in user["categories"]:
+                raise HTTPException(
+                    status_code=400,
+                    detail=(
+                        f"Category is not present in the user account. "
+                        f"Available categories are {user['categories']}"
+                    ),
+                )
+            update_fields["category"] = expense_update.category
+
+    def validate_description():
+        if expense_update.description:
+            update_fields["description"] = expense_update.description
+
+    def validate_date():
+        if expense_update.date:
+            update_fields["date"] = expense_update.date
+
+    # Run validations
+    validate_currency()
     account_type = expense["account_type"]
     account = await accounts_collection.find_one(
         {"user_id": user_id, "account_type": account_type}
@@ -290,44 +344,11 @@ async def update_expense(
     if not account:
         raise HTTPException(status_code=404, detail="Account not found")
 
-    if expense_update.amount is not None:
-        update_fields["amount"] = expense_update.amount
-
-        # Adjust the user's balance
-        # Convert old and new amounts to the account currency to determine balance adjustment
-        original_amount_converted = convert_currency(
-            expense["amount"], expense["currency"], account["currency"]
-        )
-        new_amount_converted = convert_currency(
-            expense_update.amount,
-            expense_update.currency or expense["currency"],
-            account["currency"],
-        )
-
-        difference = new_amount_converted - original_amount_converted
-        new_balance = account["balance"] - difference
-
-        if new_balance < 0:
-            raise HTTPException(
-                status_code=400, detail="Insufficient balance to update the expense"
-            )
-        await accounts_collection.update_one(
-            {"_id": account["_id"]}, {"$set": {"balance": new_balance}}
-        )
-
-    if expense_update.category:
-        if expense_update.category not in user["categories"]:
-            raise HTTPException(
-                status_code=400,
-                detail=(
-                    f"Category is not present in the user account. "
-                    f"Available categories are {user['categories']}"
-                ),
-            )
-        update_fields["category"] = expense_update.category
-
-    if expense_update.description:
-        update_fields["description"] = expense_update.description
+    new_balance = account["balance"]
+    await validate_amount()
+    validate_category()
+    validate_description()
+    validate_date()
 
     if not update_fields:
         raise HTTPException(status_code=400, detail="No fields to update")

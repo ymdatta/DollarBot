@@ -119,7 +119,7 @@ class TestExpenseAdd:
         assert response.status_code == 400, response.json()
         assert response.json()["detail"] == ("Invalid account type")
 
-    async def test_add_expense_no_date(self, async_client_auth: AsyncClient):
+    async def test_no_date(self, async_client_auth: AsyncClient):
         """
         Test case when no date is provided, should default to current datetime.
         """
@@ -139,7 +139,7 @@ class TestExpenseAdd:
             expense_date
         ), "The date should be a valid ISO datetime"
 
-    async def test_add_expense_valid_date(self, async_client_auth: AsyncClient):
+    async def test_valid_date(self, async_client_auth: AsyncClient):
         """
         Test case when a valid ISO date is provided.
         """
@@ -164,7 +164,7 @@ class TestExpenseAdd:
             expense_date == valid_date
         ), "The date should match the user-provided date"
 
-    async def test_add_expense_invalid_date(self, async_client_auth: AsyncClient):
+    async def test_invalid_date(self, async_client_auth: AsyncClient):
         """
         Test case when an invalid date format is provided.
         """
@@ -182,7 +182,7 @@ class TestExpenseAdd:
         )
         assert response.status_code == 422, response.json()
 
-    async def test_add_expense_empty_string_date(self, async_client_auth: AsyncClient):
+    async def test_empty_string_date(self, async_client_auth: AsyncClient):
         """
         Test case when an invalid date format is provided.
         """
@@ -202,7 +202,7 @@ class TestExpenseAdd:
 
 @pytest.mark.anyio
 class TestExpenseGet:
-    async def test_get_all_expenses(self, async_client_auth: AsyncClient):
+    async def test_all(self, async_client_auth: AsyncClient):
         """
         Test to retrieve all expenses for a user.
         """
@@ -226,7 +226,7 @@ class TestExpenseGet:
         assert "expenses" in response.json()
         assert isinstance(response.json()["expenses"], list)
 
-    async def test_get_specific_expense(self, async_client_auth: AsyncClient):
+    async def test_specific(self, async_client_auth: AsyncClient):
         """
         Test to retrieve a specific expense by its ID.
         """
@@ -253,7 +253,7 @@ class TestExpenseGet:
         assert "_id" in response.json()
         assert response.json()["_id"] == expense_id
 
-    async def test_get_expense_not_found(self, async_client_auth: AsyncClient):
+    async def test_not_found(self, async_client_auth: AsyncClient):
         """
         Test to retrieve an expense by a non-existent ID.
         """
@@ -267,7 +267,7 @@ class TestExpenseGet:
 
 @pytest.mark.anyio
 class TestExpenseUpdate:
-    async def test_update_expense(self, async_client_auth: AsyncClient):
+    async def test_valid(self, async_client_auth: AsyncClient):
         # First, add an expense
         add_response = await async_client_auth.post(
             "/expenses/",
@@ -295,7 +295,7 @@ class TestExpenseUpdate:
         assert response.json()["message"] == "Expense updated successfully"
         assert response.json()["updated_expense"]["amount"] == 40.0
 
-    async def test_update_expense_empty(self, async_client_auth: AsyncClient):
+    async def test_empty(self, async_client_auth: AsyncClient):
         # First, add an expense
         add_response = await async_client_auth.post(
             "/expenses/",
@@ -315,7 +315,7 @@ class TestExpenseUpdate:
         assert response.status_code == 400
         assert response.json()["detail"] == "No fields to update"
 
-    async def test_update_expense_currency_404(self, async_client_auth: AsyncClient):
+    async def test_currency_404(self, async_client_auth: AsyncClient):
         # First, add an expense
         add_response = await async_client_auth.post(
             "/expenses/",
@@ -339,7 +339,7 @@ class TestExpenseUpdate:
             "Currency type is not added to user account"
         )
 
-    async def test_update_expense_category_404(self, async_client_auth: AsyncClient):
+    async def test_category_404(self, async_client_auth: AsyncClient):
         # First, add an expense
         add_response = await async_client_auth.post(
             "/expenses/",
@@ -363,7 +363,7 @@ class TestExpenseUpdate:
             "Category is not present in the user account"
         )
 
-    async def test_update_expense_account_404(self, async_client_auth: AsyncClient):
+    async def test_account_404(self, async_client_auth: AsyncClient):
         # First, add an expense
         add_response = await async_client_auth.post(
             "/expenses/",
@@ -388,9 +388,7 @@ class TestExpenseUpdate:
         assert response.status_code == 404
         assert response.json()["detail"] == "Account not found"
 
-    async def test_update_expense_insufficient_balance(
-        self, async_client_auth: AsyncClient
-    ):
+    async def test_insufficient_balance(self, async_client_auth: AsyncClient):
         # First, add an expense
         add_response = await async_client_auth.post(
             "/expenses/",
@@ -412,17 +410,62 @@ class TestExpenseUpdate:
         assert response.status_code == 400
         assert response.json()["detail"] == "Insufficient balance to update the expense"
 
-    async def test_update_expense_not_found(self, async_client_auth: AsyncClient):
+    async def test_not_found(self, async_client_auth: AsyncClient):
         response = await async_client_auth.put(
             "/expenses/507f1f77bcf86cd799439011", json={"amount": 100.0}
         )
         assert response.status_code == 404, response.json()
         assert response.json()["detail"] == "Expense not found"
 
+    async def test_valid_date(self, async_client_auth):
+        # Create an expense first
+        create_response = await async_client_auth.post(
+            "/expenses/",
+            json={
+                "amount": 5.0,
+                "currency": "USD",
+                "category": "Food",
+                "account_type": "Checking",
+            },
+        )
+        assert create_response.status_code == 200, create_response.json()
+        expense_id = create_response.json()["expense"]["_id"]
+
+        # Update the expense with a valid date
+        response = await async_client_auth.put(
+            f"/expenses/{expense_id}",
+            json={"date": "2024-10-06T10:00:00"},
+        )
+        assert response.status_code == 200, response.json()
+        assert response.json()["message"] == "Expense updated successfully"
+        assert "updated_expense" in response.json()
+        assert response.json()["updated_expense"]["date"] == "2024-10-06T10:00:00"
+
+    async def test_invalid_date(self, async_client_auth):
+        # Create an expense first
+        create_response = await async_client_auth.post(
+            "/expenses/",
+            json={
+                "amount": 5.0,
+                "currency": "USD",
+                "category": "Food",
+                "account_type": "Checking",
+            },
+        )
+        assert create_response.status_code == 200, create_response.json()
+        expense_id = create_response.json()["expense"]["_id"]
+
+        # Attempt to update the expense with an invalid date
+        response = await async_client_auth.put(
+            f"/expenses/{expense_id}",
+            json={"date": "invalid-date-format"},
+        )
+        assert response.status_code == 422, response.json()
+
 
 @pytest.mark.anyio
 class TestExpenseDelete:
-    async def test_delete_expense(self, async_client_auth: AsyncClient):
+    async def test_specific_valid(self, async_client_auth: AsyncClient):
         # First, add an expense
         add_response = await async_client_auth.post(
             "/expenses/",
@@ -442,12 +485,12 @@ class TestExpenseDelete:
         assert response.status_code == 200
         assert response.json()["message"] == "Expense deleted successfully"
 
-    async def test_delete_expense_not_found(self, async_client_auth: AsyncClient):
+    async def test_specific_404(self, async_client_auth: AsyncClient):
         response = await async_client_auth.delete("/expenses/507f1f77bcf86cd799439011")
         assert response.status_code == 404
         assert response.json()["detail"] == "Expense not found"
 
-    async def test_delete_all_expenses(self, async_client_auth: AsyncClient):
+    async def test_all(self, async_client_auth: AsyncClient):
         """
         Test deleting all expenses for the authenticated user.
         """
@@ -476,9 +519,7 @@ class TestExpenseDelete:
         assert response.status_code == 200, response.json()
         assert len(response.json()["expenses"]) == 0
 
-    async def test_delete_all_expenses_no_expenses(
-        self, async_client_auth: AsyncClient
-    ):
+    async def test_all_but_empty(self, async_client_auth: AsyncClient):
         """
         Test deleting all expenses when no expenses exist.
         """
