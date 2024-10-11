@@ -366,6 +366,46 @@ class TestExpenseDelete:
         assert response.status_code == 404
         assert response.json()["detail"] == "Expense not found"
 
+    async def test_delete_all_expenses(self, async_client_auth: AsyncClient):
+        """
+        Test deleting all expenses for the authenticated user.
+        """
+        # Create a few expenses to ensure there is something to delete
+        for i in range(3):
+            response = await async_client_auth.post(
+                "/expenses/",
+                json={
+                    "amount": 100.0 + i,
+                    "currency": "USD",
+                    "category": "Transport",
+                    "description": f"Taxi fare {i}",
+                    "account_type": "Checking",
+                },
+            )
+            assert response.status_code == 200, response.json()
+            assert response.json()["message"] == "Expense added successfully"
+
+        # Test to delete all expenses
+        response = await async_client_auth.delete("/expenses/all")
+        assert response.status_code == 200, response.json()
+        assert "expenses deleted successfully" in response.json()["message"]
+
+        # Test to get all expenses to verify deletion
+        response = await async_client_auth.get("/expenses/")
+        assert response.status_code == 200, response.json()
+        assert len(response.json()["expenses"]) == 0
+
+    async def test_delete_all_expenses_no_expenses(
+        self, async_client_auth: AsyncClient
+    ):
+        """
+        Test deleting all expenses when no expenses exist.
+        """
+        # Test to delete all expenses when there are no expenses
+        response = await async_client_auth.delete("/expenses/all")
+        assert response.status_code == 404, response.json()
+        assert response.json()["detail"] == "No expenses found to delete"
+
 
 @pytest.mark.anyio
 async def test_currency_conversion(async_client_auth: AsyncClient):
