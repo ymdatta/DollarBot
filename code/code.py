@@ -35,7 +35,7 @@ import history
 import display
 from reminder import check_reminders
 import estimate
-import delete
+import code.done.delete as delete
 import code.done.add as add
 import add_balance
 import budget
