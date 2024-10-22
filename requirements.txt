@@ -1,0 +1,7 @@
+fastapi[standard]
+bson==0.5.10
+currencyconverter
+motor
+python-jose
+pytest
+pytest-cov
