@@ -1,9 +1,9 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='Track My Dollar',
+    name='Money Manager',
     version='1.0',
-    description='An easy to use Telegram Bot to track everyday expenses',
-    author='Dev, Prakruthi, Radhika, Rohan, Sunidhi',
+    description='An REST API based app for tracking expenses',
+    author='Abhishek, Astha, Umang',
     packages=find_packages()
 )
