@@ -199,6 +199,7 @@ async def delete_all_expenses(token: str = Header(None)):
     """
     user_id = await users.verify_token(token)
     result = await expenses_collection.delete_many({"user_id": user_id})
+    # TODO: update the account balance
 
     if result.deleted_count > 0:
         return {"message": f"{result.deleted_count} expenses deleted successfully"}
