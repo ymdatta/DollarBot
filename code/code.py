@@ -35,17 +35,17 @@ import history
 import display
 from reminder import check_reminders
 import estimate
-import delete
-import add
+import code.done.delete as delete
+import code.done.add as add
 import add_balance
 import budget
-import category
+import code.done.category as category
 import download_csv
 import download_pdf
 import email_history
 import add_recurring
-import delete_expense
-import account
+import code.done.delete_expense as delete_expense
+import code.done.account as account
 from datetime import datetime
 from jproperties import Properties
 from telebot import types

@@ -1,0 +1,75 @@
+repos:
+  - repo: local
+    hooks:
+      - id: black
+        name: black
+        entry: black api/
+        language: system
+        pass_filenames: false
+        always_run: true
+
+  - repo: local
+    hooks:
+      - id: isort
+        name: isort
+        entry: isort api/
+        language: system
+        pass_filenames: false
+        always_run: true
+
+  - repo: local
+    hooks:
+      - id: pylint
+        name: pylint
+        entry: pylint api/
+        language: system
+        pass_filenames: false
+        always_run: true
+
+  # - repo: https://github.com/pycqa/flake8
+  #   rev: 7.1.1
+  #   hooks:
+  #     - id: flake8
+
+  - repo: local
+    hooks:
+      - id: bandit
+        name: bandit
+        entry: bandit api/*
+        language: system
+        pass_filenames: false
+        always_run: true
+
+  # - repo: https://github.com/pyupio/safety
+  #   rev: 3.2.3
+  #   hooks:
+  #     - id: safety
+
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.35.1
+    hooks:
+      - id: yamllint
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+
+  - repo: local
+    hooks:
+      - id: pytest-check
+        name: pytest-check
+        entry: pytest api/
+        language: system
+        pass_filenames: false
+        always_run: true
+
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy
+        entry: mypy api/
+        language: system
+        pass_filenames: false
+        always_run: true
