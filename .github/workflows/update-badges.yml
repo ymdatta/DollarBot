@@ -115,6 +115,7 @@ jobs:
             git add README.md
             git commit -m "Update all badges in README"
             git push origin ${{ github.ref_name }}
+        fi
 
     # Ensure this section is correctly closed
     - name: Fail if any tool failed
