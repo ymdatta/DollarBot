@@ -8,11 +8,12 @@ from typing import Optional
 from bson import ObjectId
 from fastapi import APIRouter, Depends, Header, HTTPException
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from jose import JWTError, jwt
+from jose import jwt
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel
 
 from api.config import MONGO_URI, TOKEN_ALGORITHM, TOKEN_SECRET_KEY
+from api.utils.auth import verify_token
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 30 * 24 * 60
 
@@ -40,7 +41,6 @@ class UserUpdate(BaseModel):
     """Schema for updating user information."""
 
     password: Optional[str] = None
-    categories: Optional[list] = None
     currencies: Optional[list] = None
 
 
@@ -59,28 +59,6 @@ def create_access_token(data: dict, expires_delta: datetime.timedelta):
     return encoded_jwt
 
 
-async def verify_token(token: str):
-    """Verify the validity of an access token."""
-    if token is None:
-        raise HTTPException(status_code=401, detail="Token is missing")
-    try:
-        payload = jwt.decode(token, TOKEN_SECRET_KEY, algorithms=[TOKEN_ALGORITHM])
-        user_id = payload.get("sub")
-        token_exists = await tokens_collection.find_one(
-            {"user_id": user_id, "token": token}
-        )
-        if not token_exists:
-            raise HTTPException(status_code=401, detail="Token does not exist")
-        return user_id
-    except JWTError as e:
-        if "Signature has expired" in str(e):
-            await tokens_collection.delete_one({"token": token})
-            raise HTTPException(status_code=401, detail="Token has expired") from e
-        raise HTTPException(
-            status_code=401, detail="Invalid authentication credentials"
-        ) from e
-
-
 @router.post("/")
 async def create_user(user: UserCreate):
     """Create a new user along with default accounts."""
@@ -90,14 +68,15 @@ async def create_user(user: UserCreate):
     if not user.username or not user.password:
         raise HTTPException(status_code=422, detail="Invalid credential")
 
-    default_categories = [
-        "Food",
-        "Groceries",
-        "Utilities",
-        "Transport",
-        "Shopping",
-        "Miscellaneous",
-    ]
+    default_categories = {
+        "Food": {"monthly_budget": 500.0},
+        "Groceries": {"monthly_budget": 200.0},
+        "Utilities": {"monthly_budget": 150.0},
+        "Transport": {"monthly_budget": 100.0},
+        "Shopping": {"monthly_budget": 300.0},
+        "Miscellaneous": {"monthly_budget": 50.0},
+    }
+
     default_currencies = ["USD", "INR", "GBP", "EUR"]
 
     # Insert the new user
@@ -116,14 +95,14 @@ async def create_user(user: UserCreate):
     default_accounts = [
         {
             "user_id": str(user_id),
-            "account_type": "Checking",
-            "balance": 1000.0,
+            "name": "Checking",
+            "balance": 0,
             "currency": "USD",
         },
         {
             "user_id": str(user_id),
-            "account_type": "Savings",
-            "balance": 5000.0,
+            "name": "Savings",
+            "balance": 0,
             "currency": "USD",
         },
     ]
@@ -145,7 +124,7 @@ async def get_user(token: str = Header(None)):
 
 @router.put("/")
 async def update_user(user_update: UserUpdate, token: str = Header(None)):
-    """Update user information such as password, categories, or currencies."""
+    """Update user information such as password, currencies."""
     user_id = await verify_token(token)
     update_fields = user_update.dict(exclude_unset=True)
     user: Optional[dict] = await users_collection.find_one({"_id": ObjectId(user_id)})
@@ -155,12 +134,6 @@ async def update_user(user_update: UserUpdate, token: str = Header(None)):
     if "password" in update_fields and update_fields["password"]:
         # In a real application, you should hash the password
         update_fields["password"] = update_fields["password"]
-
-    if "categories" in update_fields and isinstance(update_fields["categories"], list):
-        new_categories = list(
-            set(user.get("categories", []) + update_fields["categories"])
-        )
-        update_fields["categories"] = new_categories
 
     if "currencies" in update_fields and isinstance(update_fields["currencies"], list):
         new_currencies = list(

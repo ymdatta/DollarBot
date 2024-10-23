@@ -71,7 +71,7 @@ class TestExpenseAdd:
                 "currency": "USD",
                 "category": "Food",
                 "description": "Grocery shopping",
-                "account_type": "Checking",
+                "account_name": "Checking",
             },
         )
         assert response.status_code == 200, response.json()
@@ -113,7 +113,7 @@ class TestExpenseAdd:
                 "amount": 50.0,
                 "currency": "USD",
                 "category": "Food",
-                "account_type": "InvalidAccount",
+                "account_name": "InvalidAccount",
             },
         )
         assert response.status_code == 400, response.json()
@@ -130,7 +130,7 @@ class TestExpenseAdd:
                 "currency": "USD",
                 "category": "Food",
                 "description": "Grocery shopping",
-                "account_type": "Checking",
+                "account_name": "Checking",
             },
         )
         assert response.status_code == 200, response.json()
@@ -151,7 +151,7 @@ class TestExpenseAdd:
                 "currency": "USD",
                 "category": "Transport",
                 "description": "Bus fare",
-                "account_type": "Checking",
+                "account_name": "Checking",
                 "date": valid_date,
             },
         )
@@ -176,7 +176,7 @@ class TestExpenseAdd:
                 "currency": "USD",
                 "category": "Groceries",
                 "description": "Weekly groceries",
-                "account_type": "Checking",
+                "account_name": "Checking",
                 "date": invalid_date,
             },
         )
@@ -193,7 +193,7 @@ class TestExpenseAdd:
                 "currency": "USD",
                 "category": "Groceries",
                 "description": "Weekly groceries",
-                "account_type": "Checking",
+                "account_name": "Checking",
                 "date": "",
             },
         )
@@ -214,7 +214,7 @@ class TestExpenseGet:
                 "currency": "USD",
                 "category": "Food",
                 "description": "Grocery shopping",
-                "account_type": "Checking",
+                "account_name": "Checking",
             },
         )
         assert response.status_code == 200, response.json()
@@ -238,7 +238,7 @@ class TestExpenseGet:
                 "currency": "USD",
                 "category": "Transport",
                 "description": "Taxi fare",
-                "account_type": "Checking",
+                "account_name": "Checking",
             },
         )
         assert response.status_code == 200, response.json()
@@ -276,7 +276,7 @@ class TestExpenseUpdate:
                 "currency": "USD",
                 "category": "Transport",
                 "description": "Taxi fare",
-                "account_type": "Checking",
+                "account_name": "Checking",
             },
         )
         assert add_response.status_code == 200, add_response.json()
@@ -304,7 +304,7 @@ class TestExpenseUpdate:
                 "currency": "USD",
                 "category": "Transport",
                 "description": "Taxi fare",
-                "account_type": "Checking",
+                "account_name": "Checking",
             },
         )
         assert add_response.status_code == 200, add_response.json()
@@ -324,7 +324,7 @@ class TestExpenseUpdate:
                 "currency": "USD",
                 "category": "Food",
                 "description": "Patel Bros",
-                "account_type": "Checking",
+                "account_name": "Checking",
             },
         )
         assert add_response.status_code == 200, add_response.json()
@@ -348,7 +348,7 @@ class TestExpenseUpdate:
                 "currency": "USD",
                 "category": "Food",
                 "description": "Patel Bros",
-                "account_type": "Checking",
+                "account_name": "Checking",
             },
         )
         assert add_response.status_code == 200, add_response.json()
@@ -372,18 +372,18 @@ class TestExpenseUpdate:
                 "currency": "USD",
                 "category": "Food",
                 "description": "Patel Bros",
-                "account_type": "Checking",
+                "account_name": "Checking",
             },
         )
         assert add_response.status_code == 200, add_response.json()
         expense_id = add_response.json()["expense"]["_id"]
         await expenses_collection.update_one(
-            {"_id": ObjectId(expense_id)}, {"$set": {"account_type": "InvalidAccount"}}
+            {"_id": ObjectId(expense_id)}, {"$set": {"account_name": "InvalidAccount"}}
         )
         # Update the expense
         response = await async_client_auth.put(
             f"/expenses/{expense_id}",
-            json={"amount": 40.0, "account_type": "InvalidAccount"},
+            json={"amount": 40.0, "account_name": "InvalidAccount"},
         )
         assert response.status_code == 404
         assert response.json()["detail"] == "Account not found"
@@ -397,7 +397,7 @@ class TestExpenseUpdate:
                 "currency": "USD",
                 "category": "Food",
                 "description": "Patel Bros",
-                "account_type": "Checking",
+                "account_name": "Checking",
             },
         )
         assert add_response.status_code == 200, add_response.json()
@@ -425,7 +425,7 @@ class TestExpenseUpdate:
                 "amount": 5.0,
                 "currency": "USD",
                 "category": "Food",
-                "account_type": "Checking",
+                "account_name": "Checking",
             },
         )
         assert create_response.status_code == 200, create_response.json()
@@ -449,7 +449,7 @@ class TestExpenseUpdate:
                 "amount": 5.0,
                 "currency": "USD",
                 "category": "Food",
-                "account_type": "Checking",
+                "account_name": "Checking",
             },
         )
         assert create_response.status_code == 200, create_response.json()
@@ -474,7 +474,7 @@ class TestExpenseDelete:
                 "currency": "USD",
                 "category": "Shopping",
                 "description": "Book purchase",
-                "account_type": "Checking",
+                "account_name": "Checking",
             },
         )
         assert add_response.status_code == 200, add_response.json()
@@ -503,7 +503,7 @@ class TestExpenseDelete:
                     "currency": "USD",
                     "category": "Transport",
                     "description": f"Taxi fare {i}",
-                    "account_type": "Checking",
+                    "account_name": "Checking",
                 },
             )
             assert response.status_code == 200, response.json()
@@ -537,7 +537,7 @@ async def test_currency_conversion(async_client_auth: AsyncClient):
             "amount": 50,
             "currency": "USD",
             "category": "Food",
-            "account_type": "Checking",
+            "account_name": "Checking",
         },
     )
     assert response.status_code == 200, response.json()
@@ -548,7 +548,7 @@ async def test_currency_conversion(async_client_auth: AsyncClient):
             "amount": 1000,
             "currency": "INR",
             "category": "Food",
-            "account_type": "Checking",
+            "account_name": "Checking",
         },
     )
     assert response.status_code == 200, response.json()

@@ -169,14 +169,12 @@ class TestUserUpdate:
             "/users/",
             json={
                 "password": "newpassword",
-                "categories": ["Health", "Travel"],
                 "currencies": ["INR"],
             },
         )
         assert response.status_code == 200
         assert response.json()["message"] == "User updated successfully"
         assert "updated_user" in response.json()
-        assert "Health" in response.json()["updated_user"]["categories"]
 
 
 @pytest.mark.anyio

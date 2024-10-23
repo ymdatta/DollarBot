@@ -1,5 +1,4 @@
 # test_expenses.py
-import asyncio
 from asyncio import get_event_loop
 from datetime import datetime
 
@@ -36,6 +35,18 @@ async def async_client_auth():
         )
         token = response.json()["result"]["token"]
         client.headers.update({"token": token})
+
+        account_response = await client.get("/accounts/")
+
+        accounts = account_response.json()["accounts"]
+        for account in accounts:
+            if account["name"] == "Checking":
+                account_id = account["_id"]
+                # Update the balance of the Checking account
+                await client.put(
+                    f"/accounts/{account_id}",
+                    json={"balance": 1000.0, "currency": "USD", "name": "Checking"},
+                )
 
         yield client
 

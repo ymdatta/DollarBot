@@ -12,8 +12,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel
 
 from api.config import MONGO_URI
-
-from . import users
+from api.utils.auth import verify_token
 
 currency_converter = CurrencyConverter()
 
@@ -52,7 +51,7 @@ class ExpenseCreate(BaseModel):
     currency: str
     category: str
     description: Optional[str] = None
-    account_type: str = "Checking"
+    account_name: str = "Checking"
     date: Optional[datetime.datetime] = None
 
 
@@ -63,7 +62,7 @@ class ExpenseUpdate(BaseModel):
     currency: Optional[str] = None
     category: Optional[str] = None
     description: Optional[str] = None
-    # TODO: add account_type changing capability also
+    # TODO: add account_name changing capability also
     date: Optional[datetime.datetime] = None
 
 
@@ -79,9 +78,9 @@ async def add_expense(expense: ExpenseCreate, token: str = Header(None)):
     Returns:
         dict: Message with expense details and updated balance.
     """
-    user_id = await users.verify_token(token)
+    user_id = await verify_token(token)
     account = await accounts_collection.find_one(
-        {"user_id": user_id, "account_type": expense.account_type}
+        {"user_id": user_id, "name": expense.account_name}
     )
     if not account:
         raise HTTPException(status_code=400, detail="Invalid account type")
@@ -106,7 +105,7 @@ async def add_expense(expense: ExpenseCreate, token: str = Header(None)):
     if account["balance"] < converted_amount:
         raise HTTPException(
             status_code=400,
-            detail=f"Insufficient balance in {expense.account_type} account",
+            detail=f"Insufficient balance in {expense.account_name} account",
         )
 
     if expense.category not in user["categories"]:
@@ -159,7 +158,7 @@ async def get_expenses(token: str = Header(None)):
     Returns:
         dict: List of expenses.
     """
-    user_id = await users.verify_token(token)
+    user_id = await verify_token(token)
     expenses = await expenses_collection.find({"user_id": user_id}).to_list(1000)
     formatted_expenses = [format_id(expense) for expense in expenses]
     return {"expenses": formatted_expenses}
@@ -177,7 +176,7 @@ async def get_expense(expense_id: str, token: str = Header(None)):
     Returns:
         dict: Details of the specified expense.
     """
-    user_id = await users.verify_token(token)
+    user_id = await verify_token(token)
     expense = await expenses_collection.find_one(
         {"user_id": user_id, "_id": ObjectId(expense_id)}
     )
@@ -197,7 +196,7 @@ async def delete_all_expenses(token: str = Header(None)):
     Returns:
         dict: Message indicating the number of expenses deleted.
     """
-    user_id = await users.verify_token(token)
+    user_id = await verify_token(token)
     result = await expenses_collection.delete_many({"user_id": user_id})
     # TODO: update the account balance
 
@@ -218,15 +217,15 @@ async def delete_expense(expense_id: str, token: str = Header(None)):
     Returns:
         dict: Message with updated balance.
     """
-    user_id = await users.verify_token(token)
+    user_id = await verify_token(token)
     expense = await expenses_collection.find_one({"_id": ObjectId(expense_id)})
 
     if not expense or expense["user_id"] != user_id:
         raise HTTPException(status_code=404, detail="Expense not found")
 
-    account_type = expense["account_type"]
+    account_name = expense["account_name"]
     account = await accounts_collection.find_one(
-        {"user_id": user_id, "account_type": account_type}
+        {"user_id": user_id, "name": account_name}
     )
     if not account:
         raise HTTPException(status_code=404, detail="Account not found")
@@ -265,7 +264,7 @@ async def update_expense(
     Returns:
         dict: Message with updated expense and balance.
     """
-    user_id = await users.verify_token(token)
+    user_id = await verify_token(token)
     user = await users_collection.find_one({"_id": ObjectId(user_id)})
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -338,9 +337,9 @@ async def update_expense(
 
     # Run validations
     validate_currency()
-    account_type = expense["account_type"]
+    account_name = expense["account_name"]
     account = await accounts_collection.find_one(
-        {"user_id": user_id, "account_type": account_type}
+        {"user_id": user_id, "name": account_name}
     )
     if not account:
         raise HTTPException(status_code=404, detail="Account not found")

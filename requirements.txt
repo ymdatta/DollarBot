@@ -1,5 +1,4 @@
 fastapi[standard]
-bson==0.5.10
 currencyconverter
 motor
 python-jose
@@ -7,3 +6,8 @@ pytest
 pytest-cov
 pre-commit
 PyJWT
+black
+pylint
+mypy
+bandit
+types-python-jose
