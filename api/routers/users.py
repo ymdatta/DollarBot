@@ -8,11 +8,12 @@ from typing import Optional
 from bson import ObjectId
 from fastapi import APIRouter, Depends, Header, HTTPException
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from jose import JWTError, jwt
+from jose import jwt
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel
 
 from api.config import MONGO_URI, TOKEN_ALGORITHM, TOKEN_SECRET_KEY
+from api.utils.auth import verify_token
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 30 * 24 * 60
 
@@ -59,28 +60,6 @@ def create_access_token(data: dict, expires_delta: datetime.timedelta):
     return encoded_jwt
 
 
-async def verify_token(token: str):
-    """Verify the validity of an access token."""
-    if token is None:
-        raise HTTPException(status_code=401, detail="Token is missing")
-    try:
-        payload = jwt.decode(token, TOKEN_SECRET_KEY, algorithms=[TOKEN_ALGORITHM])
-        user_id = payload.get("sub")
-        token_exists = await tokens_collection.find_one(
-            {"user_id": user_id, "token": token}
-        )
-        if not token_exists:
-            raise HTTPException(status_code=401, detail="Token does not exist")
-        return user_id
-    except JWTError as e:
-        if "Signature has expired" in str(e):
-            await tokens_collection.delete_one({"token": token})
-            raise HTTPException(status_code=401, detail="Token has expired") from e
-        raise HTTPException(
-            status_code=401, detail="Invalid authentication credentials"
-        ) from e
-
-
 @router.post("/")
 async def create_user(user: UserCreate):
     """Create a new user along with default accounts."""
@@ -116,13 +95,13 @@ async def create_user(user: UserCreate):
     default_accounts = [
         {
             "user_id": str(user_id),
-            "account_type": "Checking",
+            "name": "Checking",
             "balance": 1000.0,
             "currency": "USD",
         },
         {
             "user_id": str(user_id),
-            "account_type": "Savings",
+            "name": "Savings",
             "balance": 5000.0,
             "currency": "USD",
         },
