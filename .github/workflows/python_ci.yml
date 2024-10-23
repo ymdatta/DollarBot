@@ -50,13 +50,13 @@ jobs:
       continue-on-error: true
       run: |
         echo "PYLINT_EXIT_CODE=0" >> $GITHUB_ENV
-        pylint src tests > tmp/pylint_output.txt || echo "PYLINT_EXIT_CODE=$?" >> $GITHUB_ENV
+        pylint api tests > tmp/pylint_output.txt || echo "PYLINT_EXIT_CODE=$?" >> $GITHUB_ENV
         cat tmp/pylint_output.txt
     - name: Run pytest
       continue-on-error: true
       run: |
         echo "PYTEST_EXIT_CODE=0" >> $GITHUB_ENV
-        pytest --cov=src --cov-report=json:tmp/coverage.json --junitxml=tmp/pytest_output.xml || echo "PYTEST_EXIT_CODE=$?" >> $GITHUB_ENV
+        pytest --cov=api --cov-report=json:tmp/coverage.json --junitxml=tmp/pytest_output.xml || echo "PYTEST_EXIT_CODE=$?" >> $GITHUB_ENV
 
     - name: Generate pylint badge url
       run: |
