@@ -41,6 +41,16 @@ jobs:
         echo "PYTEST_EXIT_CODE=0" >> $GITHUB_ENV
         pytest --cov-report=json:tmp/coverage.json --junitxml=tmp/pytest_output.xml || echo "PYTEST_EXIT_CODE=$?" >> $GITHUB_ENV
 
+    - name: Generate black badge url
+      run: |
+        BLACK_EXIT_CODE=${{ env.BLACK_EXIT_CODE }}
+        if [ "$BLACK_EXIT_CODE" -eq 0 ]; then
+          BLACK_BADGE_URL="https://img.shields.io/badge/black_formatter-passing-brightgreen?style=plastic&labelColor=black"
+        else
+          BLACK_BADGE_URL="https://img.shields.io/badge/black-failing-red?style=plastic&labelColor=black"
+        fi
+        echo "BLACK_BADGE_URL=$BLACK_BADGE_URL" >> $GITHUB_ENV
+
     - name: Generate pylint badge url
       run: |
         SCORE=$(grep -oP '(?<=rated at )[0-9]+\.[0-9]+' tmp/pylint_output.txt)
@@ -97,6 +107,7 @@ jobs:
     - name: Update README with all the badges
       run: |
         RUN_LOG_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        sed -i '/\[!\[badge_black\]/c\[!\[badge_black\]('"$BLACK_BADGE_URL"')]('"$RUN_LOG_URL"')' README.md
         sed -i '/\[!\[badge_pylint\]/c\[!\[badge_pylint\]('"$PYLINT_BADGE_URL"')]('"$RUN_LOG_URL"')' README.md
         sed -i '/\[!\[badge_total_tests\]/c\[!\[badge_total_tests\]('"$TOTAL_TESTS_BADGE_URL"')](https://github.com/gitsetgopack/hw2/tree/main/tests)' README.md
         sed -i '/\[!\[badge_code_coverage\]/c\[!\[badge_code_coverage\]('"$CODE_COVERAGE_BADGE_URL"')]('"$RUN_LOG_URL"')' README.md
@@ -117,7 +128,6 @@ jobs:
             git push origin ${{ github.ref_name }}
         fi
 
-    # Ensure this section is correctly closed
     - name: Fail if any tool failed
       run: |
         for TOOL in BLACK PYLINT PYTEST; do
@@ -128,4 +138,3 @@ jobs:
             exit 1
           fi
         done
-
