@@ -140,7 +140,7 @@ jobs:
         else
             git add README.md
             git commit -m "Update all badges in README"
-            git push
+            git push origin ${{ github.head_ref }}
         fi
 
     - name: Fail if any tool failed
