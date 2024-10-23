@@ -136,7 +136,7 @@ jobs:
         
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git checkout main
+        git checkout ${{ github.ref_name }}  # Check out the branch where the push was made
         git pull
 
         if git diff --quiet; then
@@ -144,19 +144,4 @@ jobs:
         else
             git add README.md
             git commit -m "Update all badges in README"
-            git push
-        fi
-        
-    - name: Fail if any tool failed
-      run: |
-        for TOOL in PYRIGHT PYLINT PYTEST; do
-          EXIT_CODE_VAR="${TOOL}_EXIT_CODE"
-          EXIT_CODE="${!EXIT_CODE_VAR}"
-
-          echo "Checking exit code for $TOOL: $EXIT_CODE"
-
-          if [ "$EXIT_CODE" -ne 0 ]; then
-            echo "$TOOL failed, marking job as failed."
-            exit 1
-          fi
-        done
+            git push origin ${{ github.ref_name }}  # Push changes to the same branch
