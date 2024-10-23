@@ -42,5 +42,6 @@ clean: ## Clean up Python bytecode files and caches
 no_verify_commit:
 	@read -p "Enter commit message: " msg; \
 	git commit -m "$$msg" --no-verify
+	git push
 
 .PHONY: run install clean
