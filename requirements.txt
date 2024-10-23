@@ -8,3 +8,4 @@ pytest-cov
 pre-commit
 PyJWT
 black
+pylint
