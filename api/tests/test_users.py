@@ -105,7 +105,7 @@ class TestTokenGetter:
         headers = {"token": expired_token}
 
         # Try to access user details with the expired token
-        response = await async_client.get("/users/", headers=headers)
+        response = await async_client.get("/users/", headers=headers)  # type: ignore[arg-type]
         assert response.status_code == 401
         assert response.json()["detail"] == "Token has expired"
 
@@ -191,7 +191,7 @@ class TestUserUnauthenticated:
         headers = {"token": fake_token}
 
         # Try to access user details with the fake token
-        response = await async_client.get("/users/", headers=headers)
+        response = await async_client.get("/users/", headers=headers)  # type: ignore[arg-type]
         assert response.status_code == 401, response.json()
         assert (
             response.json()["detail"] == "Invalid authentication credentials"
