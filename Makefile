@@ -26,14 +26,25 @@ install: ## Install dependencies and create virtual environment if not present
 	$(VENV)/bin/pip install -r requirements.txt
 	$(VENV)/bin/pre-commit install
 
-test: ## Run pytest on api dir
-	pytest api/
+
+# Start Docker container, run tests, and clean up
+test:
+	@echo "Starting MongoDB Docker container..."
+	docker run --name mongo-test -p 27017:27017 -d mongo:latest
+	@sleep 5  # Wait for MongoDB to be ready; adjust as needed
+	@echo "Running tests..."
+	pytest || (docker stop mongo-test && docker rm mongo-test && exit 1)
+	@echo "Stopping and removing Docker container..."
+	docker stop mongo-test
+	docker rm mongo-test
 
 fix: ## Black format and isort on api dir
 	black api/
 	isort api/
 
 clean: ## Clean up Python bytecode files and caches
+	@docker stop mongo-test || true
+	@docker rm mongo-test || true
 	find . -type f -name "*.pyc" -delete
 	find . -type d -name "__pycache__" -exec rm -rf {} +
 	find . -type d -name ".pytest_cache" -exec rm -rf {} +
