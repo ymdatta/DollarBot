@@ -6,3 +6,4 @@ python-jose
 pytest
 pytest-cov
 pre-commit
+PyJWT
