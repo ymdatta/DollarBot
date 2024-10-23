@@ -30,6 +30,7 @@ jobs:
     - name: Run pylint
       continue-on-error: true
       run: |
+        echo "PYTHONPATH=$(pwd)" >> $GITHUB_ENV
         echo "PYLINT_EXIT_CODE=0" >> $GITHUB_ENV
         pylint api > tmp/pylint_output.txt || echo "PYLINT_EXIT_CODE=$?" >> $GITHUB_ENV
         cat tmp/pylint_output.txt
