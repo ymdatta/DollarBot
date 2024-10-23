@@ -163,7 +163,6 @@ async def get_expenses(token: str = Header(None)):
     formatted_expenses = [format_id(expense) for expense in expenses]
     return {"expenses": formatted_expenses}
 
-
 @router.delete("/all/{account_name}")
 async def delete_all_expenses(account_name: str, token: str = Header(None)):
     """
@@ -180,44 +179,34 @@ async def delete_all_expenses(account_name: str, token: str = Header(None)):
     account = await accounts_collection.find_one(
         {"user_id": user_id, "name": account_name}
     )
-    if not account:
-        raise HTTPException(status_code=404, detail="Account not found")
-
-    # Fetch all expenses for the user in the specified account
-    expenses = await expenses_collection.find(
-        {"user_id": user_id, "account_name": account_name}
-    ).to_list(length=None)
-
+    # Fetch all expenses for the user in the specified account to calculate total expense amount
+    expenses = await expenses_collection.find({"user_id": user_id, "account_name": account_name}).to_list(length=None)
+    
     if not expenses:
-        raise HTTPException(
-            status_code=404,
-            detail="No expenses found to delete in the specified account",
-        )
+        raise HTTPException(status_code=404, detail="No expenses found to delete in the specified account")
 
     # Calculate the total amount of expenses to be deleted
-    total_amount = sum(expense["amount"] for expense in expenses)
-
+    total_amount = sum(expense['amount'] for expense in expenses)
+    
     # Delete all expenses in the specified account
-    result = await expenses_collection.delete_many(
-        {"user_id": user_id, "account_name": account_name}
-    )
+    result = await expenses_collection.delete_many({"user_id": user_id, "account_name": account_name})
 
-    # Refund the total amount to user's account
-    new_balance = account["balance"] + total_amount
-    await accounts_collection.update_one(
-        {"_id": account["_id"]}, {"$set": {"balance": new_balance}}
-    )
+    # Update the balance of the specific account
+    user_account = await accounts_collection.find_one({"user_id": user_id, "account_name": account_name})
+    
+    if user_account:
+        # Calculate new balance by adding the total amount of expenses deleted back to the balance
+        new_balance = user_account["balance"] + total_amount
+        
+        # Update the balance in the database for the specific account
+        await accounts_collection.update_one(
+            {"_id": account["_id"]}, {"$set": {"balance": new_balance}}
+        )
 
     if result.deleted_count > 0:
-        return {
-            "message": f"Expenses deleted successfully from account {account_name}",
-            "balance": new_balance,
-        }
-
-    raise HTTPException(
-        status_code=404, detail="No expenses found to delete in the specified account"
-    )
-
+        return {"message": f"{result.deleted_count} expenses deleted successfully from account {account_name}"}
+    
+    raise HTTPException(status_code=404, detail="No expenses found to delete in the specified account")
 
 @router.get("/{expense_id}")
 async def get_expense(expense_id: str, token: str = Header(None)):
@@ -241,11 +230,6 @@ async def get_expense(expense_id: str, token: str = Header(None)):
 
 
 <<<<<<< HEAD
-# @router.delete("/all")
-# async def delete_all_expenses(token: str = Header(None)):
-#     """
-#     Delete all expenses for the authenticated user.
-=======
 @router.delete("/all")
 async def delete_all_expenses(token: str = Header(None)):
     """
@@ -305,8 +289,27 @@ async def delete_all_expenses(token: str = Header(None)):
     result = await expenses_collection.delete_many({"user_id": user_id})
 
     return {"message": f"{result.deleted_count} expenses deleted successfully"}
->>>>>>> 381ee65 (delete all bug fix with new testcases added in favor of it)
 
+=======
+# @router.delete("/all")
+# async def delete_all_expenses(token: str = Header(None)):
+#     """
+#     Delete all expenses for the authenticated user.
+
+#     Args:
+#         token (str): Authentication token.
+
+#     Returns:
+#         dict: Message indicating the number of expenses deleted.
+#     """
+#     user_id = await verify_token(token)
+#     result = await expenses_collection.delete_many({"user_id": user_id})
+#     # TODO: update the account balance
+
+#     if result.deleted_count > 0:
+#         return {"message": f"{result.deleted_count} expenses deleted successfully"}
+#     raise HTTPException(status_code=404, detail="No expenses found to delete")
+>>>>>>> 2701de1 (Update README.md)
 
 @router.delete("/{expense_id}")
 async def delete_expense(expense_id: str, token: str = Header(None)):

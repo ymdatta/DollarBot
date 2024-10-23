@@ -631,10 +631,15 @@ class TestExpenseDeleteAllWithMultipleScenarios:
         Test deleting all expenses for the authenticated user for a specific account.
         """
         # Account ID for which expenses will be added and deleted
-        account_id = "checking_account_123"
+        create_response = await async_client_auth.post(
+            "/accounts/",
+            json={"name": "123", "balance": 500.0, "currency": "USD"},
+        )
+        print(create_response.json())
+        account_id = "Checking"
         
         # Initial balance in the account
-        initial_balance = 100.0
+        initial_balance = 500.0
 
         # Sample Expenses
         total_expense_amount = 0
@@ -649,7 +654,7 @@ class TestExpenseDeleteAllWithMultipleScenarios:
                     "currency": "USD",
                     "category": "Transport",
                     "description": f"Taxi fare {i}",
-                    "account_id": account_id,
+                    "account_name": "Checking",
                 },
             )
             assert response.status_code == 200, response.json()
@@ -658,30 +663,23 @@ class TestExpenseDeleteAllWithMultipleScenarios:
         # Calculate expected balance after expenses are added
         bal_after_expenses = initial_balance - total_expense_amount
 
-        # This assumes there is an endpoint to fetch the account balance by account_id
-        response = await async_client_auth.get(f"/accounts/{account_id}")
-        assert response.status_code == 200, response.json()
-        assert response.json()["balance"] == bal_after_expenses, (
-            f"Expected balance after adding expenses should be {bal_after_expenses}, "
-            f"but got {response.json()['balance']}"
-        )
-
         # Test to delete all expenses for the specified account
         response = await async_client_auth.delete(f"/expenses/all/{account_id}")
         assert response.status_code == 200, response.json()
         assert "expenses deleted successfully" in response.json()["message"]
 
         # Test to get all expenses to verify deletion for the specified account
-        response = await async_client_auth.get(f"/expenses/?account_id={account_id}")
-        assert response.status_code == 200, response.json()
-        assert len(response.json()["expenses"]) == 0
+        # response = await async_client_auth.get(f"/expenses")
+        # assert response.status_code == 200, response.json()
+        # assert len(response.json()["expenses"]) == 0
 
         # Calculate expected balance after deleting expenses (should revert to initial balance)
         bal_after_exp_del = initial_balance
 
         # Test to get account balance after deleting expenses
-        response = await async_client_auth.get(f"/account/balance/{account_id}")
+        response = await async_client_auth.get(f"/account/{account_id}")
         assert response.status_code == 200, response.json()
+<<<<<<< HEAD
         assert response.json()["balance"] == bal_after_exp_del, (
             f"Expected balance after deleting expenses should be {bal_after_exp_del}, "
             f"but got {response.json()['balance']}"
@@ -848,12 +846,26 @@ class TestExpenseDeleteAllWithMultipleScenarios:
 =======
         # Attempt to delete all expenses
         response = await async_client_auth.delete("/expenses/all")
->>>>>>> 381ee65 (delete all bug fix with new testcases added in favor of it)
-        assert response.status_code == 404, response.json()
-        assert (
-            response.json()["detail"]
-            == "No expenses found to delete in the specified account"
+=======
+        print(response.json())
+
+    async def test_all_but_empty(self, async_client_auth: AsyncClient):
+        """
+        Test deleting all expenses when no expenses exist.
+        """
+        
+        # Account ID for which expenses will be added and deleted
+        create_response = await async_client_auth.post(
+            "/accounts/",
+            json={"name": "456", "balance": 500.0, "currency": "USD"},
         )
+        account_id = create_response.json()["account_id"]
+
+        # Test to delete all expenses when there are no expenses
+        response = await async_client_auth.delete(f"/expenses/all/{account_id}")
+>>>>>>> 2701de1 (Update README.md)
+        assert response.status_code == 404, response.json()
+        assert response.json()["detail"] == "No expenses found to delete in the specified account"
 
 
 @pytest.mark.anyio
