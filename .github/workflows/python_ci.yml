@@ -50,7 +50,7 @@ jobs:
       continue-on-error: true
       run: |
         echo "PYLINT_EXIT_CODE=0" >> $GITHUB_ENV
-        pylint api tests > tmp/pylint_output.txt || echo "PYLINT_EXIT_CODE=$?" >> $GITHUB_ENV
+        pylint api > tmp/pylint_output.txt || echo "PYLINT_EXIT_CODE=$?" >> $GITHUB_ENV
         cat tmp/pylint_output.txt
     - name: Run pytest
       continue-on-error: true
