@@ -24,7 +24,7 @@ install: ## Install dependencies and create virtual environment if not present
 	fi
 	$(VENV)/bin/pip install --upgrade pip
 	$(VENV)/bin/pip install -r requirements.txt
-	$(VENV)/bin/pre-commit install 
+	$(VENV)/bin/pre-commit install
 
 test: ## Run pytest on api dir
 	pytest api/
