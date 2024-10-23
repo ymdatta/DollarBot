@@ -41,7 +41,6 @@ class UserUpdate(BaseModel):
     """Schema for updating user information."""
 
     password: Optional[str] = None
-    categories: Optional[list] = None
     currencies: Optional[list] = None
 
 
@@ -69,14 +68,15 @@ async def create_user(user: UserCreate):
     if not user.username or not user.password:
         raise HTTPException(status_code=422, detail="Invalid credential")
 
-    default_categories = [
-        "Food",
-        "Groceries",
-        "Utilities",
-        "Transport",
-        "Shopping",
-        "Miscellaneous",
-    ]
+    default_categories = {
+        "Food": {"monthly_budget": 500.0},
+        "Groceries": {"monthly_budget": 200.0},
+        "Utilities": {"monthly_budget": 150.0},
+        "Transport": {"monthly_budget": 100.0},
+        "Shopping": {"monthly_budget": 300.0},
+        "Miscellaneous": {"monthly_budget": 50.0},
+    }
+
     default_currencies = ["USD", "INR", "GBP", "EUR"]
 
     # Insert the new user
@@ -124,7 +124,7 @@ async def get_user(token: str = Header(None)):
 
 @router.put("/")
 async def update_user(user_update: UserUpdate, token: str = Header(None)):
-    """Update user information such as password, categories, or currencies."""
+    """Update user information such as password, currencies."""
     user_id = await verify_token(token)
     update_fields = user_update.dict(exclude_unset=True)
     user: Optional[dict] = await users_collection.find_one({"_id": ObjectId(user_id)})
@@ -134,12 +134,6 @@ async def update_user(user_update: UserUpdate, token: str = Header(None)):
     if "password" in update_fields and update_fields["password"]:
         # In a real application, you should hash the password
         update_fields["password"] = update_fields["password"]
-
-    if "categories" in update_fields and isinstance(update_fields["categories"], list):
-        new_categories = list(
-            set(user.get("categories", []) + update_fields["categories"])
-        )
-        update_fields["categories"] = new_categories
 
     if "currencies" in update_fields and isinstance(update_fields["currencies"], list):
         new_currencies = list(
