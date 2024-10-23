@@ -185,24 +185,61 @@ async def get_expense(expense_id: str, token: str = Header(None)):
     return format_id(expense)
 
 
+# @router.delete("/all")
+# async def delete_all_expenses(token: str = Header(None)):
+#     """
+#     Delete all expenses for the authenticated user.
+
+#     Args:
+#         token (str): Authentication token.
+
+#     Returns:
+#         dict: Message indicating the number of expenses deleted.
+#     """
+#     user_id = await verify_token(token)
+#     result = await expenses_collection.delete_many({"user_id": user_id})
+#     # TODO: update the account balance
+
+#     if result.deleted_count > 0:
+#         return {"message": f"{result.deleted_count} expenses deleted successfully"}
+#     raise HTTPException(status_code=404, detail="No expenses found to delete")
+
 @router.delete("/all")
 async def delete_all_expenses(token: str = Header(None)):
     """
-    Delete all expenses for the authenticated user.
+    Delete all expenses for the authenticated user and update the account balance.
 
     Args:
         token (str): Authentication token.
 
     Returns:
-        dict: Message indicating the number of expenses deleted.
+        dict: Message indicating the number of expenses deleted and the updated balance.
     """
     user_id = await verify_token(token)
+    
+    # Step 1: Retrieve all expenses to calculate their total amount
+    expenses = await expenses_collection.find({"user_id": user_id}).to_list(None)
+    total_expenses_amount = sum(expense['amount'] for expense in expenses)
+    
+    # Step 2: Delete the expenses
     result = await expenses_collection.delete_many({"user_id": user_id})
-    # TODO: update the account balance
-
+    
     if result.deleted_count > 0:
-        return {"message": f"{result.deleted_count} expenses deleted successfully"}
+        # Step 3: Update the user's account balance
+        account = await account_collection.find_one({"user_id": user_id})
+        new_balance = account['balance'] - total_expenses_amount
+        await account_collection.update_one(
+            {"user_id": user_id}, 
+            {"$set": {"balance": new_balance}}
+        )
+        
+        return {
+            "message": f"{result.deleted_count} expenses deleted successfully",
+            "updated_balance": new_balance
+        }
+    
     raise HTTPException(status_code=404, detail="No expenses found to delete")
+
 
 
 @router.delete("/{expense_id}")
