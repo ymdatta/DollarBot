@@ -490,34 +490,92 @@ class TestExpenseDelete:
         assert response.status_code == 404
         assert response.json()["detail"] == "Expense not found"
 
+    # async def test_all(self, async_client_auth: AsyncClient):
+    #     """
+    #     Test deleting all expenses for the authenticated user.
+    #     """
+    #     # Create a few expenses to ensure there is something to delete
+    #     for i in range(3):
+    #         response = await async_client_auth.post(
+    #             "/expenses/",
+    #             json={
+    #                 "amount": 100.0 + i,
+    #                 "currency": "USD",
+    #                 "category": "Transport",
+    #                 "description": f"Taxi fare {i}",
+    #                 "account_name": "Checking",
+    #             },
+    #         )
+    #         assert response.status_code == 200, response.json()
+    #         assert response.json()["message"] == "Expense added successfully"
+
+    #     # Test to delete all expenses
+    #     response = await async_client_auth.delete("/expenses/all")
+    #     assert response.status_code == 200, response.json()
+    #     assert "expenses deleted successfully" in response.json()["message"]
+
+    #     # Test to get all expenses to verify deletion
+    #     response = await async_client_auth.get("/expenses/")
+    #     assert response.status_code == 200, response.json()
+    #     assert len(response.json()["expenses"]) == 0
+
     async def test_all(self, async_client_auth: AsyncClient):
-        """
-        Test deleting all expenses for the authenticated user.
-        """
-        # Create a few expenses to ensure there is something to delete
-        for i in range(3):
-            response = await async_client_auth.post(
-                "/expenses/",
-                json={
-                    "amount": 100.0 + i,
-                    "currency": "USD",
-                    "category": "Transport",
-                    "description": f"Taxi fare {i}",
-                    "account_name": "Checking",
-                },
-            )
-            assert response.status_code == 200, response.json()
-            assert response.json()["message"] == "Expense added successfully"
+    """
+    Test deleting all expenses for the authenticated user.
+    """
+    # Initial balance in the account
+    initial_balance = 100.0
 
-        # Test to delete all expenses
-        response = await async_client_auth.delete("/expenses/all")
+    # Sample Expenses
+    total_expense_amount = 0
+    for i in range(3):
+        expense_amount = 10.0 + i
+        total_expense_amount += expense_amount
+        
+        response = await async_client_auth.post(
+            "/expenses/",
+            json={
+                "amount": expense_amount,
+                "currency": "USD",
+                "category": "Transport",
+                "description": f"Taxi fare {i}",
+                "account_name": "Checking",
+            },
+        )
         assert response.status_code == 200, response.json()
-        assert "expenses deleted successfully" in response.json()["message"]
+        assert response.json()["message"] == "Expense added successfully"
 
-        # Test to get all expenses to verify deletion
-        response = await async_client_auth.get("/expenses/")
-        assert response.status_code == 200, response.json()
-        assert len(response.json()["expenses"]) == 0
+    # Calculate expected balance after expenses are added
+    bal_after_expenses = initial_balance - total_expense_amount
+
+    # This assumes there is an endpoint to fetch the account balance
+    response = await async_client_auth.get("/account/balance")
+    assert response.status_code == 200, response.json()
+    assert response.json()["balance"] == bal_after_expenses, (
+        f"Expected balance after adding expenses should be {bal_after_expenses}, "
+        f"but got {response.json()['balance']}"
+    )
+
+    # Test to delete all expenses
+    response = await async_client_auth.delete("/expenses/all")
+    assert response.status_code == 200, response.json()
+    assert "expenses deleted successfully" in response.json()["message"]
+
+    # Test to get all expenses to verify deletion
+    response = await async_client_auth.get("/expenses/")
+    assert response.status_code == 200, response.json()
+    assert len(response.json()["expenses"]) == 0
+
+    # Calculate expected balance after deleting expenses
+    bal_after_exp_del = initial_balance
+
+    # Test to get account balance after deleting expenses
+    response = await async_client_auth.get("/account/balance")
+    assert response.status_code == 200, response.json()
+    assert response.json()["balance"] == bal_after_exp_del, (
+        f"Expected balance after deleting expenses should be {bal_after_exp_del}, "
+        f"but got {response.json()['balance']}"
+    )
 
     async def test_all_but_empty(self, async_client_auth: AsyncClient):
         """
