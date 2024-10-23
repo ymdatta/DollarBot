@@ -1,3 +1,4 @@
+---
 name: Pre-Commit Check
 
 on:
@@ -22,9 +23,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Set PYTHONPATH  # This is the key part
+      - name: Set PYTHONPATH
         run: |
-          echo "PYTHONPATH=$(pwd)" >> $GITHUB_ENV  # Set the current directory as PYTHONPATH
+          echo "PYTHONPATH=$(pwd)" >> $GITHUB_ENV
 
       - name: Run pre-commit
         run: |
