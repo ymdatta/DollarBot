@@ -55,7 +55,7 @@ jobs:
         fi
 
         # Generate badge URL
-        PYLINT_BADGE_URL="https://img.shields.io/badge/pylint-${SCORE}-${COLOR}"
+        PYLINT_BADGE_URL="https://img.shields.io/badge/pylint-${SCORE}-${COLOR}?style=plastic"
         echo "PYLINT_BADGE_URL=$PYLINT_BADGE_URL" >> $GITHUB_ENV
         echo "PyTest status badge URL: $PYLINT_BADGE_URL"
 
@@ -86,9 +86,9 @@ jobs:
           COVERAGE_COLOR="red"
         fi
 
-        TOTAL_TESTS_BADGE_URL="https://img.shields.io/badge/tests-${NUM_TESTS}-blue?logo=pytest&logoColor=white&link=https%3A%2F%2Fgithub.com%2Fgitsetgopack%2Fhw2%2Ftree%2Fmain%2Ftests"
-        CODE_COVERAGE_BADGE_URL="https://img.shields.io/badge/coverage-${COVERAGE}%25-${COVERAGE_COLOR}"
-        PYTEST_STATUS_BADGE_URL="https://img.shields.io/badge/PyTest-${TESTS_STATUS}-${TESTS_COLOR}?logo=pytest&logoColor=white"
+        TOTAL_TESTS_BADGE_URL="https://img.shields.io/badge/tests-${NUM_TESTS}-blue?style=plastic&logo=pytest&logoColor=white&link=https%3A%2F%2Fgithub.com%2Fgitsetgopack%2Fhw2%2Ftree%2Fmain%2Ftests"
+        CODE_COVERAGE_BADGE_URL="https://img.shields.io/badge/coverage-${COVERAGE}%25-${COVERAGE_COLOR}?style=plastic"
+        PYTEST_STATUS_BADGE_URL="https://img.shields.io/badge/PyTest-${TESTS_STATUS}-${TESTS_COLOR}?style=plastic&logo=pytest&logoColor=white"
 
         echo "TOTAL_TESTS_BADGE_URL=$TOTAL_TESTS_BADGE_URL" >> $GITHUB_ENV
         echo "CODE_COVERAGE_BADGE_URL=$CODE_COVERAGE_BADGE_URL" >> $GITHUB_ENV
