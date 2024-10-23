@@ -130,7 +130,7 @@ jobs:
         sed -i '/\[!\[badge_pytest_status\]/c\[!\[badge_pytest_status\]('"$PYTEST_STATUS_BADGE_URL"')]('"$RUN_LOG_URL"')' README.md
 
         rm -rf tmp
-        
+
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git checkout main
@@ -143,7 +143,7 @@ jobs:
             git commit -m "Update all badges in README"
             git push
         fi
-        
+
     - name: Fail if any tool failed
       run: |
         for TOOL in PYLINT PYTEST; do
