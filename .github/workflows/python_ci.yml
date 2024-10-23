@@ -56,7 +56,7 @@ jobs:
       continue-on-error: true
       run: |
         echo "PYTEST_EXIT_CODE=0" >> $GITHUB_ENV
-        pytest --cov=api --cov-report=json:tmp/coverage.json --junitxml=tmp/pytest_output.xml || echo "PYTEST_EXIT_CODE=$?" >> $GITHUB_ENV
+        pytest --cov-report=json:tmp/coverage.json --junitxml=tmp/pytest_output.xml || echo "PYTEST_EXIT_CODE=$?" >> $GITHUB_ENV
 
     - name: Generate pylint badge url
       run: |
