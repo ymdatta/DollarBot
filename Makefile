@@ -39,4 +39,8 @@ clean: ## Clean up Python bytecode files and caches
 	find . -type d -name ".pytest_cache" -exec rm -rf {} +
 	find . -type d -name ".mypy_cache" -exec rm -rf {} +
 
+no_verify_commit:
+	@read -p "Enter commit message: " msg; \
+	git commit -m "$$msg" --no-verify
+
 .PHONY: run install clean
