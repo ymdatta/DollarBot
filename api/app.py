@@ -11,8 +11,8 @@ from api.routers import accounts, expenses, users
 
 
 @asynccontextmanager
-async def lifespan():
-    """Lifespan"""
+async def lifespan(_app: FastAPI):
+    """Lifespan function that handles app startup and shutdown"""
     yield
     # Handles the shutdown event to close the MongoDB client
     await users.shutdown_db_client()
