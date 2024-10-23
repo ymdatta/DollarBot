@@ -4,23 +4,23 @@ A REST API application for managing expenses. Build your own automation, be it t
 ---
 
 #### Quality
-[![badge_pytest_status](https://img.shields.io/badge/PyTest-passing-brightgreen?logo=pytest&logoColor=white)](https://github.com/gitsetgopack/hw2/actions/runs/11190159988)
-[![badge_code_coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://github.com/gitsetgopack/hw2/actions/runs/11190159988)
-[![badge_total_tests](https://img.shields.io/badge/tests-9-blue?logo=pytest&logoColor=white&link=https%3A%2F%2Fgithub.com%2Fgitsetgopack%2Fhw2%2Ftree%2Fmain%2Ftests)](https://github.com/gitsetgopack/hw2/tree/main/tests)
-[![badge_pylint](https://img.shields.io/badge/pylint-10.00-brightgreen)](https://github.com/gitsetgopack/hw2/actions/runs/11190159988)
-[![badge_pyright](https://img.shields.io/badge/pyright-passing-brightgreen)](https://github.com/gitsetgopack/hw2/actions/runs/11190159988)
+[![badge_pytest_status](https://img.shields.io/badge/PyTest-passing-brightgreen?logo=pytest&logoColor=white)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11190159988)
+[![badge_code_coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11190159988)
+[![badge_total_tests](https://img.shields.io/badge/tests-9-blue?logo=pytest&logoColor=white&link=https%3A%2F%2Fgithub.com%2Fgitsetgopack%2FMoneyManager%2Ftree%2Fmain%2Ftests)](https://github.com/gitsetgopack/MoneyManager/tree/main/tests)
+[![badge_pylint](https://img.shields.io/badge/pylint-10.00-brightgreen)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11190159988)
+[![badge_pyright](https://img.shields.io/badge/pyright-passing-brightgreen)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11190159988)
 
 #### Standards
 <!-- ![autopep8](https://img.shields.io/badge/code%20style-autopep8-blue) -->
-![license](https://img.shields.io/github/license/gitsetgopack/hw2)
+![license](https://img.shields.io/github/license/gitsetgopack/MoneyManager)
 
 #### Stats
-![repo_size](https://img.shields.io/github/repo-size/gitsetgopack/hw2)
-![pr_open](https://img.shields.io/github/issues-pr/gitsetgopack/hw2)
-![pr_close](https://img.shields.io/github/issues-pr-closed/gitsetgopack/hw2)
-![forks](https://img.shields.io/github/forks/gitsetgopack/hw2?style=flat)
-![stars](https://img.shields.io/github/stars/gitsetgopack/hw2?style=flat)
-![downloads](https://img.shields.io/github/downloads/gitsetgopack/hw2/total)
+![repo_size](https://img.shields.io/github/repo-size/gitsetgopack/MoneyManager)
+![pr_open](https://img.shields.io/github/issues-pr/gitsetgopack/MoneyManager)
+![pr_close](https://img.shields.io/github/issues-pr-closed/gitsetgopack/MoneyManager)
+![forks](https://img.shields.io/github/forks/gitsetgopack/MoneyManager?style=flat)
+![stars](https://img.shields.io/github/stars/gitsetgopack/MoneyManager?style=flat)
+![downloads](https://img.shields.io/github/downloads/gitsetgopack/MoneyManager/total)
 
 
 #### Tools & Technologies
