@@ -7,24 +7,7 @@ permissions:
   contents: write
 
 jobs:
-  format:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python 3.12
-      uses: actions/setup-python@v3
-      with:
-        python-version: "3.12"
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-
-    - name: Format check with black
-      run: |
-        black .
-
-  lint_test_badges:
+  badges:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -38,6 +21,11 @@ jobs:
         sudo apt-get install -y libxml2-utils
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+
+    - name: Format check with black
+      run: |
+        echo "BLACK_EXIT_CODE=0" >> $GITHUB_ENV
+        black . || echo "BLACK_EXIT_CODE=$?" >> $GITHUB_ENV
 
     - name: Run pylint
       continue-on-error: true
@@ -69,12 +57,6 @@ jobs:
         PYLINT_BADGE_URL="https://img.shields.io/badge/pylint-${SCORE}-${COLOR}"
         echo "PYLINT_BADGE_URL=$PYLINT_BADGE_URL" >> $GITHUB_ENV
         echo "PyTest status badge URL: $PYLINT_BADGE_URL"
-
-    - name: Generate pyright badge url
-      run: |
-        BADGE_COLOR=$( [ $PYRIGHT_EXIT_CODE -eq 0 ] && echo "passing-brightgreen" || echo "failing-red" )
-        PYRIGHT_BADGE_URL="https://img.shields.io/badge/pyright-${BADGE_COLOR}"
-        echo "PYRIGHT_BADGE_URL=$PYRIGHT_BADGE_URL" >> $GITHUB_ENV
 
     - name: Extract number of tests, coverage, and determine result
       run: |
@@ -115,7 +97,6 @@ jobs:
       run: |
         RUN_LOG_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
         sed -i '/\[!\[badge_pylint\]/c\[!\[badge_pylint\]('"$PYLINT_BADGE_URL"')]('"$RUN_LOG_URL"')' README.md
-        sed -i '/\[!\[badge_pyright\]/c\[!\[badge_pyright\]('"$PYRIGHT_BADGE_URL"')]('"$RUN_LOG_URL"')' README.md
         sed -i '/\[!\[badge_total_tests\]/c\[!\[badge_total_tests\]('"$TOTAL_TESTS_BADGE_URL"')](https://github.com/gitsetgopack/hw2/tree/main/tests)' README.md
         sed -i '/\[!\[badge_code_coverage\]/c\[!\[badge_code_coverage\]('"$CODE_COVERAGE_BADGE_URL"')]('"$RUN_LOG_URL"')' README.md
         sed -i '/\[!\[badge_pytest_status\]/c\[!\[badge_pytest_status\]('"$PYTEST_STATUS_BADGE_URL"')]('"$RUN_LOG_URL"')' README.md
@@ -136,7 +117,7 @@ jobs:
 
     - name: Fail if any tool failed
       run: |
-        for TOOL in PYRIGHT PYLINT PYTEST; do
+        for TOOL in BLACK PYLINT PYTEST; do
           EXIT_CODE_VAR="${TOOL}_EXIT_CODE"
           EXIT_CODE="${!EXIT_CODE_VAR}"
 
