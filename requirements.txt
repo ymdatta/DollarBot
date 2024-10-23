@@ -9,3 +9,5 @@ pre-commit
 PyJWT
 black
 pylint
+mypy
+bandit
