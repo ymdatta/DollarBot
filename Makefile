@@ -1,12 +1,60 @@
+<<<<<<< HEAD
+=======
+# Define variables
+PYTHON_VERSION = 3.12.1
+VENV_NAME = mm_venv
+PYENV_ROOT = $(HOME)/.pyenv
+
+>>>>>>> 73749c6 (fix for check_pyenv in makefile)
 # Help function to display available commands
 help: ## Show this help message
 	@echo "Available commands:"
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-15s\033[0m %s\n", $$1, $$2}'
 
+<<<<<<< HEAD
 install: ## Install dependencies in the virtual environment
 	pip install --upgrade pip
 	pip install -r requirements.txt
 	pre-commit install
+=======
+install_pyenv: ## Check if pyenv is installed, install if not
+	@if ! command -v pyenv > /dev/null 2>&1; then \
+		echo "pyenv not installed. Installing pyenv..."; \
+		rm -rf ~/.pyenv; \
+		curl https://pyenv.run | bash; \
+		echo 'export PYENV_ROOT="$(PYENV_ROOT)"' >> $(HOME)/.bashrc; \
+		echo 'export PATH="$(PYENV_ROOT)/bin:$$PATH"' >> $(HOME)/.bashrc; \
+		echo 'eval "$$(pyenv init --path)"' >> $(HOME)/.bashrc; \
+		echo 'eval "$$(pyenv init -)"' >> $(HOME)/.bashrc; \
+		echo 'eval "$$(pyenv virtualenv-init -)"' >> $(HOME)/.bashrc; \
+		echo "Please run 'source ~/.bashrc' or restart your terminal for changes to take effect."; \
+	else \
+		echo "pyenv is already installed."; \
+	fi
+
+check_python: ## Install Python 3.12.1 using pyenv if not installed
+	@if ! pyenv versions --bare | grep -q $(PYTHON_VERSION); then \
+		echo "Python $(PYTHON_VERSION) not found. Installing..."; \
+		pyenv install $(PYTHON_VERSION); \
+	else \
+		echo "Python $(PYTHON_VERSION) is already installed."; \
+	fi
+	@pyenv local $(PYTHON_VERSION)
+
+create_venv: check_python ## Create and activate virtual environment mm_venv
+	@if [ ! -d "$(PYENV_ROOT)/versions/$(VENV_NAME)" ]; then \
+		echo "Creating virtual environment $(VENV_NAME)..."; \
+		pyenv virtualenv $(PYTHON_VERSION) $(VENV_NAME); \
+	else \
+		echo "Virtual environment $(VENV_NAME) already exists."; \
+	fi
+	@pyenv local $(VENV_NAME)
+
+install: create_venv ## Install dependencies in the virtual environment
+	@pyenv exec pip install --upgrade pip
+	@pyenv exec pip install -r requirements.txt
+	@pyenv exec pre-commit install
+>>>>>>> 73749c6 (fix for check_pyenv in makefile)
 
 run: ## Run the FastAPI app using the virtual environment
 	python api/app.py
