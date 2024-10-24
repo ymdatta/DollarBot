@@ -45,6 +45,9 @@ install: create_venv ## Install dependencies in the virtual environment
 	@pyenv exec pip install --upgrade pip
 	@pyenv exec pip install -r requirements.txt
 	@pyenv exec pre-commit install
+	@echo "export PYTHONPATH=$(shell pwd):\$$PYTHONPATH" >> ~/.bashrc
+	@echo "PYTHONPATH exported to .bashrc. Please restart your terminal or run 'source ~/.bashrc' to apply changes."
+
 
 run: ## Run the FastAPI app using the virtual environment
 	@pyenv exec python api/app.py
