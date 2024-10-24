@@ -2,7 +2,7 @@ name: Python application
 
 on:
   push:
-    branches: [ "release/2024.2", "feature/api" ]
+    branches: [ "release/2024.2" ]
 permissions:
   contents: write
 
@@ -25,7 +25,7 @@ jobs:
     - name: Format check with black
       run: |
         echo "BLACK_EXIT_CODE=0" >> $GITHUB_ENV
-        black . || echo "BLACK_EXIT_CODE=$?" >> $GITHUB_ENV
+        black . --check || echo "BLACK_EXIT_CODE=1" >> $GITHUB_ENV
 
     - name: Run pylint
       continue-on-error: true
@@ -47,7 +47,7 @@ jobs:
         if [ "$BLACK_EXIT_CODE" -eq 0 ]; then
           BLACK_BADGE_URL="https://img.shields.io/badge/black_formatter-passing-brightgreen?style=plastic&labelColor=black"
         else
-          BLACK_BADGE_URL="https://img.shields.io/badge/black-failing-red?style=plastic&labelColor=black"
+          BLACK_BADGE_URL="https://img.shields.io/badge/black_formatter-failing-red?style=plastic&labelColor=black"
         fi
         echo "BLACK_BADGE_URL=$BLACK_BADGE_URL" >> $GITHUB_ENV
 
