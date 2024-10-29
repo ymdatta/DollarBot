@@ -490,40 +490,185 @@ class TestExpenseDelete:
         assert response.status_code == 404
         assert response.json()["detail"] == "Expense not found"
 
-    async def test_all(self, async_client_auth: AsyncClient):
-        """
-        Test deleting all expenses for the authenticated user.
-        """
-        # Create a few expenses to ensure there is something to delete
-        for i in range(3):
+
+@pytest.mark.anyio
+class TestExpenseDeleteAllWithMultipleScenarios:
+    async def test_single_expense_single_account(self, async_client_auth: AsyncClient):
+        # Create an account
+        initial_balance = 500.0
+        account_response = await async_client_auth.post(
+            "/accounts/",
+            json={
+                "name": "Checking 764",
+                "balance": initial_balance,
+                "currency": "USD",
+            },
+        )
+        assert account_response.status_code == 200, account_response.json()
+        account_id = account_response.json()["account_id"]
+
+        # Create a single expense tied to the account
+        expense = {
+            "amount": 100.0,
+            "currency": "USD",
+            "category": "Groceries",
+            "account_name": "Checking 764",
+        }
+        response = await async_client_auth.post("/expenses/", json=expense)
+        assert response.status_code == 200, response.json()
+
+        # Capture initial balance
+
+        # Delete all expenses
+        delete_response = await async_client_auth.delete("/expenses/all")
+        assert delete_response.status_code == 200, delete_response.json()
+        assert "expenses deleted successfully" in delete_response.json()["message"]
+
+        # Verify account balance adjustment
+        response = await async_client_auth.get(f"/accounts/{account_id}")
+        updated_balance = response.json()["account"]["balance"]
+        assert updated_balance == initial_balance
+
+    async def test_many_expenses_single_account(self, async_client_auth: AsyncClient):
+        # Create an account
+        initial_balance = 1000.0
+        account_response = await async_client_auth.post(
+            "/accounts/",
+            json={"name": "Savings76", "balance": initial_balance, "currency": "USD"},
+        )
+        assert account_response.status_code == 200, account_response.json()
+        account_id = account_response.json()["account_id"]
+
+        # Create 10 small expenses tied to the account
+        expenses = [
+            {
+                "amount": 10.0,
+                "currency": "USD",
+                "category": "Miscellaneous",
+                "account_name": "Savings76",
+            }
+            for _ in range(10)
+        ]
+
+        for expense in expenses:
+            response = await async_client_auth.post("/expenses/", json=expense)
+            assert response.status_code == 200, response.json()
+
+        # Delete all expenses
+        delete_response = await async_client_auth.delete("/expenses/all")
+        assert delete_response.status_code == 200, delete_response.json()
+
+        # Verify account balance adjustment
+        response = await async_client_auth.get(f"/accounts/{account_id}")
+        updated_balance = response.json()["account"]["balance"]
+        assert updated_balance == initial_balance
+
+    async def test_single_expense_multiple_accounts(
+        self, async_client_auth: AsyncClient
+    ):
+        # Create three accounts
+        accounts = ["Wallet 7cd", "Credit 87a", "Cash as3"]
+        balances = [300.0, 150.0, 50.0]
+        account_ids = []
+
+        for account, balance in zip(accounts, balances):
             response = await async_client_auth.post(
-                "/expenses/",
-                json={
-                    "amount": 100.0 + i,
-                    "currency": "USD",
-                    "category": "Transport",
-                    "description": f"Taxi fare {i}",
-                    "account_name": "Checking",
-                },
+                "/accounts/",
+                json={"name": account, "balance": balance, "currency": "USD"},
             )
             assert response.status_code == 200, response.json()
-            assert response.json()["message"] == "Expense added successfully"
+            account_ids.append(response.json()["account_id"])
 
-        # Test to delete all expenses
-        response = await async_client_auth.delete("/expenses/all")
-        assert response.status_code == 200, response.json()
-        assert "expenses deleted successfully" in response.json()["message"]
+        # Create one expense per account
+        expenses_data = [
+            {
+                "amount": 30.0,
+                "currency": "USD",
+                "category": "Food",
+                "account_name": "Wallet 7cd",
+            },
+            {
+                "amount": 50.0,
+                "currency": "USD",
+                "category": "Shopping",
+                "account_name": "Credit 87a",
+            },
+            {
+                "amount": 10.0,
+                "currency": "USD",
+                "category": "Miscellaneous",
+                "account_name": "Cash as3",
+            },
+        ]
 
-        # Test to get all expenses to verify deletion
+        for expense in expenses_data:
+            response = await async_client_auth.post("/expenses/", json=expense)
+            assert response.status_code == 200, response.json()
+
+        # Delete all expenses
+        delete_response = await async_client_auth.delete("/expenses/all")
+        assert delete_response.status_code == 200, delete_response.json()
+
+        # Verify account balance adjustments
+        for account_id, balance, expense in zip(account_ids, balances, expenses_data):
+            response = await async_client_auth.get(f"/accounts/{account_id}")
+            updated_balance = response.json()["account"]["balance"]
+            assert updated_balance == balance
+
+    async def test_many_expenses_multiple_accounts(
+        self, async_client_auth: AsyncClient
+    ):
+        # Create multiple accounts with initial balances
+        accounts = ["Account A", "Account B", "Account C"]
+        balances = [500.0, 750.0, 1000.0]
+        account_ids = []
+
+        for account, balance in zip(accounts, balances):
+            response = await async_client_auth.post(
+                "/accounts/",
+                json={"name": account, "balance": balance, "currency": "USD"},
+            )
+            assert response.status_code == 200, response.json()
+            account_ids.append(response.json()["account_id"])
+
+        # Create 15 small expenses distributed among the accounts
+        expenses_data = [
+            {
+                "amount": 10.0,
+                "currency": "USD",
+                "category": "Miscellaneous",
+                "account_name": accounts[i % 3],
+            }
+            for i in range(15)
+        ]
+        account_expenses = {account_id: 0.0 for account_id in account_ids}
+
+        for expense in expenses_data:
+            response = await async_client_auth.post("/expenses/", json=expense)
+            assert response.status_code == 200, response.json()
+
+            # Accumulate expense totals per account
+            for idx, account in enumerate(accounts):
+                if expense["account_name"] == account:
+                    account_expenses[account_ids[idx]] += 10
+
+        # Delete all expenses
+        delete_response = await async_client_auth.delete("/expenses/all")
+        assert delete_response.status_code == 200, delete_response.json()
+
+        # Verify each account's balance adjustment
+        for account_id, initial_balance in zip(account_ids, balances):
+            response = await async_client_auth.get(f"/accounts/{account_id}")
+            updated_balance = response.json()["account"]["balance"]
+            assert updated_balance == initial_balance
+
+    async def test_no_expenses(self, async_client_auth: AsyncClient):
+        # Ensure no expenses exist
         response = await async_client_auth.get("/expenses/")
         assert response.status_code == 200, response.json()
         assert len(response.json()["expenses"]) == 0
 
-    async def test_all_but_empty(self, async_client_auth: AsyncClient):
-        """
-        Test deleting all expenses when no expenses exist.
-        """
-        # Test to delete all expenses when there are no expenses
+        # Attempt to delete all expenses
         response = await async_client_auth.delete("/expenses/all")
         assert response.status_code == 404, response.json()
         assert response.json()["detail"] == "No expenses found to delete"
@@ -553,6 +698,7 @@ async def test_currency_conversion(async_client_auth: AsyncClient):
     )
     assert response.status_code == 200, response.json()
     assert "expense" in response.json(), response.json()
+
     assert response.json()["expense"]["currency"] == "INR"
 
     expense_id = response.json()["expense"]["_id"]
