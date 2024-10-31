@@ -230,12 +230,12 @@ async def categories_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
     """
     Handle the /categories command, providing a list of categories.
     """
-    user_id = update.message.chat_id 
+    user_id = update.message.chat_id
 
     if user_id not in user_tokens:
         await update.message.reply_text("Please log in using /login command to view categories.")
         return
-    
+
     token = user_tokens[user_id]
     headers = {"token":token}
 
@@ -243,18 +243,18 @@ async def categories_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
     response = requests.get(f"{API_BASE_URL}/categories/", headers=headers)
     if response.status_code == 200:
         categories_data = response.json().get("categories", {})
-        
+
         # Prepare table header and rows with fixed-width formatting
         header = f"{'Category':<20} {'Monthly Budget':>15}\n"
         separator = "-" * 35
         rows = [f"{category:<20} {details['monthly_budget']:>15.2f}" for category, details in categories_data.items()]
-        
+
         # Combine header, separator, and rows into one string
         table_str = f"Here are your available categories with budgets:\n\n```\n{header}{separator}\n" + "\n".join(rows) + "\n```"
-        
+
         # Send the formatted table as a message with monospaced font
         await update.message.reply_text(table_str,
-                                        
+
         error_message = response.json().get("detail", "Unable to fetch categories.")
         await update.message.reply_text(f"Error: {error_message}")
 
