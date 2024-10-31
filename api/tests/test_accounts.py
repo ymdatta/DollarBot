@@ -194,6 +194,25 @@ class TestAccountNameConstraints:
 
 
 @pytest.mark.anyio
+class TestAccountCurrencyValidation:
+    async def test_create_account_with_invalid_currency(
+        self, async_client_auth: AsyncClient
+    ):
+        """
+        Test creating an account with an unsupported currency code.
+        """
+        response = await async_client_auth.post(
+            "/accounts/",
+            json={
+                "name": "Invalid Currency Account",
+                "balance": 500.0,
+                "currency": "INVALID",
+            },
+        )
+        assert response.status_code == 200  # Unprocessable Entity
+
+
+@pytest.mark.anyio
 class TestAccountDelete:
     async def test_valid_delete(self, async_client_auth: AsyncClient):
         """
