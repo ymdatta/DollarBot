@@ -7,8 +7,8 @@ from contextlib import asynccontextmanager
 import uvicorn
 from fastapi import FastAPI
 
-from config import API_BIND_HOST, API_BIND_PORT
 from api.routers import accounts, categories, expenses, users
+from config import API_BIND_HOST, API_BIND_PORT
 
 
 @asynccontextmanager

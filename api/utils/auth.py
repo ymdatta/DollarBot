@@ -1,6 +1,5 @@
-# api/utils/auth_utils.py
+"""Utilies to manage authentication"""
 
-from bson import ObjectId
 from fastapi import HTTPException
 from jose import JWTError, jwt
 from motor.motor_asyncio import AsyncIOMotorClient
