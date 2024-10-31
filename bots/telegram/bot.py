@@ -43,6 +43,7 @@ SIGNUP_STATE = {}
 USERNAMES = {}
 PASSWORDS = {}
 
+
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
     Handle the /start command, providing a welcome message and instructions to log in.
@@ -60,6 +61,7 @@ async def login_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.message.chat_id if update.message else None
     LOGIN_STATE[user_id] = "awaiting_username"
     await update.message.reply_text("Please enter your username:")
+
 
 async def signup_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
@@ -95,7 +97,9 @@ async def add_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("Expense added successfully!")
     else:
         error_message = response.json().get("detail", "Unknown error")
-        await update.message.reply_text(f"Failed to add expense. Error: {error_message}")
+        await update.message.reply_text(
+            f"Failed to add expense. Error: {error_message}"
+        )
 
 
 async def view_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -117,47 +121,55 @@ async def view_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 #     else:
 #         await update.message.reply_text("Sorry, I didn't understand that command. Please use /help to see available commands.")
 
+
 async def attempt_signup(update: Update, username: str, password: str):
     """
     Attempt to sign the user up with the provided username and password.
     """
-    response = requests.post(f"{API_BASE_URL}/users/", json={"username": username, "password": password})
+    response = requests.post(
+        f"{API_BASE_URL}/users/", json={"username": username, "password": password}
+    )
     # Check if the username already exists
     existing_user = await telegram_collection.find_one({"username": username})
     if existing_user:
-        await update.message.reply_text("Username already exists. Please choose another one.")
+        await update.message.reply_text(
+            "Username already exists. Please choose another one."
+        )
         return
-
 
     if response.status_code == 200:
         user_id = update.message.chat_id if update.message else None
         tokenization = requests.post(
             f"{API_BASE_URL}/users/token/?token_expires=43200",
-            data={"username": username, "password": password}
+            data={"username": username, "password": password},
         )
         token = tokenization.json()["result"]["token"]
 
-        payload = {
-            "name": username,
-            "balance": 0,
-            "currency": "string"
-        }
-        account_detail = requests.post(f"{API_BASE_URL}/accounts/", headers={"token": token}, json=payload)
-        account_id = account_detail.json()['account_id']
+        payload = {"name": username, "balance": 0, "currency": "string"}
+        account_detail = requests.post(
+            f"{API_BASE_URL}/accounts/", headers={"token": token}, json=payload
+        )
+        account_id = account_detail.json()["account_id"]
 
         user_data = {
             "username": username,
             "password": password,
             "token": token,
             "telegram_id": user_id,
-            "account_id":account_id,
+            "account_id": account_id,
         }
         await telegram_collection.insert_one(user_data)
-        await update.message.reply_text("Signup successful! You can now log in using /login.")
+        await update.message.reply_text(
+            "Signup successful! You can now log in using /login."
+        )
     elif response.status_code == 400:
-        await update.message.reply_text("Username already exists. Please choose another one.")
+        await update.message.reply_text(
+            "Username already exists. Please choose another one."
+        )
     elif response.status_code == 422:
-        await update.message.reply_text("Invalid credentials. Make sure to provide both a username and password.")
+        await update.message.reply_text(
+            "Invalid credentials. Make sure to provide both a username and password."
+        )
     else:
         await update.message.reply_text(f"An error occurred: {response.text}")
 
@@ -207,17 +219,23 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         await handle_response(update, text)
 
+
 async def attempt_login(update: Update, username: str, password: str):
     """
     Attempt to log the user in with the provided username and password.
     """
-    response = requests.post(f"{API_BASE_URL}/users/token/?token_expires=43200", data={"username": username, "password": password})
+    response = requests.post(
+        f"{API_BASE_URL}/users/token/?token_expires=43200",
+        data={"username": username, "password": password},
+    )
     if response.status_code == 200:
         # token = response.json().get("access_token")
         user_id = update.message.chat_id if update.message else None
 
-        user = await telegram_collection.find_one({"username": username, "password": password})
-        user_tokens[user_id]= user["token"]
+        user = await telegram_collection.find_one(
+            {"username": username, "password": password}
+        )
+        user_tokens[user_id] = user["token"]
         user_tokens["account"] = user["account_id"]
         print(user_tokens)
 
@@ -233,11 +251,13 @@ async def categories_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
     user_id = update.message.chat_id
 
     if user_id not in user_tokens:
-        await update.message.reply_text("Please log in using /login command to view categories.")
+        await update.message.reply_text(
+            "Please log in using /login command to view categories."
+        )
         return
 
     token = user_tokens[user_id]
-    headers = {"token":token}
+    headers = {"token": token}
 
     # Fetch categories from API
     response = requests.get(f"{API_BASE_URL}/categories/", headers=headers)
@@ -247,16 +267,24 @@ async def categories_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
         # Prepare table header and rows with fixed-width formatting
         header = f"{'Category':<20} {'Monthly Budget':>15}\n"
         separator = "-" * 35
-        rows = [f"{category:<20} {details['monthly_budget']:>15.2f}" for category, details in categories_data.items()]
+        rows = [
+            f"{category:<20} {details['monthly_budget']:>15.2f}"
+            for category, details in categories_data.items()
+        ]
 
         # Combine header, separator, and rows into one string
-        table_str = f"Here are your available categories with budgets:\n\n```\n{header}{separator}\n" + "\n".join(rows) + "\n```"
+        table_str = (
+            f"Here are your available categories with budgets:\n\n```\n{header}{separator}\n"
+            + "\n".join(rows)
+            + "\n```"
+        )
 
         # Send the formatted table as a message with monospaced font
-        await update.message.reply_text(table_str,
+        await update.message.reply_text(table_str, parse_mode="MarkdownV2")
 
         error_message = response.json().get("detail", "Unable to fetch categories.")
         await update.message.reply_text(f"Error: {error_message}")
+
 
 async def error(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
