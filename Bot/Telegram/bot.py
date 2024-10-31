@@ -146,7 +146,7 @@ async def handle_login(update: Update, text: str):
     """
     user_input = text.split()
     username, password = user_input[0], user_input[1]
-    response = requests.post(f"{API_BASE_URL}/token/", data={"username": username, "password": password})
+    response = requests.post(f"{API_BASE_URL}/users/token/?token_expires=43200", data={"username": username, "password": password})
 
     if response.status_code == 200:
         token = response.json().get("access_token")
