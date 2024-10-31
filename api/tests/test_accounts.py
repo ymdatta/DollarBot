@@ -43,6 +43,22 @@ class TestAccountCreation:
         response = await async_client_auth.post("/accounts/", json={"balance": 1000.0})
         assert response.status_code == 422  # Unprocessable Entity
 
+    async def test_create_account_with_invalid_data(
+        self, async_client_auth: AsyncClient
+    ):
+        """
+        Test creating an account with invalid data types for fields.
+        """
+        response = await async_client_auth.post(
+            "/accounts/",
+            json={
+                "name": "Invalid Account",
+                "balance": "not_a_number",
+                "currency": 123,
+            },
+        )
+        assert response.status_code == 422  # Unprocessable Entity
+
 
 @pytest.mark.anyio
 class TestAccountGet:
