@@ -245,8 +245,8 @@ async def categories_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
         table_str = f"Here are your available categories with budgets:\n\n```\n{header}{separator}\n" + "\n".join(rows) + "\n```"
         
         # Send the formatted table as a message with monospaced font
-        await update.message.reply_text(table_str, parse_mode="MarkdownV2")
-    else:
+        await update.message.reply_text(table_str,
+                                        
         error_message = response.json().get("detail", "Unable to fetch categories.")
         await update.message.reply_text(f"Error: {error_message}")
 
