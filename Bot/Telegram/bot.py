@@ -6,6 +6,8 @@ from bson import ObjectId
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 from jose import jwt
+import pandas as pd
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 # Constants
 API_BASE_URL = "http://localhost:8000"
@@ -95,17 +97,17 @@ async def view_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Hello, Your balance is")
 
 
-async def handle_response(update: Update, text: str):
-    """
-    Handle user input based on the current task (e.g., Signup, Login).
-    """
-    global TSK
-    if TSK == "Signup":
-        await handle_signup(update, text)
-    elif TSK == "Login":
-        await handle_login(update, text)
-    else:
-        await update.message.reply_text("Sorry, I didn't understand that command. Please use /help to see available commands.")
+# async def handle_response(update: Update, text: str):
+#     """
+#     Handle user input based on the current task (e.g., Signup, Login).
+#     """
+#     global TSK
+#     if TSK == "Signup":
+#         await handle_signup(update, text)
+#     elif TSK == "Login":
+#         await handle_login(update, text)
+#     else:
+#         await update.message.reply_text("Sorry, I didn't understand that command. Please use /help to see available commands.")
 
 async def attempt_signup(update: Update, username: str, password: str):
     """
@@ -220,26 +222,33 @@ async def categories_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
     """
     Handle the /categories command, providing a list of categories.
     """
-    user_id = update.message.chat_id
+    user_id = update.message.chat_id 
 
     if user_id not in user_tokens:
         await update.message.reply_text("Please log in using /login command to view categories.")
         return
-
+    
     token = user_tokens[user_id]
     headers = {"token":token}
 
-    category = requests.get(f"{API_BASE_URL}/categories/", headers=headers)
-    if category.status_code == 200:
-        categories = category.json()["categories"]
-        await update.message.reply_text(f"Available Categories:")
-        print(categories.keys())
-        for i in categories.keys():
-            await update.message.reply_text(f"•{i}")
+    # Fetch categories from API
+    response = requests.get(f"{API_BASE_URL}/categories/", headers=headers)
+    if response.status_code == 200:
+        categories_data = response.json().get("categories", {})
+        
+        # Prepare table header and rows with fixed-width formatting
+        header = f"{'Category':<20} {'Monthly Budget':>15}\n"
+        separator = "-" * 35
+        rows = [f"{category:<20} {details['monthly_budget']:>15.2f}" for category, details in categories_data.items()]
+        
+        # Combine header, separator, and rows into one string
+        table_str = f"Here are your available categories with budgets:\n\n```\n{header}{separator}\n" + "\n".join(rows) + "\n```"
+        
+        # Send the formatted table as a message with monospaced font
+        await update.message.reply_text(table_str, parse_mode="MarkdownV2")
     else:
-        error_message = category.json().get("detail", "Unable to fetch categories.")
+        error_message = response.json().get("detail", "Unable to fetch categories.")
         await update.message.reply_text(f"Error: {error_message}")
-
 
 async def error(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
