@@ -30,6 +30,7 @@ clean: ## Clean up Python bytecode files and caches
 	@docker rm mongo-test || true
 	find . -type f -name "*.pyc" -delete
 	find . -type f -name ".coverage" -delete
+	find . -type f -name ".python-version" -delete
 	find . -type d -name "__pycache__" -exec rm -rf {} +
 	find . -type d -name ".pytest_cache" -exec rm -rf {} +
 	find . -type d -name ".mypy_cache" -exec rm -rf {} +
