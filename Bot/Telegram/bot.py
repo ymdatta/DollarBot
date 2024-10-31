@@ -152,69 +152,6 @@ async def attempt_signup(update: Update, username: str, password: str):
         await update.message.reply_text(f"An error occurred: {response.text}")
 
 
-# async def handle_signup(update: Update, text: str):
-#     """
-#     Handle user signup by creating an account and storing the user data in MongoDB.
-#     """
-#     user_input = text.split()
-#     username, password = user_input[0], user_input[1]
-#     response = requests.post(f"{API_BASE_URL}/users/", json={"username": username, "password": password})
-
-#     if response.status_code == 200:
-#         user_id = update.message.chat_id if update.message else None
-#         tokenization = requests.post(
-#             f"{API_BASE_URL}/users/token/?token_expires=43200",
-#             data={"username": username, "password": password}
-#         )
-#         token = tokenization.json()["result"]["token"]
-
-#         payload = {
-#             "name": username,
-#             "balance": 0,
-#             "currency": "string"
-#         }
-#         print(username)
-#         account_detail = requests.post(f"{API_BASE_URL}/accounts/", headers={"token": token}, json=payload)
-#         print(account_detail.json())
-#         account_id = account_detail.json()['account_id']
-#         print(account_id)
-
-#         user_data = {
-#             "username": username,
-#             "password": password,
-#             "token": token,
-#             "telegram_id": user_id,
-#             "account_id":account_id
-#         }
-#         print("=====")
-#         print(username)
-#         await telegram_collection.insert_one(user_data)
-#         await update.message.reply_text("User created successfully! You can now log in using /login.")
-#     elif response.status_code == 400:
-#         await update.message.reply_text("Username already exists. Please choose another one.")
-#     elif response.status_code == 422:
-#         await update.message.reply_text("Invalid credentials. Make sure to provide both a username and password.")
-#     else:
-#         await update.message.reply_text(f"An error occurred: {response.text}")
-
-
-async def handle_login(update: Update, text: str):
-    """
-    Handle user login by authenticating the user and retrieving their access token.
-    """
-    user_input = text.split()
-    username, password = user_input[0], user_input[1]
-    response = requests.post(f"{API_BASE_URL}/users/token/?token_expires=43200", data={"username": username, "password": password})
-
-    if response.status_code == 200:
-        token = response.json().get("access_token")
-        user_id = update.message.chat_id if update.message else None
-        user_tokens[user_id] = token
-        await update.message.reply_text("Login successful!")
-    else:
-        await update.message.reply_text("Login failed. Please check your credentials.")
-
-
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
     Handle incoming text messages and direct messages to appropriate handlers based on context.
@@ -269,9 +206,14 @@ async def attempt_login(update: Update, username: str, password: str):
 
     response = requests.post(f"{API_BASE_URL}/users/token/?token_expires=43200", data={"username": username, "password": password})
     if response.status_code == 200:
-        token = response.json().get("access_token")
+        # token = response.json().get("access_token")
         user_id = update.message.chat_id if update.message else None
-        user_tokens[user_id] = token
+
+        user = await telegram_collection.find_one({"username": username, "password": password})
+        user_tokens[user_id] = user["token"]
+        user_tokens["account"] = user["account_id"]
+        print(user_tokens)
+
         await update.message.reply_text("Login successful!")
     else:
         await update.message.reply_text("Login failed. Please check your credentials.")
@@ -302,3 +244,64 @@ if __name__ == "__main__":
     app.add_error_handler(error)
     print("Polling..")
     app.run_polling(poll_interval=3)
+
+# async def handle_signup(update: Update, text: str):
+#     """
+#     Handle user signup by creating an account and storing the user data in MongoDB.
+#     """
+#     user_input = text.split()
+#     username, password = user_input[0], user_input[1]
+#     response = requests.post(f"{API_BASE_URL}/users/", json={"username": username, "password": password})
+
+#     if response.status_code == 200:
+#         user_id = update.message.chat_id if update.message else None
+#         tokenization = requests.post(
+#             f"{API_BASE_URL}/users/token/?token_expires=43200",
+#             data={"username": username, "password": password}
+#         )
+#         token = tokenization.json()["result"]["token"]
+
+#         payload = {
+#             "name": username,
+#             "balance": 0,
+#             "currency": "string"
+#         }
+#         print(username)
+#         account_detail = requests.post(f"{API_BASE_URL}/accounts/", headers={"token": token}, json=payload)
+#         print(account_detail.json())
+#         account_id = account_detail.json()['account_id']
+#         print(account_id)
+
+#         user_data = {
+#             "username": username,
+#             "password": password,
+#             "token": token,
+#             "telegram_id": user_id,
+#             "account_id":account_id
+#         }
+#         print("=====")
+#         print(username)
+#         await telegram_collection.insert_one(user_data)
+#         await update.message.reply_text("User created successfully! You can now log in using /login.")
+#     elif response.status_code == 400:
+#         await update.message.reply_text("Username already exists. Please choose another one.")
+#     elif response.status_code == 422:
+#         await update.message.reply_text("Invalid credentials. Make sure to provide both a username and password.")
+#     else:
+#         await update.message.reply_text(f"An error occurred: {response.text}")
+
+# async def handle_login(update: Update, text: str):
+#     """
+#     Handle user login by authenticating the user and retrieving their access token.
+#     """
+#     user_input = text.split()
+#     username, password = user_input[0], user_input[1]
+#     response = requests.post(f"{API_BASE_URL}/users/token/?token_expires=43200", data={"username": username, "password": password})
+
+#     if response.status_code == 200:
+#         token = response.json().get("access_token")
+#         user_id = update.message.chat_id if update.message else None
+#         user_tokens[user_id] = token
+#         await update.message.reply_text("Login successful!")
+#     else:
+#         await update.message.reply_text("Login failed. Please check your credentials.")
