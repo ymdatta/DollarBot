@@ -24,7 +24,7 @@ MONGO_URI = os.getenv(
     "?retryWrites=true&w=majority&appName=MoneyManagerDB",
 )
 
-
+# MongoDB collections for user and token management
 user_tokens = {}
 
 # MongoDB setup
@@ -38,21 +38,37 @@ telegram_collection = db.Telegram
 
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    Handle the /start command, providing a welcome message and instructions to log in.
+    """
     await update.message.reply_text("Welcome to MoneyHandler! Please log in using /login <username> <password>")
 
+
 async def login_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    Set the task to "Login" and prompt the user to provide login credentials.
+    """
     print("Login command called.")
     global TSK
     TSK = "Login"
     await update.message.reply_text("Please enter your username and password in the format: <username> <password>")
 
+
 async def signup_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    Set the task to "Signup" and prompt the user to provide signup credentials.
+    """
     print("Signup command called.")
     global TSK
-    TSK =  "Signup"
+    TSK = "Signup"
     await update.message.reply_text("Please sign up using /login command before adding expenses.")
 
+
 async def add_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    Check if the user is authenticated, then handle adding an expense.
+    If the user is not logged in, prompt them to log in first.
+    """
     user_id = update.message.chat_id
 
     # Check if user is authenticated
@@ -60,13 +76,16 @@ async def add_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("Please log in using /login command before adding expenses.")
         return
 
-     # Token for the authenticated user
+    # Token for the authenticated user
     token = user_tokens[user_id]
 
-    # Example of adding an expense
-    # Modify according to your needs
+    # Adding an expense with a default payload (modify as needed)
     headers = {"Authorization": f"Bearer {token}"}
-    response = requests.post(f"{API_BASE_URL}/expenses/", json={"amount": 100, "currency": "USD", "category": "Food"}, headers=headers)
+    response = requests.post(
+        f"{API_BASE_URL}/expenses/",
+        json={"amount": 100, "currency": "USD", "category": "Food"},
+        headers=headers
+    )
 
     if response.status_code == 200:
         await update.message.reply_text("Expense added successfully!")
@@ -74,17 +93,23 @@ async def add_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(f"Failed to add expense. Error: {response.json().get('detail', 'Unknown error')}")
 
 
-
 async def view_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Hello, YOur balance is")
-
-
-# handle resopnses
+    """
+    Placeholder function for viewing balance or account details.
+    """
+    await update.message.reply_text("Hello, Your balance is")
 
 
 async def handle_response(update: Update, text: str):
+    """
+    Handle user input based on the current task (e.g., Signup, Login).
+    If task is "Signup", attempt to register the user.
+    If task is "Login", authenticate the user and retrieve their access token.
+    """
     global TSK
     print(TSK)
+    
+    # Handle Signup task
     if TSK == "Signup":
         user_input = text.split()
         username, password = user_input[0], user_input[1]
@@ -94,7 +119,10 @@ async def handle_response(update: Update, text: str):
         if response.status_code == 200:
             print(1)
             user_id = update.message.chat_id
-            tokenization = requests.post(f"{API_BASE_URL}/users/token/?token_expires=43200", data={"username": "hellothere", "password": "hello htere"})
+            tokenization = requests.post(
+                f"{API_BASE_URL}/users/token/?token_expires=43200",
+                data={"username": username, "password": password}
+            )
             token = tokenization.json()['result']['token']
             print(token)
 
@@ -117,6 +145,7 @@ async def handle_response(update: Update, text: str):
         else:
             await update.message.reply_text(f"An error occurred: {response.text}")
 
+    # Handle Login task
     elif TSK == "Login":
         user_input = text.split()
         username, password = user_input[0], user_input[1]
@@ -133,6 +162,10 @@ async def handle_response(update: Update, text: str):
 
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    Handle incoming text messages, checking for group mentions of the bot or processing single messages.
+    Directs messages to the appropriate handler based on context.
+    """
     message_type = update.message.chat.type
     text = update.message.text
 
@@ -151,11 +184,11 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     print("Bot response sent")
 
-    # print('Bot:', response)
-    # await update.message.reply_text(response)
-
 
 async def error(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    Log and handle errors that occur during the bot's operation.
+    """
     print(f"Update {update} caused error {context.error}")
 
 
@@ -172,19 +205,3 @@ if __name__ == "__main__":
     app.add_error_handler(error)
     print("Polling..")
     app.run_polling(poll_interval=3)
-
-
-# def start(update: Update, context):
-#     update.message.reply_text('Welcome to MoneyManager bot!')
-
-# def main():
-#     TOKEN = "7217139754:AAGTo4BtF2obYrxm_MsHmXLekxvnNQ8F3fs"
-#     bot = Bot(TOKEN)
-#     update_queue = Queue()
-#     dispatcher = Dispatcher(bot, update_queue, use_context=True)
-#     dispatcher.add_handler(CommandHandler("start", start))
-#     # dispatcher.add_handler(CommandHandler("balance", get_balance))
-#     bot.start_polling()
-
-# if __name__ == '__main__':
-#     main()
