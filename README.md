@@ -12,7 +12,6 @@ A REST API application for managing expenses. Build your own automation, be it t
 [![badge_pylint](https://img.shields.io/badge/pylint-10.00-brightgreen?style=plastic)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11605743334)
 [![badge_black](https://img.shields.io/badge/black_formatter-failing-red?style=plastic&labelColor=black)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11605743334)
 
-
 <!-- [![badge_pyright](https://img.shields.io/badge/pyright-passing-brightgreen)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11190159988) -->
 
 #### Standards
