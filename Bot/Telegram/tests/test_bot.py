@@ -2,7 +2,7 @@ import pytest
 from aioresponses import aioresponses
 from unittest.mock import AsyncMock, MagicMock
 from telegram import Update
-from Bot.Telegram.bot import start_command, signup_command, login_command, handle_response
+from Bot.Telegram.bot import start_command, signup_command, login_command, handle_message
 
 API_BASE_URL = "http://localhost:8000"
 
@@ -52,13 +52,30 @@ async def test_signup_command(update_mock, context_mock):
 
 
 @pytest.mark.asyncio
-async def test_login_command(update_mock, context_mock):
-    """Test the /login command."""
+async def test_login_command_username_prompt(update_mock, context_mock):
+    """Test the /login command prompts for the username."""
     update_mock.message.reply_text = AsyncMock()
     await login_command(update_mock, context_mock)
-    update_mock.message.reply_text.assert_called_once_with(
-        "Please enter your username and password in the format: <username> <password>"
-    )
+    update_mock.message.reply_text.assert_called_once_with("Please enter your username:")
+
+@pytest.mark.asyncio
+async def test_login_command_password_prompt(update_mock, context_mock):
+    """Test the login process prompts for the password after receiving the username."""
+    # First, simulate the username prompt by calling the /login command
+    update_mock.message.reply_text = AsyncMock()
+    await login_command(update_mock, context_mock)
+
+    # Set the state to 'awaiting_password' to simulate that the username has been received
+    user_id = update_mock.message.chat_id
+    context_mock.USERNAMES = {user_id: "testuser"}  # mock username storage
+    context_mock.LOGIN_STATE = {user_id: "awaiting_password"}
+
+    # Simulate the password prompt
+    update_mock.message.text = "password123"
+    await handle_message(update_mock, context_mock)
+
+    # Check if the bot prompts for a password
+    update_mock.message.reply_text.assert_called_with("Please enter your password:")
 
 
 # @pytest.mark.asyncio

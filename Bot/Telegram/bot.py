@@ -29,6 +29,8 @@ expenses_collection = db.expenses
 telegram_collection = db.Telegram
 user_tokens = {}
 
+LOGIN_STATE = {}
+USERNAMES = {}
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
@@ -42,15 +44,11 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def login_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
-    Set the task to "Login" and prompt the user to provide login credentials.
+    Initiate the login process, prompting for the username first.
     """
-    global TSK
-    TSK = "Login"
-    if update.message:
-        await update.message.reply_text(
-            "Please enter your username and password in the format: <username> <password>"
-        )
-
+    user_id = update.message.chat_id if update.message else None
+    LOGIN_STATE[user_id] = "awaiting_username"
+    await update.message.reply_text("Please enter your username:")
 
 async def signup_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
@@ -161,14 +159,51 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
     Handle incoming text messages and direct messages to appropriate handlers based on context.
     """
-    message_type = update.message.chat.type if update.message else None
+    user_id = update.message.chat_id if update.message else None
     text = update.message.text if update.message else ""
 
-    if message_type == "group" and BOT_USERNAME in text:
-        new_text = text.replace(BOT_USERNAME, '').strip()
-        await handle_response(update, new_text)
-    elif message_type == "private":
+    # Check if user is in login process
+    if user_id in LOGIN_STATE:
+        if LOGIN_STATE[user_id] == "awaiting_username":
+            # Store the username and prompt for password
+            USERNAMES[user_id] = text
+            LOGIN_STATE[user_id] = "awaiting_password"
+            await update.message.reply_text("Please enter your password:")
+
+        elif LOGIN_STATE[user_id] == "awaiting_password":
+            # Retrieve username and password, then attempt login
+            username = USERNAMES.get(user_id)
+            password = text
+            await attempt_login(update, username, password)
+            # Clear login state after attempting login
+            LOGIN_STATE.pop(user_id, None)
+            USERNAMES.pop(user_id, None)
+        return
+
         await handle_response(update, text)
+
+async def attempt_login(update: Update, username: str, password: str):
+    """
+    Attempt to log the user in with the provided username and password.
+    """
+    # Find the user in the telegram collection
+    # user = await telegram_collection.find_one({"username": username})
+
+    response = requests.post(f"{API_BASE_URL}/users/token/?token_expires=43200", data={"username": username, "password": password})
+    if response.status_code == 200:
+        token = response.json().get("access_token")
+        user_id = update.message.chat_id if update.message else None
+        user_tokens[user_id] = token
+        await update.message.reply_text("Login successful!")
+    else:
+        await update.message.reply_text("Login failed. Please check your credentials.")
+    # if user and user["password"] == password:
+    #     token = user.get("token")
+    #     user_id = update.message.chat_id if update.message else None
+    #     user_tokens[user_id] = token  # Store token for the user session
+    #     await update.message.reply_text("Login successful!")
+    # else:
+    #     await update.message.reply_text("Invalid username or password. Please try again or sign up.")
 
 
 async def error(update: Update, context: ContextTypes.DEFAULT_TYPE):
