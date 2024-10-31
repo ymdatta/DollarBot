@@ -1,8 +1,15 @@
+from unittest.mock import AsyncMock, MagicMock
+
 import pytest
 from aioresponses import aioresponses
-from unittest.mock import AsyncMock, MagicMock
 from telegram import Update
-from Bot.Telegram.bot import start_command, signup_command, login_command, handle_message
+
+from bots.telegram.bot import (
+    handle_message,
+    login_command,
+    signup_command,
+    start_command,
+)
 
 API_BASE_URL = "http://localhost:8000"
 
@@ -12,11 +19,15 @@ def update_mock():
     """Mock an update message with specific content for testing."""
     update = Update(
         update_id=12345,
-        message=type('obj', (object,), {
-            'chat_id': 6387422040,
-            'reply_text': AsyncMock(),
-            'text': "Mocked text",
-        })()
+        message=type(
+            "obj",
+            (object,),
+            {
+                "chat_id": 6387422040,
+                "reply_text": AsyncMock(),
+                "text": "Mocked text",
+            },
+        )(),
     )
     return update
 
@@ -24,6 +35,7 @@ def update_mock():
 @pytest.fixture
 def context_mock():
     """Mock context without actual API calls."""
+
     class MockContext:
         def __init__(self):
             self.args = []
@@ -56,7 +68,10 @@ async def test_login_command_username_prompt(update_mock, context_mock):
     """Test the /login command prompts for the username."""
     update_mock.message.reply_text = AsyncMock()
     await login_command(update_mock, context_mock)
-    update_mock.message.reply_text.assert_called_once_with("Please enter your username:")
+    update_mock.message.reply_text.assert_called_once_with(
+        "Please enter your username:"
+    )
+
 
 @pytest.mark.asyncio
 async def test_login_command_password_prompt(update_mock, context_mock):
