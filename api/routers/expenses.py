@@ -11,7 +11,7 @@ from fastapi import APIRouter, Header, HTTPException
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel
 
-from api.config import MONGO_URI
+from config import MONGO_URI
 from api.utils.auth import verify_token
 
 currency_converter = CurrencyConverter()

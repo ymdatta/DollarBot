@@ -12,7 +12,7 @@ from jose import jwt
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel
 
-from api.config import MONGO_URI, TOKEN_ALGORITHM, TOKEN_SECRET_KEY
+from config import MONGO_URI, TOKEN_ALGORITHM, TOKEN_SECRET_KEY
 from api.utils.auth import verify_token
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 30 * 24 * 60
