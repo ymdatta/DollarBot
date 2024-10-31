@@ -8,6 +8,7 @@ import uvicorn
 from fastapi import FastAPI
 
 from api.routers import accounts, categories, expenses, users
+from config import API_BIND_HOST, API_BIND_PORT
 
 
 @asynccontextmanager
@@ -27,4 +28,4 @@ app.include_router(categories.router)
 app.include_router(expenses.router)
 
 if __name__ == "__main__":
-    uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("app:app", host=API_BIND_HOST, port=API_BIND_PORT, reload=True)

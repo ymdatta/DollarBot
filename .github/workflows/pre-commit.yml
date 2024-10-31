@@ -4,7 +4,8 @@ name: Pre-Commit Check
 on:
   pull_request:
     branches:
-      - "release/2024.2"
+      # - "release/2024.2"
+      - main
 
 jobs:
   pre-commit:

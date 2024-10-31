@@ -1,37 +1,20 @@
-# Define variables
-APP_DIR = api
-APP = $(APP_DIR)/app.py
-VENV = venv
-PYTHON = $(VENV)/bin/python
-
 # Help function to display available commands
 help: ## Show this help message
 	@echo "Available commands:"
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-15s\033[0m %s\n", $$1, $$2}'
 
-run: ## Run the Fastapi app from the api directory
-	@if [ ! -f $(PYTHON) ]; then \
-		echo "Virtual environment not found. Please run 'make install' first."; \
-		exit 1; \
-	fi
-	$(PYTHON) api/app.py
+install: ## Install dependencies in the virtual environment
+	pip install --upgrade pip
+	pip install -r requirements.txt
+	pre-commit install
 
+run: ## Run the FastAPI app using the virtual environment
+	python api/app.py
 
-install: ## Install dependencies and create virtual environment if not present
-	@if [ ! -d $(VENV) ]; then \
-		echo "Creating virtual environment..."; \
-		python3 -m venv $(VENV); \
-	fi
-	$(VENV)/bin/pip install --upgrade pip
-	$(VENV)/bin/pip install -r requirements.txt
-	$(VENV)/bin/pre-commit install
-
-
-# Start Docker container, run tests, and clean up
-test:
+test: ## Start MongoDB Docker container, run tests, and clean up
 	@echo "Starting MongoDB Docker container..."
 	docker run --name mongo-test -p 27017:27017 -d mongo:latest
-	@sleep 5  # Wait for MongoDB to be ready; adjust as needed
+	@sleep 5  # Wait for MongoDB to be ready
 	@echo "Running tests..."
 	pytest || (docker stop mongo-test && docker rm mongo-test && exit 1)
 	@echo "Stopping and removing Docker container..."
@@ -47,13 +30,14 @@ clean: ## Clean up Python bytecode files and caches
 	@docker rm mongo-test || true
 	find . -type f -name "*.pyc" -delete
 	find . -type f -name ".coverage" -delete
+	find . -type f -name ".python-version" -delete
 	find . -type d -name "__pycache__" -exec rm -rf {} +
 	find . -type d -name ".pytest_cache" -exec rm -rf {} +
 	find . -type d -name ".mypy_cache" -exec rm -rf {} +
 
-no_verify_commit:
+no_verify_push: ## Stage, commit & push with --no-verify
 	@read -p "Enter commit message: " msg; \
 	git commit -a -m "$$msg" --no-verify
 	git push
 
-.PHONY: run install clean
+.PHONY: help install run test fix clean no_verify_push

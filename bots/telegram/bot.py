@@ -1,3 +1,4 @@
+import datetime
 import os
 import datetime
 import requests
@@ -71,7 +72,9 @@ async def add_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
     user_id = update.message.chat_id if update.message else None
     if user_id not in user_tokens:
-        await update.message.reply_text("Please log in using /login command before adding expenses.")
+        await update.message.reply_text(
+            "Please log in using /login command before adding expenses."
+        )
         return
 
     # Token for the authenticated user

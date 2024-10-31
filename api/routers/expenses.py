@@ -11,8 +11,8 @@ from fastapi import APIRouter, Header, HTTPException
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel
 
-from api.config import MONGO_URI
 from api.utils.auth import verify_token
+from config import MONGO_URI
 
 currency_converter = CurrencyConverter()
 
@@ -113,7 +113,7 @@ async def add_expense(expense: ExpenseCreate, token: str = Header(None)):
             status_code=400,
             detail=(
                 f"Category is not present in the user account. "
-                f"Available categories are {user['categories']}"
+                f"Available categories are {list(user['categories'])}"
             ),
         )
 
@@ -188,7 +188,7 @@ async def get_expense(expense_id: str, token: str = Header(None)):
 @router.delete("/all")
 async def delete_all_expenses(token: str = Header(None)):
     """
-    Delete all expenses for the authenticated user.
+    Delete all expenses for the authenticated user and update account balances.
 
     Args:
         token (str): Authentication token.
@@ -197,12 +197,40 @@ async def delete_all_expenses(token: str = Header(None)):
         dict: Message indicating the number of expenses deleted.
     """
     user_id = await verify_token(token)
-    result = await expenses_collection.delete_many({"user_id": user_id})
-    # TODO: update the account balance
 
-    if result.deleted_count > 0:
-        return {"message": f"{result.deleted_count} expenses deleted successfully"}
-    raise HTTPException(status_code=404, detail="No expenses found to delete")
+    # Retrieve all expenses for the user before deletion
+    expenses = await expenses_collection.find({"user_id": user_id}).to_list(None)
+    if not expenses:
+        raise HTTPException(status_code=404, detail="No expenses found to delete")
+
+    # Organize expenses by account name to sum them for each account
+    account_adjustments: dict[str, float] = {}
+    for expense in expenses:
+        account_name = expense.get("account_name")
+        amount = expense.get("amount", 0)
+
+        # Find the account ID by name
+        account = await accounts_collection.find_one(
+            {"name": account_name, "user_id": user_id}
+        )
+        if account:
+            account_id = account["_id"]
+            if account_id in account_adjustments:
+                account_adjustments[account_id] += amount
+            else:
+                account_adjustments[account_id] = amount
+
+    # Update each account's balance
+    for account_id, total_expense_amount in account_adjustments.items():
+        await accounts_collection.update_one(
+            {"_id": account_id, "user_id": user_id},
+            {"$inc": {"balance": total_expense_amount}},
+        )
+
+    # Delete all expenses
+    result = await expenses_collection.delete_many({"user_id": user_id})
+
+    return {"message": f"{result.deleted_count} expenses deleted successfully"}
 
 
 @router.delete("/{expense_id}")
@@ -322,7 +350,7 @@ async def update_expense(
                     status_code=400,
                     detail=(
                         f"Category is not present in the user account. "
-                        f"Available categories are {user['categories']}"
+                        f"Available categories are {list(user['categories'])}"
                     ),
                 )
             update_fields["category"] = expense_update.category
