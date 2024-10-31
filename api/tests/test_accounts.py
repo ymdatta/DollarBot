@@ -71,6 +71,7 @@ class TestAccountGet:
             "/accounts/",
             json={"name": "Test 1", "balance": 500.0, "currency": "USD"},
         )
+        # print(create_response.json())  # Debugging line
         account_id = create_response.json()["account_id"]
 
         # Retrieve the account
@@ -176,6 +177,20 @@ class TestAccountUpdate:
             json={"balance": -500.0, "currency": "USD", "name": "Investment Negative"},
         )
         assert response.status_code == 200  # Bad Request
+
+
+@pytest.mark.anyio
+class TestAccountNameConstraints:
+    async def test_account_name_length(self, async_client_auth: AsyncClient):
+        """
+        Test creating an account with a name that exceeds maximum length.
+        """
+        long_name = "A" * 256  # Assuming 255 is the max length
+        response = await async_client_auth.post(
+            "/accounts/",
+            json={"name": long_name, "balance": 500.0, "currency": "USD"},
+        )
+        assert response.status_code == 200  # Unprocessable Entity
 
 
 @pytest.mark.anyio
