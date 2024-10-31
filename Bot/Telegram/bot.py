@@ -207,13 +207,39 @@ async def attempt_login(update: Update, username: str, password: str):
         user_id = update.message.chat_id if update.message else None
 
         user = await telegram_collection.find_one({"username": username, "password": password})
-        user_tokens[user_id] = user["token"]
+        user_tokens[user_id]= user["token"]
         user_tokens["account"] = user["account_id"]
         print(user_tokens)
 
         await update.message.reply_text("Login successful!")
     else:
         await update.message.reply_text("Login failed. Please check your credentials.")
+
+
+async def categories_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    Handle the /categories command, providing a list of categories.
+    """
+    user_id = update.message.chat_id
+
+    if user_id not in user_tokens:
+        await update.message.reply_text("Please log in using /login command to view categories.")
+        return
+
+    token = user_tokens[user_id]
+    headers = {"token":token}
+
+    category = requests.get(f"{API_BASE_URL}/categories/", headers=headers)
+    if category.status_code == 200:
+        categories = category.json()["categories"]
+        await update.message.reply_text(f"Available Categories:")
+        print(categories.keys())
+        for i in categories.keys():
+            await update.message.reply_text(f"•{i}")
+    else:
+        error_message = category.json().get("detail", "Unable to fetch categories.")
+        await update.message.reply_text(f"Error: {error_message}")
+
 
 async def error(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
@@ -229,6 +255,7 @@ if __name__ == "__main__":
     app.add_handler(CommandHandler("add", add_command))
     app.add_handler(CommandHandler("login", login_command))
     app.add_handler(CommandHandler("signup", signup_command))
+    app.add_handler(CommandHandler("see_categories", categories_command))
     app.add_handler(MessageHandler(filters.TEXT, handle_message))
     app.add_error_handler(error)
     print("Polling..")
