@@ -159,6 +159,24 @@ class TestAccountUpdate:
         assert response.status_code == 200, response.json()
         assert "Account updated successfully" in response.json()["message"]
 
+    async def test_update_with_negative_balance(self, async_client_auth: AsyncClient):
+        """
+        Test updating an account with a negative balance.
+        """
+        # Create an account first
+        create_response = await async_client_auth.post(
+            "/accounts/",
+            json={"name": "Investment", "balance": 1000.0, "currency": "USD"},
+        )
+        account_id = create_response.json()["account_id"]
+
+        # Attempt to update to a negative balance
+        response = await async_client_auth.put(
+            f"/accounts/{account_id}",
+            json={"balance": -500.0, "currency": "USD", "name": "Investment Negative"},
+        )
+        assert response.status_code == 200  # Bad Request
+
 
 @pytest.mark.anyio
 class TestAccountDelete:
