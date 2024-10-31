@@ -1,64 +1,98 @@
 # import pytest
 # from fastapi.testclient import TestClient
+# from httpx import AsyncClient
+# from unittest.mock import patch, MagicMock
+# from datetime import datetime, timedelta
+# import pandas as pd
+# from typing import Optional
 
-# from api.app import app
+# from api.app import app  # Import FastAPI app here
 
 # client = TestClient(app)
 
+# # Mock sample data for testing
+# def sample_expense_data(days_ago, amount=100, category="food"):
+#     return {
+#         "date": datetime.now() - timedelta(days=days_ago),
+#         "amount": amount,
+#         "category": category
+#     }
 
-# # Test to ensure the analytics endpoint exists and returns a valid response
-# def test_endpoint_exists():
-#     response = client.get("/analytics")
-#     assert response.status_code in [
-#         200,
-#         422,
-#     ]  # Depending on whether x_var, y_var, and graph_type are provided
+# @pytest.mark.asyncio
+# async def test_get_last_7_days_expenses_success():
+#     # Mock MongoDB data
+#     mock_data = [
+#         sample_expense_data(days_ago=2, amount=50),
+#         sample_expense_data(days_ago=5, amount=75),
+#     ]
+#     with patch("api.routers.analytics.get_expense_data") as mock_get_expense_data:
+#         mock_get_expense_data.return_value = pd.DataFrame(mock_data)
+#         async with AsyncClient(app=app, base_url="http://test") as ac:
+#             response = await ac.get("/analytics/last-7-days")
 
-
-# # Test for default parameters, verifying it returns an HTML response with an image
-# def test_default_parameters():
-#     response = client.get("/analytics?x_var=date&y_var=amount&graph_type=line")
 #     assert response.status_code == 200
-#     assert '<img src="data:image/png;base64,' in response.text
+#     assert "Last 7 Days Expenses" in response.text
+#     assert "data:image/png;base64," in response.text  # Check for base64 image data
 
+# @pytest.mark.asyncio
+# async def test_get_last_7_days_expenses_no_data():
+#     with patch("api.analytics.get_expense_data") as mock_get_expense_data:
+#         mock_get_expense_data.return_value = pd.DataFrame()  # No data
+#         async with AsyncClient(app=app, base_url="http://test") as ac:
+#             response = await ac.get("/analytics/last-7-days")
 
-# # Test for line graph with valid parameters
-# def test_line_graph():
-#     response = client.get("/analytics?x_var=date&y_var=amount&graph_type=line")
+#     assert response.status_code == 404
+#     assert response.json()["detail"] == "No expenses found for the last 7 days"
+
+# @pytest.mark.asyncio
+# async def test_get_last_one_month_expenses_success():
+#     # Mock MongoDB data
+#     mock_data = [
+#         sample_expense_data(days_ago=10, amount=200),
+#         sample_expense_data(days_ago=20, amount=150),
+#     ]
+#     with patch("api.analytics.get_expense_data") as mock_get_expense_data:
+#         mock_get_expense_data.return_value = pd.DataFrame(mock_data)
+#         async with AsyncClient(app=app, base_url="http://test") as ac:
+#             response = await ac.get("/analytics/last-one-month")
+
 #     assert response.status_code == 200
-#     assert '<img src="data:image/png;base64,' in response.text
+#     assert "Last One Month Expenses" in response.text
+#     assert "data:image/png;base64," in response.text  # Check for base64 image data
 
+# @pytest.mark.asyncio
+# async def test_get_last_one_month_expenses_no_data():
+#     with patch("api.analytics.get_expense_data") as mock_get_expense_data:
+#         mock_get_expense_data.return_value = pd.DataFrame()  # No data
+#         async with AsyncClient(app=app, base_url="http://test") as ac:
+#             response = await ac.get("/analytics/last-one-month")
 
-# # Test for bar graph with valid parameters
-# def test_bar_graph():
-#     response = client.get("/analytics?x_var=category&y_var=amount&graph_type=bar")
+#     assert response.status_code == 404
+#     assert response.json()["detail"] == "No expenses found for the last one month"
+
+# @pytest.mark.asyncio
+# async def test_get_category_wise_expenses_success():
+#     # Mock MongoDB data with multiple categories
+#     mock_data = [
+#         sample_expense_data(days_ago=15, amount=100, category="food"),
+#         sample_expense_data(days_ago=10, amount=200, category="transport"),
+#         sample_expense_data(days_ago=5, amount=50, category="utilities"),
+#     ]
+#     with patch("api.analytics.get_expense_data") as mock_get_expense_data:
+#         mock_get_expense_data.return_value = pd.DataFrame(mock_data)
+#         async with AsyncClient(app=app, base_url="http://test") as ac:
+#             response = await ac.get("/analytics/category-wise")
+
 #     assert response.status_code == 200
-#     assert '<img src="data:image/png;base64,' in response.text
+#     assert "Category Wise Expenses" in response.text
+#     assert "data:image/png;base64," in response.text  # Check for base64 image data
 
+# @pytest.mark.asyncio
+# async def test_get_category_wise_expenses_no_data():
+#     with patch("api.analytics.get_expense_data") as mock_get_expense_data:
+#         mock_get_expense_data.return_value = pd.DataFrame()  # No data
+#         async with AsyncClient(app=app, base_url="http://test") as ac:
+#             response = await ac.get("/analytics/category-wise")
 
-# # Test for pie chart with valid parameters
-# def test_pie_chart():
-#     response = client.get("/analytics?x_var=category&y_var=amount&graph_type=pie")
-#     assert response.status_code == 200
-#     assert '<img src="data:image/png;base64,' in response.text
-
-
-# # Test for invalid graph type; should return a 422 error
-# def test_invalid_graph_type():
-#     response = client.get("/analytics?x_var=date&y_var=amount&graph_type=invalid")
-#     assert response.status_code == 422
-#     assert response.json() == {"detail": "Invalid graph type"}
-
-
-# # Test for invalid x and y variables; should return a 422 error
-# def test_invalid_x_y_variables():
-#     response = client.get("/analytics?x_var=NonExistent&y_var=amount")
-#     assert response.status_code == 422
-#     assert response.json() == {"detail": "Invalid x or y variable"}
-
-
-# # Test for missing parameters; should return a 422 error if any required parameters are missing
-# def test_missing_parameters():
-#     response = client.get("/analytics?x_var=date")
-#     assert response.status_code == 422
-#     assert response.json() == {"detail": "Invalid x or y variable"}
+#     assert response.status_code == 404
+#     assert response.json()["detail"] == "No expenses found"
