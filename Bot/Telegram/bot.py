@@ -29,8 +29,11 @@ expenses_collection = db.expenses
 telegram_collection = db.Telegram
 user_tokens = {}
 
+# Global dictionaries to track login and signup states and temporarily store usernames and passwords
 LOGIN_STATE = {}
+SIGNUP_STATE = {}
 USERNAMES = {}
+PASSWORDS = {}
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
@@ -52,12 +55,11 @@ async def login_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def signup_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
-    Set the task to "Signup" and prompt the user to provide signup credentials.
+    Initiate the signup process, prompting for the username first.
     """
-    global TSK
-    TSK = "Signup"
-    if update.message:
-        await update.message.reply_text("Please sign up using /login command before adding expenses.")
+    user_id = update.message.chat_id if update.message else None
+    SIGNUP_STATE[user_id] = "awaiting_username"
+    await update.message.reply_text("To sign up, please enter your desired username:")
 
 
 async def add_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -104,6 +106,41 @@ async def handle_response(update: Update, text: str):
         await handle_login(update, text)
     else:
         await update.message.reply_text("Sorry, I didn't understand that command. Please use /help to see available commands.")
+
+async def attempt_signup(update: Update, username: str, password: str):
+    """
+    Attempt to sign the user up with the provided username and password.
+    """
+    response = requests.post(f"{API_BASE_URL}/users/", json={"username": username, "password": password})
+    # Check if the username already exists
+    existing_user = await telegram_collection.find_one({"username": username})
+    if existing_user:
+        await update.message.reply_text("Username already exists. Please choose another one.")
+        return
+
+
+    if response.status_code == 200:
+        user_id = update.message.chat_id if update.message else None
+        tokenization = requests.post(
+            f"{API_BASE_URL}/users/token/?token_expires=43200",
+            data={"username": username, "password": password}
+        )
+        token = tokenization.json()["result"]["token"]
+
+        user_data = {
+            "username": username,
+            "password": password,
+            "token": token,
+            "telegram_id": user_id,
+        }
+        await telegram_collection.insert_one(user_data)
+        await update.message.reply_text("Signup successful! You can now log in using /login.")
+    elif response.status_code == 400:
+        await update.message.reply_text("Username already exists. Please choose another one.")
+    elif response.status_code == 422:
+        await update.message.reply_text("Invalid credentials. Make sure to provide both a username and password.")
+    else:
+        await update.message.reply_text(f"An error occurred: {response.text}")
 
 
 async def handle_signup(update: Update, text: str):
@@ -161,6 +198,24 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
     user_id = update.message.chat_id if update.message else None
     text = update.message.text if update.message else ""
+
+    # Check if user is in the signup process
+    if user_id in SIGNUP_STATE:
+        if SIGNUP_STATE[user_id] == "awaiting_username":
+            # Store the username and prompt for password
+            USERNAMES[user_id] = text
+            SIGNUP_STATE[user_id] = "awaiting_password"
+            await update.message.reply_text("Please enter your desired password:")
+
+        elif SIGNUP_STATE[user_id] == "awaiting_password":
+            # Retrieve username and password, then attempt signup
+            username = USERNAMES.get(user_id)
+            password = text
+            await attempt_signup(update, username, password)
+            # Clear signup state after attempting signup
+            SIGNUP_STATE.pop(user_id, None)
+            USERNAMES.pop(user_id, None)
+        return
 
     # Check if user is in login process
     if user_id in LOGIN_STATE:

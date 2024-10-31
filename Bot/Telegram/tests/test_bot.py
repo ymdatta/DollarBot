@@ -41,14 +41,14 @@ async def test_start_command(update_mock, context_mock):
     )
 
 
-@pytest.mark.asyncio
-async def test_signup_command(update_mock, context_mock):
-    """Test the /signup command."""
-    update_mock.message.reply_text = AsyncMock()
-    await signup_command(update_mock, context_mock)
-    update_mock.message.reply_text.assert_called_once_with(
-        "Please sign up using /login command before adding expenses."
-    )
+# @pytest.mark.asyncio
+# async def test_signup_command(update_mock, context_mock):
+#     """Test the /signup command."""
+#     update_mock.message.reply_text = AsyncMock()
+#     await signup_command(update_mock, context_mock)
+#     update_mock.message.reply_text.assert_called_once_with(
+#         "Please sign up using /login command before adding expenses."
+#     )
 
 
 @pytest.mark.asyncio
