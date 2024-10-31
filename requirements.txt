@@ -11,3 +11,6 @@ pylint
 mypy
 bandit
 types-python-jose
+matplotlib
+pandas
+pandas-stubs
