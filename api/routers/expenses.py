@@ -189,23 +189,10 @@ async def get_expense(expense_id: str, token: str = Header(None)):
 async def delete_all_expenses(token: str = Header(None)):
     """
     Delete all expenses for the authenticated user and update account balances.
->>>>>>> 381ee65 (delete all bug fix with new testcases added in favor of it)
 
-#     Args:
-#         token (str): Authentication token.
+    Args:
+        token (str): Authentication token.
 
-<<<<<<< HEAD
-#     Returns:
-#         dict: Message indicating the number of expenses deleted.
-#     """
-#     user_id = await verify_token(token)
-#     result = await expenses_collection.delete_many({"user_id": user_id})
-#     # TODO: update the account balance
-
-#     if result.deleted_count > 0:
-#         return {"message": f"{result.deleted_count} expenses deleted successfully"}
-#     raise HTTPException(status_code=404, detail="No expenses found to delete")
-=======
     Returns:
         dict: Message indicating the number of expenses deleted.
     """
