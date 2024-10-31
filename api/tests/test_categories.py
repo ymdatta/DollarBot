@@ -31,6 +31,50 @@ class TestCategoryCreation:
 
 
 @pytest.mark.anyio
+class TestCategoryCases:
+    async def test_empty_category_name(self, async_client_auth: AsyncClient):
+        # Test creating a category with an empty name
+        response = await async_client_auth.post(
+            "/categories/", json={"name": "", "monthly_budget": 100.0}
+        )
+        # Since the API allows empty names, expect a success message
+        assert response.status_code == 200, response.json()
+        assert response.json()["message"] == "Category created successfully"
+
+    async def test_zero_budget_category(self, async_client_auth: AsyncClient):
+        # Test creating a category with a zero budget
+        response = await async_client_auth.post(
+            "/categories/", json={"name": "ZeroBudget", "monthly_budget": 0.0}
+        )
+        # Assuming the API allows zero budget, expect a success message
+        assert response.status_code == 200, response.json()
+        assert response.json()["message"] == "Category created successfully"
+
+    async def test_fetch_empty_category_list(self, async_client_auth: AsyncClient):
+        # Fetch all categories
+        response = await async_client_auth.get("/categories/")
+        assert response.status_code == 200, response.json()
+        # Expecting categories to be in a dict format, which could contain items
+        assert isinstance(response.json()["categories"], dict)
+
+    async def test_delete_category_with_empty_name(
+        self, async_client_auth: AsyncClient
+    ):
+        # Try deleting a category with an empty name
+        response = await async_client_auth.delete("/categories/")
+        # Check for 405 Method Not Allowed if an empty name is not handled
+        assert response.status_code == 405, response.json()
+
+    async def test_get_category_with_unusual_characters(
+        self, async_client_auth: AsyncClient
+    ):
+        # Fetch a category with unusual characters in the name
+        response = await async_client_auth.get("/categories/!@#$%^&*()")
+        # Expect a 404 error for category not found
+        assert response.status_code == 404, response.json()
+
+
+@pytest.mark.anyio
 class TestCategoryUpdate:
     async def test_update_category(self, async_client_auth: AsyncClient):
         # Update the budget of an existing category
