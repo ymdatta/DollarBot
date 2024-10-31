@@ -1,20 +1,17 @@
 name: Python application
 
 on:
-  push:
+  pull_request:
     branches: [ "release/2024.2" ]
 permissions:
   contents: write
 
 jobs:
   badges:
-    if: ${{ github.actor != 'github-actions[bot]' }}
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      with:
-        ssh-key: ${{ secrets.DEPLOY_KEY }}
     - name: Set up Python 3.12
       uses: actions/setup-python@v3
       with:
