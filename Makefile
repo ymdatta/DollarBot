@@ -16,7 +16,7 @@ test: ## Start MongoDB Docker container, run tests, and clean up
 	docker run --name mongo-test -p 27017:27017 -d mongo:latest
 	@sleep 5  # Wait for MongoDB to be ready
 	@echo "Running tests..."
-	pytest -v || (docker stop mongo-test && docker rm mongo-test && exit 1)
+	pytest || (docker stop mongo-test && docker rm mongo-test && exit 1)
 	@echo "Stopping and removing Docker container..."
 	docker stop mongo-test
 	docker rm mongo-test
