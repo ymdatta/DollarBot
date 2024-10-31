@@ -1,22 +1,18 @@
-<<<<<<< HEAD
-=======
 # Define variables
 PYTHON_VERSION = 3.12.1
 VENV_NAME = mm_venv
 PYENV_ROOT = $(HOME)/.pyenv
 
->>>>>>> 73749c6 (fix for check_pyenv in makefile)
 # Help function to display available commands
 help: ## Show this help message
 	@echo "Available commands:"
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-15s\033[0m %s\n", $$1, $$2}'
 
-<<<<<<< HEAD
 install: ## Install dependencies in the virtual environment
 	pip install --upgrade pip
 	pip install -r requirements.txt
 	pre-commit install
-=======
+
 install_pyenv: ## Check if pyenv is installed, install if not
 	@if ! command -v pyenv > /dev/null 2>&1; then \
 		echo "pyenv not installed. Installing pyenv..."; \
@@ -54,13 +50,9 @@ install: create_venv ## Install dependencies in the virtual environment
 	@pyenv exec pip install --upgrade pip
 	@pyenv exec pip install -r requirements.txt
 	@pyenv exec pre-commit install
-<<<<<<< HEAD
->>>>>>> 73749c6 (fix for check_pyenv in makefile)
-=======
+
 	@echo "export PYTHONPATH=$(shell pwd):\$$PYTHONPATH" >> ~/.bashrc
 	@echo "PYTHONPATH exported to .bashrc. Please restart your terminal or run 'source ~/.bashrc' to apply changes."
-
->>>>>>> d82c173 (more changes to makefile)
 
 run: ## Run the FastAPI app using the virtual environment
 	python api/app.py
