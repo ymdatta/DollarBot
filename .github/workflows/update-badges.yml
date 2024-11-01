@@ -6,6 +6,9 @@ on:  # yamllint disable-line rule:truthy
     workflows: ["pre-commit"]  # Name of the `pre-commit` workflow
     types:
       - completed
+  pull_request:
+    branches:
+      - "release/*"
 
 permissions:
   contents: write
