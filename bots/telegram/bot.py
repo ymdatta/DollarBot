@@ -459,12 +459,51 @@ async def add_category_handler(query, context):
 
 async def edit_category_handler(query, context):
     """
-    Handle editing a category.
+    Display the user's categories as inline buttons to select for editing.
     """
-    await query.edit_message_text(
-        "Please enter the name of the category you want to edit:"
-    )
+    user_id = query.message.chat_id
+    if user_id not in user_tokens:
+        await query.edit_message_text("Please log in to edit categories.")
+        return
+
+    token = user_tokens[user_id]
+    headers = {"token": token}
+    response = requests.get(f"{API_BASE_URL}/categories/", headers=headers)
+
+    if response.status_code == 200:
+        categories_data = response.json().get("categories", {})
+
+        # Create buttons for each category
+        keyboard = [
+            [InlineKeyboardButton(category, callback_data=f"edit_{category}")]
+            for category in categories_data.keys()
+        ]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        await query.edit_message_text(
+            "Select a category to edit:", reply_markup=reply_markup
+        )
+        context.user_data["category_action"] = "edit"
+    else:
+        error_message = response.json().get("detail", "Unable to fetch categories.")
+        await query.edit_message_text(f"Error: {error_message}")
+
+async def handle_edit_category_selection(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    Handle the selection of a category for editing and prompt for a new budget.
+    """
+    query = update.callback_query
+    await query.answer()  # Acknowledge the callback
+    selected_category = query.data.replace("edit_", "")
+    
+    # Store the selected category and set up for the next step to enter a new budget
+    context.user_data["selected_category"] = selected_category
     context.user_data["category_action"] = "edit"
+    context.user_data["category_step"] = "edit_budget"  # Set the next expected step
+
+    # Prompt the user to enter the new budget
+    await query.edit_message_text(
+        f"Enter the new monthly budget for {selected_category}:"
+    )
 
 
 async def delete_category_handler(query, context):
@@ -624,6 +663,37 @@ async def combined_message_handler(update: Update, context: ContextTypes.DEFAULT
                 await update.message.reply_text("Invalid budget. Please enter a numeric value.")
             return
 
+    # Check if the user is in the process of editing a category's budget
+    elif context.user_data.get("category_action") == "edit":
+        # Editing category flow: Prompt for a new budget after category selection
+        if context.user_data.get("category_step") == "edit_budget":
+            try:
+                new_budget = float(text)
+                selected_category = context.user_data.get("selected_category")
+                
+                # Update the category budget in the database
+                token = user_tokens[user_id]
+                headers = {"token": token}
+                payload = {"name": selected_category, "monthly_budget": new_budget}
+                response = requests.put(f"{API_BASE_URL}/categories/{selected_category}", headers=headers, json=payload)
+
+                if response.status_code == 200:
+                    await update.message.reply_text(
+                        f"The budget for {selected_category} has been updated to {new_budget}."
+                    )
+                else:
+                    error_message = response.json().get("detail", "Failed to update category.")
+                    await update.message.reply_text(f"Error: {error_message}")
+                
+            except ValueError:
+                await update.message.reply_text("Invalid budget. Please enter a numeric value.")
+            
+            # Clear context data after updating
+            context.user_data.pop("category_action", None)
+            context.user_data.pop("category_step", None)
+            context.user_data.pop("selected_category", None)
+            return
+
     # Check if the user is in the signup process
     elif user_id in SIGNUP_STATE:
         if SIGNUP_STATE[user_id] == "awaiting_username":
@@ -703,13 +773,14 @@ if __name__ == "__main__":
     app.add_handler(CommandHandler("signup", signup_command))
     app.add_handler(CommandHandler("see_categories", categories_command))
     app.add_handler(CommandHandler("expense", expense_command))
-
+    
     app.add_handler(
         CallbackQueryHandler(
             category_button_handler,
             pattern="^(view_category|add_category|edit_category|delete_category)$",
         )
     )
+    app.add_handler(CallbackQueryHandler(handle_edit_category_selection, pattern="^edit_"))
     app.add_handler(CallbackQueryHandler(button_handler))
     app.add_handler(
         MessageHandler(
