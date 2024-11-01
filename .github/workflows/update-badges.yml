@@ -52,6 +52,12 @@ jobs:
           echo "MYPY_EXIT_CODE=0" >> $GITHUB_ENV
           mypy api || echo "MYPY_EXIT_CODE=1" >> $GITHUB_ENV
 
+      - name: Run Bandit
+        continue-on-error: true
+        run: |
+          echo "BANDIT_EXIT_CODE=0" >> $GITHUB_ENV
+          bandit -r api || echo "BANDIT_EXIT_CODE=1" >> $GITHUB_ENV
+
       - name: Generate black badge URL
         run: |
           BLACK_EXIT_CODE=${{ env.BLACK_EXIT_CODE }}
@@ -86,6 +92,16 @@ jobs:
             MYPY_BADGE_URL="https://img.shields.io/badge/mypy-failing-red?style=plastic"
           fi
           echo "MYPY_BADGE_URL=$MYPY_BADGE_URL" >> $GITHUB_ENV
+
+      - name: Generate Bandit badge URL
+        run: |
+          BANDIT_EXIT_CODE=${{ env.BANDIT_EXIT_CODE }}
+          if [ "$BANDIT_EXIT_CODE" -eq 0 ]; then
+            BANDIT_BADGE_URL="https://img.shields.io/badge/bandit-passing-brightgreen?style=plastic"
+          else
+            BANDIT_BADGE_URL="https://img.shields.io/badge/bandit-failing-red?style=plastic"
+          fi
+          echo "BANDIT_BADGE_URL=$BANDIT_BADGE_URL" >> $GITHUB_ENV
 
       - name: Extract number of tests, coverage, and determine result
         run: |
@@ -124,6 +140,7 @@ jobs:
           sed -i '/\[!\[badge_black\]/c\[!\[badge_black\]('"$BLACK_BADGE_URL"')]('"$RUN_LOG_URL"')' README.md
           sed -i '/\[!\[badge_pylint\]/c\[!\[badge_pylint\]('"$PYLINT_BADGE_URL"')]('"$RUN_LOG_URL"')' README.md
           sed -i '/\[!\[badge_mypy\]/c\[!\[badge_mypy\]('"$MYPY_BADGE_URL"')]('"$RUN_LOG_URL"')' README.md
+          sed -i '/\[!\[badge_bandit\]/c\[!\[badge_bandit\]('"$BANDIT_BADGE_URL"')]('"$RUN_LOG_URL"')' README.md
           sed -i '/\[!\[badge_total_tests\]/c\[!\[badge_total_tests\]('"$TOTAL_TESTS_BADGE_URL"')](https://github.com/gitsetgopack/hw2/tree/main/tests)' README.md
           sed -i '/\[!\[badge_code_coverage\]/c\[!\[badge_code_coverage\]('"$CODE_COVERAGE_BADGE_URL"')]('"$RUN_LOG_URL"')' README.md
           sed -i '/\[!\[badge_pytest_status\]/c\[!\[badge_pytest_status\]('"$PYTEST_STATUS_BADGE_URL"')]('"$RUN_LOG_URL"')' README.md
@@ -142,7 +159,7 @@ jobs:
 
       - name: Fail if any tool failed
         run: |
-          for TOOL in BLACK PYLINT PYTEST MYPY; do
+          for TOOL in BLACK PYLINT PYTEST MYPY BANDIT; do
             EXIT_CODE_VAR="${TOOL}_EXIT_CODE"
             EXIT_CODE="${!EXIT_CODE_VAR}"
             if [ "$EXIT_CODE" -ne 0 ]; then
