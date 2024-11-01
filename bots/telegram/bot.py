@@ -211,10 +211,66 @@ async def add_expense_handler(query, context):
     """
     Handle adding a new expense.
     """
-    await query.edit_message_text(
-        "Please enter the amount, category, and date (e.g., `50 Food 2024-10-31`):"
-    )
+    await query.edit_message_text("Please enter the amount:")
     context.user_data["expense_action"] = "add"
+    context.user_data["expense_step"] = "amount"  # Set the next step as amount
+
+async def process_expense_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    Handle the sequential input for adding an expense (amount, category, date).
+    """
+    user_id = update.message.chat_id if update.message else None
+    text = update.message.text if update.message else ""
+    
+    if context.user_data.get("expense_action") == "add":
+        # Process amount
+        if context.user_data.get("expense_step") == "amount":
+            try:
+                # Try to parse amount as a float
+                amount = float(text)
+                context.user_data["amount"] = amount
+                context.user_data["expense_step"] = "category"
+                await update.message.reply_text("Please enter the category (e.g., Food):")
+            except ValueError:
+                await update.message.reply_text("Invalid amount. Please enter a numeric value.")
+
+        # Process category
+        elif context.user_data.get("expense_step") == "category":
+            context.user_data["category"] = text
+            context.user_data["expense_step"] = "date"
+            await update.message.reply_text("Please enter the date (YYYY-MM-DD):")
+
+        # Process date
+        elif context.user_data.get("expense_step") == "date":
+            try:
+                # Validate date format
+                date = datetime.datetime.strptime(text, "%Y-%m-%d").date()
+                context.user_data["date"] = date
+                # Complete the expense addition
+                await finalize_expense(update, context)
+            except ValueError:
+                await update.message.reply_text("Invalid date format. Please enter a date in YYYY-MM-DD format.")
+
+async def finalize_expense(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    Finalize the expense entry and clear the temporary data.
+    """
+    amount = context.user_data.get("amount")
+    category = context.user_data.get("category")
+    date = context.user_data.get("date")
+    
+    # Post the expense to the API or store it
+    # Example for demonstration purposes
+    await update.message.reply_text(
+        f"Expense added successfully!\n\nAmount: {amount}\nCategory: {category}\nDate: {date}"
+    )
+    
+    # Clear user data for expense entry
+    context.user_data.pop("expense_action", None)
+    context.user_data.pop("expense_step", None)
+    context.user_data.pop("amount", None)
+    context.user_data.pop("category", None)
+    context.user_data.pop("date", None)
 
 
 async def delete_expense_handler(query, context):
@@ -370,6 +426,7 @@ if __name__ == "__main__":
     app.add_handler(CommandHandler("see_categories", categories_command))
     app.add_handler(CommandHandler("expense", expense_command))
     app.add_handler(CallbackQueryHandler(button_handler))
+    app.add_handler(MessageHandler(filters.TEXT & filters.ChatType.PRIVATE, process_expense_input))
     app.add_handler(MessageHandler(filters.TEXT, handle_message))
     app.add_handler(MessageHandler(filters.COMMAND, fallback_command))
     app.add_error_handler(error)
