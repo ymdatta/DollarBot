@@ -137,13 +137,36 @@ async def attempt_signup(update: Update, username: str, password: str):
     response = requests.post(
         f"{API_BASE_URL}/users/", json={"username": username, "password": password}
     )
-    # Check if the username already exists
-    existing_user = await telegram_collection.find_one({"username": username})
-    if existing_user:
-        await update.message.reply_text(
-            "Username already exists. Please choose another one."
+
+    if response.status_code == 200:
+        print("SIGNUP", username, password)
+        user_id = update.message.chat_id if update.message else None
+        tokenization = requests.post(
+            f"{API_BASE_URL}/users/token/?token_expires=43200",
+            data={"username": username, "password": password},
         )
-        return
+        token = tokenization.json()["result"]["token"]
+
+        user_data = {
+            "username": username,
+            "token": token,
+            "telegram_id": user_id,
+        }
+
+        existing_user = await telegram_collection.find_one({"telegram_id": user_id})
+        if existing_user:
+            await telegram_collection.update_one(
+                {"telegram_id": user_id}, {"$set": user_data}
+            )
+        else:
+            await telegram_collection.insert_one(user_data)
+
+        await update.message.reply_text(
+            "Signup successful! You can now log in using /login."
+        )
+        return 
+    await update.message.reply_text(f"An error occurred: {response.json().get('detail', 'Unknown error')}")
+
 
     if response.status_code == 200:
         user_id = update.message.chat_id if update.message else None
