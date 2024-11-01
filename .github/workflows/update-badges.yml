@@ -1,11 +1,11 @@
 ---
-name: Python application
+name: Update Badges
 
 on:  # yamllint disable-line rule:truthy
-  pull_request:
-    branches:
-      # - "release/2024.2"
-      - main
+  workflow_run:
+    workflows: ["Pre-Commit Check"]  # Name of the `pre-commit` workflow
+    types:
+      - completed
 
 permissions:
   contents: write
