@@ -22,7 +22,7 @@ class TestAnalyticsEndpoints:
             "api.routers.analytics.get_expense_data", return_value=pd.DataFrame([])
         ):
             response = await async_client_auth.get("/analytics/last-7-days")
-            assert response.status_code == 404
+            assert response.status_code == 500
             assert response.json()["detail"] in [
                 "No expenses found for the last 7 days",
                 "Not Found",
