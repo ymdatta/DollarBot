@@ -1,4 +1,4 @@
-"""Utilies to manage authentication"""
+"""Utilities to manage authentication"""
 
 from fastapi import HTTPException
 from jose import JWTError, jwt

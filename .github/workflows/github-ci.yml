@@ -1,21 +1,48 @@
 ---
-name: update-badge
+name: github-ci
 
 on:  # yamllint disable-line rule:truthy
-  workflow_run:
-    workflows: ["pre-commit"]  # Name of the `pre-commit` workflow
-    types:
-      - completed
+  pull_request:
+    branches:
+      - "release/*"
 
 permissions:
   contents: write
 
 jobs:
-  badges:
+
+  # pre-commit:
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - uses: actions/checkout@v4
+
+  #     - name: Set up Python 3.12
+  #       uses: actions/setup-python@v3
+  #       with:
+  #         python-version: "3.12"
+
+  #     - name: Install requirements
+  #       run: |
+  #         python -m pip install --upgrade pip
+  #         pip install -r requirements.txt
+
+  #     - name: Set PYTHONPATH
+  #       run: |
+  #         echo "PYTHONPATH=$(pwd)" >> $GITHUB_ENV
+
+  #     - name: Run pre-commit
+  #       run: |
+  #         pre-commit run --all-files
+
+  update-badges:
+    # needs: pre-commit
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Set up Python 3.12
         uses: actions/setup-python@v3
         with:
@@ -122,11 +149,12 @@ jobs:
             COVERAGE_COLOR="yellowgreen"
           elif [ "$COVERAGE" -ge 60 ]; then
             COVERAGE_COLOR="yellow"
-          elif [ "$COVERAGE" -ge 50" ]; then
+          elif [ "$COVERAGE" -ge 50 ]; then  # corrected line
             COVERAGE_COLOR="orange"
           else
             COVERAGE_COLOR="red"
           fi
+
           TOTAL_TESTS_BADGE_URL="https://img.shields.io/badge/tests-${NUM_TESTS}-blue?style=plastic&logo=pytest&logoColor=white"
           CODE_COVERAGE_BADGE_URL="https://img.shields.io/badge/coverage-${COVERAGE}%25-${COVERAGE_COLOR}?style=plastic"
           PYTEST_STATUS_BADGE_URL="https://img.shields.io/badge/PyTest-${TESTS_STATUS}-${TESTS_COLOR}?style=plastic&logo=pytest&logoColor=white"
@@ -134,28 +162,28 @@ jobs:
           echo "CODE_COVERAGE_BADGE_URL=$CODE_COVERAGE_BADGE_URL" >> $GITHUB_ENV
           echo "PYTEST_STATUS_BADGE_URL=$PYTEST_STATUS_BADGE_URL" >> $GITHUB_ENV
 
+
       - name: Update README with all the badges
         run: |
           RUN_LOG_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           sed -i '/\[!\[badge_black\]/c\[!\[badge_black\]('"$BLACK_BADGE_URL"')]('"$RUN_LOG_URL"')' README.md
           sed -i '/\[!\[badge_pylint\]/c\[!\[badge_pylint\]('"$PYLINT_BADGE_URL"')]('"$RUN_LOG_URL"')' README.md
           sed -i '/\[!\[badge_mypy\]/c\[!\[badge_mypy\]('"$MYPY_BADGE_URL"')]('"$RUN_LOG_URL"')' README.md
-          sed -i '/\[!\[badge_bandit\]/c\[!\[badge_bandit\]('"$BANDIT_BADGE_URL"')]('"$RUN_LOG_URL"')' README.md
-          sed -i '/\[!\[badge_total_tests\]/c\[!\[badge_total_tests\]('"$TOTAL_TESTS_BADGE_URL"')](https://github.com/gitsetgopack/hw2/tree/main/tests)' README.md
-          sed -i '/\[!\[badge_code_coverage\]/c\[!\[badge_code_coverage\]('"$CODE_COVERAGE_BADGE_URL"')]('"$RUN_LOG_URL"')' README.md
-          sed -i '/\[!\[badge_pytest_status\]/c\[!\[badge_pytest_status\]('"$PYTEST_STATUS_BADGE_URL"')]('"$RUN_LOG_URL"')' README.md
-          rm -rf tmp
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git checkout ${{ github.ref_name }}
-          git pull
-          if git diff --quiet; then
+            sed -i '/\[!\[badge_bandit\]/c\[!\[badge_bandit\]('"$BANDIT_BADGE_URL"')]('"$RUN_LOG_URL"')' README.md
+            sed -i '/\[!\[badge_total_tests\]/c\[!\[badge_total_tests\]('"$TOTAL_TESTS_BADGE_URL"')](https://github.com/gitsetgopack/hw2/tree/main/tests)' README.md
+            sed -i '/\[!\[badge_code_coverage\]/c\[!\[badge_code_coverage\]('"$CODE_COVERAGE_BADGE_URL"')]('"$RUN_LOG_URL"')' README.md
+            sed -i '/\[!\[badge_pytest_status\]/c\[!\[badge_pytest_status\]('"$PYTEST_STATUS_BADGE_URL"')]('"$RUN_LOG_URL"')' README.md
+            rm -rf tmp
+
+            if git diff --quiet; then
               echo "No changes to commit"
-          else
+            else
+              git config --global user.name 'github-actions[bot]'
+              git config --global user.email 'github-actions[bot]@users.noreply.github.com'
               git add README.md
               git commit -m "Update all badges in README"
-              git push origin ${{ github.ref_name }}
-          fi
+              git push origin HEAD:${{ github.head_ref }}
+            fi
 
       - name: Fail if any tool failed
         run: |
