@@ -169,22 +169,21 @@ jobs:
           sed -i '/\[!\[badge_black\]/c\[!\[badge_black\]('"$BLACK_BADGE_URL"')]('"$RUN_LOG_URL"')' README.md
           sed -i '/\[!\[badge_pylint\]/c\[!\[badge_pylint\]('"$PYLINT_BADGE_URL"')]('"$RUN_LOG_URL"')' README.md
           sed -i '/\[!\[badge_mypy\]/c\[!\[badge_mypy\]('"$MYPY_BADGE_URL"')]('"$RUN_LOG_URL"')' README.md
-          sed -i '/\[!\[badge_bandit\]/c\[!\[badge_bandit\]('"$BANDIT_BADGE_URL"')]('"$RUN_LOG_URL"')' README.md
-          sed -i '/\[!\[badge_total_tests\]/c\[!\[badge_total_tests\]('"$TOTAL_TESTS_BADGE_URL"')](https://github.com/gitsetgopack/hw2/tree/main/tests)' README.md
-          sed -i '/\[!\[badge_code_coverage\]/c\[!\[badge_code_coverage\]('"$CODE_COVERAGE_BADGE_URL"')]('"$RUN_LOG_URL"')' README.md
-          sed -i '/\[!\[badge_pytest_status\]/c\[!\[badge_pytest_status\]('"$PYTEST_STATUS_BADGE_URL"')]('"$RUN_LOG_URL"')' README.md
-          rm -rf tmp
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git checkout ${{ github.ref_name   }}
-          git pull
-          if git diff --quiet; then
+            sed -i '/\[!\[badge_bandit\]/c\[!\[badge_bandit\]('"$BANDIT_BADGE_URL"')]('"$RUN_LOG_URL"')' README.md
+            sed -i '/\[!\[badge_total_tests\]/c\[!\[badge_total_tests\]('"$TOTAL_TESTS_BADGE_URL"')](https://github.com/gitsetgopack/hw2/tree/main/tests)' README.md
+            sed -i '/\[!\[badge_code_coverage\]/c\[!\[badge_code_coverage\]('"$CODE_COVERAGE_BADGE_URL"')]('"$RUN_LOG_URL"')' README.md
+            sed -i '/\[!\[badge_pytest_status\]/c\[!\[badge_pytest_status\]('"$PYTEST_STATUS_BADGE_URL"')]('"$RUN_LOG_URL"')' README.md
+            rm -rf tmp
+
+            if git diff --quiet; then
               echo "No changes to commit"
-          else
+            else
+              git config --global user.name 'github-actions[bot]'
+              git config --global user.email 'github-actions[bot]@users.noreply.github.com'
               git add README.md
               git commit -m "Update all badges in README"
-              git push origin
-          fi
+              git push origin HEAD:${{ github.head_ref }}
+            fi
 
       - name: Fail if any tool failed
         run: |
