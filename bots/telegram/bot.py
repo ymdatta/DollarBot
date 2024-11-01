@@ -24,13 +24,7 @@ TOKEN = TELEGRAM_BOT_TOKEN
 BOT_USERNAME = "@moneyhandlerbot"
 TSK = "None"
 TOKEN_ALGORITHM = "HS256"
-# MONGO_URI = os.getenv(
-#     "MONGO_URI",
-#     "mongodb+srv://mmdb_admin:tiaNSKxzyO2NdXts@moneymanagerdb.s2bp9.mongodb.net/"
-#     "?retryWrites=true&w=majority&appName=MoneyManagerDB",
-# )
 
-# MongoDB setup
 client = AsyncIOMotorClient(MONGO_URI)
 db = client.mmdb
 users_collection = db.users
@@ -47,8 +41,19 @@ USERNAMES = {}
 PASSWORDS = {}
 
 
-def is_user_logged_in(user_id):
-    return user_id in user_tokens
+# Authentication check decorator
+def requires_auth(func):
+    async def wrapper(update: Update, context: ContextTypes.DEFAULT_TYPE, *args, **kwargs):
+        print("Checking auth")
+        user_id = update.message.chat_id
+        print(user_id)
+        user = await telegram_collection.find_one({"telegram_id": user_id})
+        print(user)
+        if user and user.get("token"):
+            return await func(update, context, *args, **kwargs, token=user.get("token"))
+        else:
+            await update.message.reply_text("You are not authenticated. Please /login")
+    return wrapper
 
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -840,24 +845,6 @@ async def unified_callback_query_handler(update: Update, context: ContextTypes.D
         await query.edit_message_text("Unknown action. Please try again.")
 
 
-# async def finalize_category_addition(update: Update, context: ContextTypes.DEFAULT_TYPE):
-#     """
-#     Finalize adding a new category and display confirmation to the user.
-#     """
-#     new_category_name = context.user_data.get("new_category_name")
-#     new_category_budget = context.user_data.get("new_category_budget")
-
-#     # Add the new category to the database or API (stub example here)
-#     await update.message.reply_text(
-#         f"New category added successfully!\n\nCategory: {new_category_name}\nMonthly Budget: {new_category_budget}"
-#     )
-
-#     # Clear user data after adding category
-#     context.user_data.pop("category_action", None)
-#     context.user_data.pop("category_step", None)
-#     context.user_data.pop("new_category_name", None)
-#     context.user_data.pop("new_category_budget", None)
-
 async def handle_general_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
     General message handler for other text messages.
@@ -894,8 +881,6 @@ if __name__ == "__main__":
             filters.TEXT & filters.ChatType.PRIVATE, combined_message_handler
         )
     )
-    # app.add_handler(MessageHandler(filters.TEXT, handle_message))
-    # app.add_handler(MessageHandler(filters.TEXT & filters.ChatType.PRIVATE, process_expense_input))
     app.add_handler(MessageHandler(filters.COMMAND, fallback_command))
     app.add_error_handler(error)
     print("Polling..")
