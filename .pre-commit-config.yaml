@@ -32,6 +32,50 @@ repos:
   #   hooks:
   #     - id: flake8
 
+  - repo: https://github.com/crate-ci/typos
+    rev: v1.13.21
+    hooks:
+      - id: typos
+
+  - repo: https://github.com/markdownlint/markdownlint
+    rev: v0.12.0
+    hooks:
+      - id: markdownlint
+        args: ["--config", ".markdownlint.json"]  # Optional: specify a config file if you have one
+
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.2.4
+    hooks:
+      - id: codespell
+        args: ["--skip=", ".git", "--quiet-level=2"]  # Optional args to customize the behavior
+
+  - repo: https://github.com/thlorenz/doctoc
+    rev: v2.0.1
+    hooks:
+      - id: doctoc
+        args: ["--github", "--maxlevel=3"]  # Customize as needed for your TOC structure
+
+  - repo: https://github.com/trufflesecurity/truffleHog
+    rev: v3.83.2
+    hooks:
+      - id: trufflehog
+        name: Detect Secrets with TruffleHog
+        args: ["--regex", "--entropy=False"]
+
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.21.2
+    hooks:
+      - id: gitleaks
+        name: Gitleaks Secret Scan
+        args: ["detect", "--no-banner", "--redact"]
+
+  - repo: https://github.com/mrtazz/checkmake
+    rev: 0.2.2
+    hooks:
+      - id: checkmake
+        name: Check Makefile Linting
+        files: ^Makefile$
+
   - repo: local
     hooks:
       - id: bandit

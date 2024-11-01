@@ -1,3 +1,11 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Money Manager](#money-manager)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Money Manager
 A REST API application for managing expenses. Build your own automation, be it telegram bot, discord or your own app.
 
