@@ -374,6 +374,7 @@ async def categories_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
     """
     Show buttons for category actions (View, Add, Edit, Delete).
     """
+    
     keyboard = [
         [InlineKeyboardButton("View Categories", callback_data="view_category")],
         [InlineKeyboardButton("Add Category", callback_data="add_category")],
@@ -445,6 +446,12 @@ async def add_category_handler(query, context):
     """
     Handle adding a new category.
     """
+    user_id = query.message.chat_id
+    if user_id not in user_tokens:
+        await query.edit_message_text("Please log in to view categories.")
+        return
+    
+
     await query.edit_message_text("Please enter the name of the new category:")
     context.user_data["category_action"] = "add"
     context.user_data["category_step"] = "add_name"
@@ -505,16 +512,58 @@ async def view_categories(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def finalize_category_addition(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
-    Finalize adding a new category and display confirmation to the user.
+    Finalize adding a new category by making an API request and confirm to the user.
     """
+    user_id = update.message.chat_id if update.message else None
+    token = user_tokens[user_id]
+
+    if not token:
+        await update.message.reply_text("Please log in to add a category.")
+        return
+
     new_category_name = context.user_data.get("new_category_name")
     new_category_budget = context.user_data.get("new_category_budget")
 
-    # Here, you would add the code to save the new category and budget to the database or API
-    # For this example, we will just confirm the addition
-    await update.message.reply_text(
-        f"New category added successfully!\n\nCategory: {new_category_name}\nMonthly Budget: {new_category_budget}"
-    )
+    # Prepare headers and payload for the API request
+    headers = {
+        "accept": "application/json",
+        "token": token,
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "name": new_category_name,
+        "monthly_budget": new_category_budget
+    }
+
+    # Log request details for debugging
+    print("Sending request to add category")
+    print(f"Headers: {headers}")
+    print(f"Payload: {payload}")
+    print(f"API Endpoint: https://frightening-orb-747j6q4gjjqcwr7j-9999.app.github.dev/categories/")
+
+    try:
+        # Send the request to add the category
+        response = requests.post(
+            f"{API_BASE_URL}/categories/",
+            json=payload,
+            headers=headers
+        )
+        
+        # Log response details
+        print(f"Response status code: {response.status_code}")
+        print(f"Response content: {response.text}")
+
+        if response.status_code == 200:
+            await update.message.reply_text(
+                f"New category added successfully!\n\nCategory: {new_category_name}\nMonthly Budget: {new_category_budget}"
+            )
+        else:
+            error_message = response.json().get("detail", "An error occurred while adding the category.")
+            await update.message.reply_text(f"Failed to add category. Error: {error_message}")
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        await update.message.reply_text("An unexpected error occurred while trying to add the category.")
 
     # Clear category addition state
     context.user_data.pop("category_action", None)
@@ -607,23 +656,23 @@ async def combined_message_handler(update: Update, context: ContextTypes.DEFAULT
     else:
         await handle_general_message(update, context)
 
-async def finalize_category_addition(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """
-    Finalize adding a new category and display confirmation to the user.
-    """
-    new_category_name = context.user_data.get("new_category_name")
-    new_category_budget = context.user_data.get("new_category_budget")
+# async def finalize_category_addition(update: Update, context: ContextTypes.DEFAULT_TYPE):
+#     """
+#     Finalize adding a new category and display confirmation to the user.
+#     """
+#     new_category_name = context.user_data.get("new_category_name")
+#     new_category_budget = context.user_data.get("new_category_budget")
 
-    # Add the new category to the database or API (stub example here)
-    await update.message.reply_text(
-        f"New category added successfully!\n\nCategory: {new_category_name}\nMonthly Budget: {new_category_budget}"
-    )
+#     # Add the new category to the database or API (stub example here)
+#     await update.message.reply_text(
+#         f"New category added successfully!\n\nCategory: {new_category_name}\nMonthly Budget: {new_category_budget}"
+#     )
 
-    # Clear user data after adding category
-    context.user_data.pop("category_action", None)
-    context.user_data.pop("category_step", None)
-    context.user_data.pop("new_category_name", None)
-    context.user_data.pop("new_category_budget", None)
+#     # Clear user data after adding category
+#     context.user_data.pop("category_action", None)
+#     context.user_data.pop("category_step", None)
+#     context.user_data.pop("new_category_name", None)
+#     context.user_data.pop("new_category_budget", None)
 
 async def handle_general_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
