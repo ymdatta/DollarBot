@@ -9,16 +9,14 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import (
     Application,
+    CallbackQueryHandler,
     CommandHandler,
     ContextTypes,
     MessageHandler,
-    CallbackQueryHandler,
     filters,
 )
 
-from config import MONGO_URI
-from config import TELEGRAM_BOT_TOKEN
-from config import TELEGRAM_BOT_API_BASE_URL
+from config import MONGO_URI, TELEGRAM_BOT_API_BASE_URL, TELEGRAM_BOT_TOKEN
 
 # Constants
 API_BASE_URL = TELEGRAM_BOT_API_BASE_URL
@@ -48,8 +46,10 @@ SIGNUP_STATE = {}
 USERNAMES = {}
 PASSWORDS = {}
 
+
 def is_user_logged_in(user_id):
     return user_id in user_tokens
+
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
@@ -167,6 +167,7 @@ async def attempt_signup(update: Update, username: str, password: str):
     else:
         await update.message.reply_text(f"An error occurred: {response.text}")
 
+
 async def expense_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
     Show buttons for expense actions (Add, Delete, View).
@@ -174,13 +175,15 @@ async def expense_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.message.chat_id if update.message else None
 
     if not is_user_logged_in(user_id):
-        await update.message.reply_text("Please log in using /login command to access this feature.")
+        await update.message.reply_text(
+            "Please log in using /login command to access this feature."
+        )
         return
-    
+
     keyboard = [
         [InlineKeyboardButton("Add Expense", callback_data="add_expense")],
         [InlineKeyboardButton("Delete Expense", callback_data="delete_expense")],
-        [InlineKeyboardButton("View Expenses", callback_data="view_expenses")]
+        [InlineKeyboardButton("View Expenses", callback_data="view_expenses")],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     await update.message.reply_text(
@@ -202,6 +205,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     elif query.data == "view_expenses":
         await view_expenses_handler(query, context)
 
+
 async def add_expense_handler(query, context):
     """
     Start the process of adding a new expense by prompting for the amount.
@@ -210,13 +214,14 @@ async def add_expense_handler(query, context):
     context.user_data["expense_action"] = "add"
     context.user_data["expense_step"] = "amount"  # Set the next step as amount
 
+
 async def process_expense_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
     Handle the sequential input for adding an expense (amount, category, date).
     """
     user_id = update.message.chat_id if update.message else None
     text = update.message.text if update.message else ""
-    
+
     if context.user_data.get("expense_action") == "add":
         # Process amount
         if context.user_data.get("expense_step") == "amount":
@@ -225,9 +230,13 @@ async def process_expense_input(update: Update, context: ContextTypes.DEFAULT_TY
                 amount = float(text)
                 context.user_data["amount"] = amount
                 context.user_data["expense_step"] = "category"
-                await update.message.reply_text("Please enter the category (e.g., Food):")
+                await update.message.reply_text(
+                    "Please enter the category (e.g., Food):"
+                )
             except ValueError:
-                await update.message.reply_text("Invalid amount. Please enter a numeric value.")
+                await update.message.reply_text(
+                    "Invalid amount. Please enter a numeric value."
+                )
 
         # Process category
         elif context.user_data.get("expense_step") == "category":
@@ -244,7 +253,10 @@ async def process_expense_input(update: Update, context: ContextTypes.DEFAULT_TY
                 # Complete the expense addition
                 await finalize_expense(update, context)
             except ValueError:
-                await update.message.reply_text("Invalid date format. Please enter a date in YYYY-MM-DD format.")
+                await update.message.reply_text(
+                    "Invalid date format. Please enter a date in YYYY-MM-DD format."
+                )
+
 
 async def finalize_expense(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
@@ -253,13 +265,13 @@ async def finalize_expense(update: Update, context: ContextTypes.DEFAULT_TYPE):
     amount = context.user_data.get("amount")
     category = context.user_data.get("category")
     date = context.user_data.get("date")
-    
+
     # Post the expense to the API or store it
     # Example for demonstration purposes
     await update.message.reply_text(
         f"Expense added successfully!\n\nAmount: {amount}\nCategory: {category}\nDate: {date}"
     )
-    
+
     # Clear user data for expense entry
     context.user_data.pop("expense_action", None)
     context.user_data.pop("expense_step", None)
@@ -267,12 +279,16 @@ async def finalize_expense(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data.pop("category", None)
     context.user_data.pop("date", None)
 
+
 async def delete_expense_handler(query, context):
     """
     Handle deleting an expense.
     """
-    await query.edit_message_text("Please enter the ID or description of the expense to delete:")
+    await query.edit_message_text(
+        "Please enter the ID or description of the expense to delete:"
+    )
     context.user_data["expense_action"] = "delete"
+
 
 async def view_expenses_handler(query, context):
     """
@@ -282,6 +298,7 @@ async def view_expenses_handler(query, context):
     # You can fetch actual expenses from your database and format them here.
     expense_list = "1. Food - $50\n2. Transport - $15"
     await query.edit_message_text(f"Here are your recent expenses:\n\n{expense_list}")
+
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
@@ -355,21 +372,50 @@ async def attempt_login(update: Update, username: str, password: str):
 
 async def categories_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
-    Handle the /categories command, providing a list of categories.
+    Show buttons for category actions (View, Add, Edit, Delete).
     """
-    user_id = update.message.chat_id
+    keyboard = [
+        [InlineKeyboardButton("View Categories", callback_data="view_category")],
+        [InlineKeyboardButton("Add Category", callback_data="add_category")],
+        [InlineKeyboardButton("Edit Category", callback_data="edit_category")],
+        [InlineKeyboardButton("Delete Category", callback_data="delete_category")],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await update.message.reply_text(
+        "Choose an action for categories:", reply_markup=reply_markup
+    )
 
+
+async def category_button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    Handle inline button actions for categories.
+    """
+    query = update.callback_query
+    await query.answer()  # Acknowledge the callback
+
+    if query.data == "view_category":
+        await view_category_handler(query, context)
+    elif query.data == "add_category":
+        await add_category_handler(query, context)
+    elif query.data == "edit_category":
+        await edit_category_handler(query, context)
+    elif query.data == "delete_category":
+        await delete_category_handler(query, context)
+
+
+async def view_category_handler(query, context):
+    """
+    Handle viewing categories with table format.
+    """
+    user_id = query.message.chat_id
     if user_id not in user_tokens:
-        await update.message.reply_text(
-            "Please log in using /login command to view categories."
-        )
+        await query.edit_message_text("Please log in to view categories.")
         return
 
     token = user_tokens[user_id]
     headers = {"token": token}
-
-    # Fetch categories from API
     response = requests.get(f"{API_BASE_URL}/categories/", headers=headers)
+
     if response.status_code == 200:
         categories_data = response.json().get("categories", {})
 
@@ -389,53 +435,177 @@ async def categories_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
         )
 
         # Send the formatted table as a message with monospaced font
-        await update.message.reply_text(table_str, parse_mode="MarkdownV2")
+        await query.edit_message_text(table_str, parse_mode="MarkdownV2")
     else:
         error_message = response.json().get("detail", "Unable to fetch categories.")
-        await update.message.reply_text(f"Error: {error_message}")
+        await query.edit_message_text(f"Error: {error_message}")
+
+
+async def add_category_handler(query, context):
+    """
+    Handle adding a new category.
+    """
+    await query.edit_message_text("Please enter the name of the new category:")
+    context.user_data["category_action"] = "add"
+
+
+async def edit_category_handler(query, context):
+    """
+    Handle editing a category.
+    """
+    await query.edit_message_text(
+        "Please enter the name of the category you want to edit:"
+    )
+    context.user_data["category_action"] = "edit"
+
+
+async def delete_category_handler(query, context):
+    """
+    Handle deleting a category.
+    """
+    await query.edit_message_text(
+        "Please enter the name of the category you want to delete:"
+    )
+    context.user_data["category_action"] = "delete"
+
 
 async def fallback_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Unrecognized command")
 
 
-async def combined_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def view_categories(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
-    Handle incoming text messages for either general handling or processing expense input,
-    based on the user's context.
+    Sample function to view categories.
+    """
+    # Sample categories data for demonstration
+    categories_data = {
+        "Food": {"monthly_budget": 200},
+        "Transport": {"monthly_budget": 100},
+        "Entertainment": {"monthly_budget": 150},
+    }
+
+    # Prepare table header and rows with fixed-width formatting
+    header = f"{'Category':<20} {'Monthly Budget':>15}\n"
+    separator = "-" * 35
+    rows = [
+        f"{category:<20} {details['monthly_budget']:>15.2f}"
+        for category, details in categories_data.items()
+    ]
+
+    # Combine header, separator, and rows into one string
+    table_str = (
+        f"Here are your available categories with budgets:\n\n```\n{header}{separator}\n"
+        + "\n".join(rows)
+        + "\n```"
+    )
+
+    # Send the formatted table as a message with monospaced font
+    await update.message.reply_text(table_str, parse_mode="MarkdownV2")
+
+
+async def combined_message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    Combined handler for general messages, expense input processing, and category input.
     """
     user_id = update.message.chat_id if update.message else None
     text = update.message.text if update.message else ""
 
-    # Check if the user is in the middle of adding an expense
+    # Check if the user is in the process of adding an expense
     if context.user_data.get("expense_action") == "add":
-        # Process expense input
         if context.user_data.get("expense_step") == "amount":
             try:
-                # Try to parse amount as a float
                 amount = float(text)
                 context.user_data["amount"] = amount
                 context.user_data["expense_step"] = "category"
-                await update.message.reply_text("Please enter the category (e.g., Food):")
+                await update.message.reply_text(
+                    "Please enter the category (e.g., Food):"
+                )
             except ValueError:
-                await update.message.reply_text("Invalid amount. Please enter a numeric value.")
+                await update.message.reply_text(
+                    "Invalid amount. Please enter a numeric value."
+                )
+            return
 
         elif context.user_data.get("expense_step") == "category":
             context.user_data["category"] = text
             context.user_data["expense_step"] = "date"
             await update.message.reply_text("Please enter the date (YYYY-MM-DD):")
+            return
 
         elif context.user_data.get("expense_step") == "date":
             try:
-                # Validate date format
                 date = datetime.datetime.strptime(text, "%Y-%m-%d").date()
                 context.user_data["date"] = date
                 await finalize_expense(update, context)
             except ValueError:
-                await update.message.reply_text("Invalid date format. Please enter a date in YYYY-MM-DD format.")
-    
+                await update.message.reply_text(
+                    "Invalid date format. Please enter a date in YYYY-MM-DD format."
+                )
+            return
+
+    # Check if the user is in the process of handling categories
+    elif context.user_data.get("category_action") == "manage":
+        if context.user_data.get("category_step") == "view":
+            await view_categories(update, context)
+            context.user_data["category_action"] = None  # Clear after viewing
+            return
+
+        elif context.user_data.get("category_step") == "add":
+            context.user_data["new_category"] = text
+            await update.message.reply_text(f"Category '{text}' added successfully!")
+            context.user_data["category_action"] = None  # Clear after adding
+            return
+
+        elif context.user_data.get("category_step") == "delete":
+            context.user_data["category_to_delete"] = text
+            await update.message.reply_text(f"Category '{text}' deleted successfully!")
+            context.user_data["category_action"] = None  # Clear after deleting
+            return
+
+    # Check if user is in the signup process
+    elif user_id in SIGNUP_STATE:
+        if SIGNUP_STATE[user_id] == "awaiting_username":
+            USERNAMES[user_id] = text
+            SIGNUP_STATE[user_id] = "awaiting_password"
+            await update.message.reply_text("Please enter your desired password:")
+        elif SIGNUP_STATE[user_id] == "awaiting_password":
+            username = USERNAMES.get(user_id)
+            password = text
+            await attempt_signup(update, username, password)
+            SIGNUP_STATE.pop(user_id, None)
+            USERNAMES.pop(user_id, None)
+        return
+
+    # Check if user is in login process
+    elif user_id in LOGIN_STATE:
+        if LOGIN_STATE[user_id] == "awaiting_username":
+            USERNAMES[user_id] = text
+            LOGIN_STATE[user_id] = "awaiting_password"
+            await update.message.reply_text("Please enter your password:")
+        elif LOGIN_STATE[user_id] == "awaiting_password":
+            username = USERNAMES.get(user_id)
+            password = text
+            await attempt_login(update, username, password)
+            LOGIN_STATE.pop(user_id, None)
+            USERNAMES.pop(user_id, None)
+        return
+
+    # Handle general messages or commands that don't fall into the above categories
     else:
-        # If not in expense input process, handle as a general message
-        await handle_message(update, context)
+        await handle_general_message(update, context)
+
+
+async def handle_general_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    General message handler for other text messages.
+    """
+    text = update.message.text
+    if text.lower() in ("hi", "hello"):
+        await update.message.reply_text("Hello! How can I assist you today?")
+    else:
+        await update.message.reply_text(
+            "Sorry, I didn't understand that. Please use /help to see available commands."
+        )
 
 
 async def error(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -454,8 +624,19 @@ if __name__ == "__main__":
     app.add_handler(CommandHandler("signup", signup_command))
     app.add_handler(CommandHandler("see_categories", categories_command))
     app.add_handler(CommandHandler("expense", expense_command))
+
+    app.add_handler(
+        CallbackQueryHandler(
+            category_button_handler,
+            pattern="^(view_category|add_category|edit_category|delete_category)$",
+        )
+    )
     app.add_handler(CallbackQueryHandler(button_handler))
-    app.add_handler(MessageHandler(filters.TEXT & filters.ChatType.PRIVATE, combined_handler))
+    app.add_handler(
+        MessageHandler(
+            filters.TEXT & filters.ChatType.PRIVATE, combined_message_handler
+        )
+    )
     # app.add_handler(MessageHandler(filters.TEXT, handle_message))
     # app.add_handler(MessageHandler(filters.TEXT & filters.ChatType.PRIVATE, process_expense_input))
     app.add_handler(MessageHandler(filters.COMMAND, fallback_command))
