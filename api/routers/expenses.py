@@ -11,8 +11,8 @@ from fastapi import APIRouter, Header, HTTPException
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel
 
-from api.config import MONGO_URI
 from api.utils.auth import verify_token
+from config import MONGO_URI
 
 currency_converter = CurrencyConverter()
 
@@ -130,14 +130,14 @@ async def add_expense(expense: ExpenseCreate, token: str = Header(None)):
     expense_data.update(
         {
             "user_id": user_id,
-            "date": expense_date.isoformat(),
+            "date": expense_date,
         }
     )
     result = await expenses_collection.insert_one(expense_data)
 
     if result.inserted_id:
         expense_data["date"] = (
-            expense_date.isoformat()
+            expense_date
         )  # Ensure consistent formatting for response
         return {
             "message": "Expense added successfully",

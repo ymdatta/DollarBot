@@ -16,7 +16,7 @@ test: ## Start MongoDB Docker container, run tests, and clean up
 	docker run --name mongo-test -p 27017:27017 -d mongo:latest
 	@sleep 5  # Wait for MongoDB to be ready
 	@echo "Running tests..."
-	pytest || (docker stop mongo-test && docker rm mongo-test && exit 1)
+	pytest -v || (docker stop mongo-test && docker rm mongo-test && exit 1)
 	@echo "Stopping and removing Docker container..."
 	docker stop mongo-test
 	docker rm mongo-test
@@ -30,6 +30,7 @@ clean: ## Clean up Python bytecode files and caches
 	@docker rm mongo-test || true
 	find . -type f -name "*.pyc" -delete
 	find . -type f -name ".coverage" -delete
+	find . -type f -name ".python-version" -delete
 	find . -type d -name "__pycache__" -exec rm -rf {} +
 	find . -type d -name ".pytest_cache" -exec rm -rf {} +
 	find . -type d -name ".mypy_cache" -exec rm -rf {} +
