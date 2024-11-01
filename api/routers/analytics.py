@@ -141,7 +141,7 @@ async def expense_pie(x_days: int, token: str = Header(None)):
     plt.figure(figsize=(8, 8))
     plt.pie(
         category_expenses,
-        labels=category_expenses.index,
+        labels=category_expenses.index.astype(str).tolist(),
         autopct="%1.1f%%",
         startangle=140,
         colors=["#FF9999", "#FF4D4D", "#FF0000"],
