@@ -1,4 +1,13 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Money Manager](#money-manager)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Money Manager
+
 A REST API application for managing expenses. Build your own automation, be it telegram bot, discord or your own app.
 
 ![built_with_love](http://ForTheBadge.com/images/badges/built-with-love.svg)
@@ -6,6 +15,7 @@ A REST API application for managing expenses. Build your own automation, be it t
 ---
 
 #### Quality
+<<<<<<< HEAD
 [![badge_pytest_status](https://img.shields.io/badge/PyTest-passing-brightgreen?style=plastic&logo=pytest&logoColor=white)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11488971402)
 [![badge_code_coverage](https://img.shields.io/badge/coverage-98%25-brightgreen?style=plastic)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11488971402)
 [![badge_total_tests](https://img.shields.io/badge/tests-69-blue?style=plastic&logo=pytest&logoColor=white&link=https%3A%2F%2Fgithub.com%2Fgitsetgopack%2Fhw2%2Ftree%2Fmain%2Ftests)](https://github.com/gitsetgopack/hw2/tree/main/tests)
@@ -18,15 +28,25 @@ A REST API application for managing expenses. Build your own automation, be it t
 [![badge_total_tests](https://img.shields.io/badge/tests-72-blue?style=plastic&logo=pytest&logoColor=white&link=https%3A%2F%2Fgithub.com%2Fgitsetgopack%2Fhw2%2Ftree%2Fmain%2Ftests)](https://github.com/gitsetgopack/hw2/tree/main/tests)
 [![badge_pylint](https://img.shields.io/badge/pylint-10.00-brightgreen?style=plastic)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11605743334)
 [![badge_black](https://img.shields.io/badge/black_formatter-failing-red?style=plastic&labelColor=black)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11605743334)
+=======
+>>>>>>> origin/release/2024.2
 
-<!-- [![badge_pyright](https://img.shields.io/badge/pyright-passing-brightgreen)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11190159988) -->
+[![badge_pytest_status](https://img.shields.io/badge/PyTest-passing-brightgreen?style=plastic&logo=pytest&logoColor=white)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11624312610)
+[![badge_code_coverage](https://img.shields.io/badge/coverage-95%25-brightgreen?style=plastic)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11624312610)
+[![badge_total_tests](https://img.shields.io/badge/tests-72-blue?style=plastic&logo=pytest&logoColor=white)](https://github.com/gitsetgopack/hw2/tree/main/tests)
+[![badge_pylint](https://img.shields.io/badge/pylint-10.00-brightgreen?style=plastic)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11624312610)
+[![badge_black](https://img.shields.io/badge/black_formatter-passing-brightgreen?style=plastic&labelColor=black)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11624312610)
+[![badge_mypy](https://img.shields.io/badge/mypy-passing-brightgreen?style=plastic)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11624312610)
+[![badge_bandit](https://img.shields.io/badge/bandit-passing-brightgreen?style=plastic)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11624312610)
 
 #### Standards
+
 ![black](https://img.shields.io/badge/code%20style-black-black?style=plastic&)
 ![license](https://img.shields.io/github/license/gitsetgopack/MoneyManager?style=plastic&)
 ![maintained](https://img.shields.io/badge/Maintained%3F-yes-green.svg?style=plastic&)
 
 #### Stats
+
 ![pr_open](https://img.shields.io/github/issues-pr/gitsetgopack/MoneyManager?style=plastic&)
 ![pr_close](https://img.shields.io/github/issues-pr-closed/gitsetgopack/MoneyManager?style=plastic&)
 ![issue_open](https://img.shields.io/github/issues/gitsetgopack/MoneyManager.svg?style=plastic&)
@@ -38,8 +58,8 @@ A REST API application for managing expenses. Build your own automation, be it t
 ![stars](https://img.shields.io/github/stars/gitsetgopack/MoneyManager?style=plastic&)
 ![downloads](https://img.shields.io/github/downloads/gitsetgopack/MoneyManager/total?style=plastic&)
 
-
 #### Tools & Technologies
+
 [![Python](https://img.shields.io/badge/python%203.12-3670A0?logo=python&logoColor=ffdd54)](https://www.python.org/downloads/release/python-3121/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?logo=mongodb&logoColor=white)](https://www.mongodb.com/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-009485.svg?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)

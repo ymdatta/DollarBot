@@ -13,7 +13,7 @@ class TestAccountCreation:
         """
         response = await async_client_auth.post(
             "/accounts/",
-            json={"name": "Invest ment", "balance": 1000.0, "currency": "USD"},
+            json={"name": "Invest meant", "balance": 1000.0, "currency": "USD"},
         )
         assert response.status_code == 200
         assert "Account created successfully" in response.json()["message"]
@@ -99,7 +99,7 @@ class TestAccountGet:
         )
         await async_client_auth.post(
             "/accounts/",
-            json={"name": "Invest ment", "balance": 1000.0, "currency": "USD"},
+            json={"name": "Invest meant", "balance": 1000.0, "currency": "USD"},
         )
 
         # Retrieve all accounts
@@ -117,7 +117,7 @@ class TestAccountUpdate:
         # Create an account first
         create_response = await async_client_auth.post(
             "/accounts/",
-            json={"name": "Invest ment 2", "balance": 1000.0, "currency": "USD"},
+            json={"name": "Invest meant 2", "balance": 1000.0, "currency": "USD"},
         )
         account_id = create_response.json()["account_id"]
 
