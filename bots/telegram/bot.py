@@ -447,6 +447,7 @@ async def add_category_handler(query, context):
     """
     await query.edit_message_text("Please enter the name of the new category:")
     context.user_data["category_action"] = "add"
+    context.user_data["category_step"] = "add_name"
 
 
 async def edit_category_handler(query, context):
@@ -502,28 +503,43 @@ async def view_categories(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Send the formatted table as a message with monospaced font
     await update.message.reply_text(table_str, parse_mode="MarkdownV2")
 
+async def finalize_category_addition(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    Finalize adding a new category and display confirmation to the user.
+    """
+    new_category_name = context.user_data.get("new_category_name")
+    new_category_budget = context.user_data.get("new_category_budget")
+
+    # Here, you would add the code to save the new category and budget to the database or API
+    # For this example, we will just confirm the addition
+    await update.message.reply_text(
+        f"New category added successfully!\n\nCategory: {new_category_name}\nMonthly Budget: {new_category_budget}"
+    )
+
+    # Clear category addition state
+    context.user_data.pop("category_action", None)
+    context.user_data.pop("category_step", None)
+    context.user_data.pop("new_category_name", None)
+    context.user_data.pop("new_category_budget", None)
 
 async def combined_message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
-    Combined handler for general messages, expense input processing, and category input.
+    Combined handler for handling category and expense inputs step-by-step.
     """
     user_id = update.message.chat_id if update.message else None
     text = update.message.text if update.message else ""
 
     # Check if the user is in the process of adding an expense
     if context.user_data.get("expense_action") == "add":
+        # Process expense input step by step
         if context.user_data.get("expense_step") == "amount":
             try:
                 amount = float(text)
                 context.user_data["amount"] = amount
                 context.user_data["expense_step"] = "category"
-                await update.message.reply_text(
-                    "Please enter the category (e.g., Food):"
-                )
+                await update.message.reply_text("Please enter the category (e.g., Food):")
             except ValueError:
-                await update.message.reply_text(
-                    "Invalid amount. Please enter a numeric value."
-                )
+                await update.message.reply_text("Invalid amount. Please enter a numeric value.")
             return
 
         elif context.user_data.get("expense_step") == "category":
@@ -538,31 +554,28 @@ async def combined_message_handler(update: Update, context: ContextTypes.DEFAULT
                 context.user_data["date"] = date
                 await finalize_expense(update, context)
             except ValueError:
-                await update.message.reply_text(
-                    "Invalid date format. Please enter a date in YYYY-MM-DD format."
-                )
+                await update.message.reply_text("Invalid date format. Please enter a date in YYYY-MM-DD format.")
             return
 
-    # Check if the user is in the process of handling categories
-    elif context.user_data.get("category_action") == "manage":
-        if context.user_data.get("category_step") == "view":
-            await view_categories(update, context)
-            context.user_data["category_action"] = None  # Clear after viewing
+    # Check if the user is in the process of adding a new category
+    elif context.user_data.get("category_action") == "add":
+        # Category addition flow: Step-by-step inputs
+        if context.user_data.get("category_step") == "add_name":
+            context.user_data["new_category_name"] = text
+            context.user_data["category_step"] = "add_budget"
+            await update.message.reply_text("Please enter the monthly budget for this category:")
             return
 
-        elif context.user_data.get("category_step") == "add":
-            context.user_data["new_category"] = text
-            await update.message.reply_text(f"Category '{text}' added successfully!")
-            context.user_data["category_action"] = None  # Clear after adding
+        elif context.user_data.get("category_step") == "add_budget":
+            try:
+                monthly_budget = float(text)
+                context.user_data["new_category_budget"] = monthly_budget
+                await finalize_category_addition(update, context)
+            except ValueError:
+                await update.message.reply_text("Invalid budget. Please enter a numeric value.")
             return
 
-        elif context.user_data.get("category_step") == "delete":
-            context.user_data["category_to_delete"] = text
-            await update.message.reply_text(f"Category '{text}' deleted successfully!")
-            context.user_data["category_action"] = None  # Clear after deleting
-            return
-
-    # Check if user is in the signup process
+    # Check if the user is in the signup process
     elif user_id in SIGNUP_STATE:
         if SIGNUP_STATE[user_id] == "awaiting_username":
             USERNAMES[user_id] = text
@@ -576,7 +589,7 @@ async def combined_message_handler(update: Update, context: ContextTypes.DEFAULT
             USERNAMES.pop(user_id, None)
         return
 
-    # Check if user is in login process
+    # Check if the user is in the login process
     elif user_id in LOGIN_STATE:
         if LOGIN_STATE[user_id] == "awaiting_username":
             USERNAMES[user_id] = text
@@ -590,10 +603,27 @@ async def combined_message_handler(update: Update, context: ContextTypes.DEFAULT
             USERNAMES.pop(user_id, None)
         return
 
-    # Handle general messages or commands that don't fall into the above categories
+    # Handle general messages or unrecognized commands
     else:
         await handle_general_message(update, context)
 
+async def finalize_category_addition(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    Finalize adding a new category and display confirmation to the user.
+    """
+    new_category_name = context.user_data.get("new_category_name")
+    new_category_budget = context.user_data.get("new_category_budget")
+
+    # Add the new category to the database or API (stub example here)
+    await update.message.reply_text(
+        f"New category added successfully!\n\nCategory: {new_category_name}\nMonthly Budget: {new_category_budget}"
+    )
+
+    # Clear user data after adding category
+    context.user_data.pop("category_action", None)
+    context.user_data.pop("category_step", None)
+    context.user_data.pop("new_category_name", None)
+    context.user_data.pop("new_category_budget", None)
 
 async def handle_general_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
