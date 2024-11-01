@@ -1,9 +1,9 @@
 ---
-name: Update Badges
+name: update-badge
 
 on:  # yamllint disable-line rule:truthy
   workflow_run:
-    workflows: ["Pre-Commit Check"]  # Name of the `pre-commit` workflow
+    workflows: ["pre-commit"]  # Name of the `pre-commit` workflow
     types:
       - completed
 
