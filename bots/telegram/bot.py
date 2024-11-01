@@ -64,15 +64,6 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(
             "Welcome to Money Manager! Please singup using /signup or log in using /login"
         )
-async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """
-    Handle the /start command, providing a welcome message and instructions to log in.
-    """
-    if update.message:
-        await update.message.reply_text(
-            "Welcome to Money Manager! Please singup using /signup or log in using /login"
-        )
-
 
 
 async def login_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
