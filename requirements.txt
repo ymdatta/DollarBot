@@ -5,6 +5,7 @@ python-jose
 pytest
 pytest-cov
 pre-commit
+isort
 PyJWT
 black
 pylint

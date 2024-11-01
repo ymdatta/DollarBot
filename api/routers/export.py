@@ -9,8 +9,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
 from api.config import MONGO_URI
-from api.routers.accounts import \
-    accounts_collection  # Import the accounts collection
+from api.routers.accounts import accounts_collection  # Import the accounts collection
 from api.routers.expenses import expenses_collection
 from api.utils.auth import verify_token  # Import your authentication function
 
