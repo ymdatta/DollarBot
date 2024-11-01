@@ -508,12 +508,76 @@ async def handle_edit_category_selection(update: Update, context: ContextTypes.D
 
 async def delete_category_handler(query, context):
     """
-    Handle deleting a category.
+    Display the user's categories as inline buttons for deletion.
     """
-    await query.edit_message_text(
-        "Please enter the name of the category you want to delete:"
-    )
-    context.user_data["category_action"] = "delete"
+    user_id = query.message.chat_id
+    if user_id not in user_tokens:
+        await query.edit_message_text("Please log in to delete categories.")
+        return
+
+    token = user_tokens[user_id]
+    headers = {"token": token}
+    response = requests.get(f"{API_BASE_URL}/categories/", headers=headers)
+
+    if response.status_code == 200:
+        categories_data = response.json().get("categories", {})
+
+        # Create buttons for each category
+        keyboard = [
+            [InlineKeyboardButton(category, callback_data=f"delete_{category}")]
+            for category in categories_data.keys()
+        ]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        await query.edit_message_text(
+            "Select a category to delete:", reply_markup=reply_markup
+        )
+        context.user_data["category_action"] = "delete"
+    else:
+        error_message = response.json().get("detail", "Unable to fetch categories.")
+        await query.edit_message_text(f"Error: {error_message}")
+
+async def handle_delete_category_selection(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    Handle the selection of a category for deletion and confirm deletion.
+    """
+    query = update.callback_query
+    await query.answer()  # Acknowledge the callback
+    selected_category = query.data.replace("delete_", "")
+
+    # Confirm deletion with the user
+    user_id = query.message.chat_id
+    token = user_tokens[user_id]
+    headers = {"token": token}
+    response = requests.delete(f"{API_BASE_URL}/categories/{selected_category}", headers=headers)
+
+    if response.status_code == 200:
+        await query.edit_message_text(f"The category '{selected_category}' has been successfully deleted.")
+    else:
+        error_message = response.json().get("detail", "Failed to delete category.")
+        await query.edit_message_text(f"Error: {error_message}")
+
+async def delete_selected_category(query, context, selected_category):
+    """
+    Delete the specified category and notify the user of the result.
+    """
+    user_id = query.message.chat_id
+    token = user_tokens.get(user_id)
+    
+    # Ensure the user is authenticated
+    if not token:
+        await query.edit_message_text("Please log in to delete categories.")
+        return
+
+    # Set up headers for the request
+    headers = {"token": token}
+    response = requests.delete(f"{API_BASE_URL}/categories/{selected_category}", headers=headers)
+
+    # Handle the response
+    if response.status_code == 200:
+        await query.edit_message_text(f"The category '{selected_category}' has been successfully deleted.")
+    else:
+        error_message = response.json().get("detail", "Failed to delete category.")
+        await query.edit_message_text(f"Error: {error_message}")
 
 
 async def fallback_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -726,6 +790,56 @@ async def combined_message_handler(update: Update, context: ContextTypes.DEFAULT
     else:
         await handle_general_message(update, context)
 
+async def unified_callback_query_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    Unified handler for all callback queries related to categories and expenses.
+    """
+    query = update.callback_query
+    await query.answer()  # Acknowledge the callback
+
+    # Debugging print to check if the handler is triggered
+    print("CallbackQueryHandler triggered with data:", query.data)
+
+    data = query.data  # The callback data from the button clicked
+
+    # Handle the different callback actions
+    if data == "edit_category":
+        await edit_category_handler(query, context)
+    elif data == "delete_category":
+        await delete_category_handler(query, context)
+    elif data.startswith("edit_"):
+        selected_category = data.replace("edit_", "")
+        context.user_data["selected_category"] = selected_category
+        context.user_data["category_action"] = "edit"
+        context.user_data["category_step"] = "edit_budget"
+        await query.edit_message_text(
+            f"Enter the new monthly budget for {selected_category}:"
+        )
+    elif data.startswith("delete_"):
+        selected_category = data.replace("delete_", "")
+        await delete_selected_category(query, context, selected_category)
+
+    elif data == "view_category":
+        # Handle view categories (this can be expanded as needed)
+        await view_category_handler(query, context)
+
+    elif data == "add_category":
+        # Handle add category
+        await add_category_handler(query, context)
+
+    elif data == "edit_category":
+        # Show categories for editing
+        await edit_category_handler(query, context)
+
+    elif data == "delete_category":
+        # Show categories for deletion
+        await delete_category_handler(query, context)
+
+    else:
+        # Fallback for unrecognized data
+        await query.edit_message_text("Unknown action. Please try again.")
+
+
 # async def finalize_category_addition(update: Update, context: ContextTypes.DEFAULT_TYPE):
 #     """
 #     Finalize adding a new category and display confirmation to the user.
@@ -773,15 +887,8 @@ if __name__ == "__main__":
     app.add_handler(CommandHandler("signup", signup_command))
     app.add_handler(CommandHandler("see_categories", categories_command))
     app.add_handler(CommandHandler("expense", expense_command))
+    app.add_handler(CallbackQueryHandler(unified_callback_query_handler))
     
-    app.add_handler(
-        CallbackQueryHandler(
-            category_button_handler,
-            pattern="^(view_category|add_category|edit_category|delete_category)$",
-        )
-    )
-    app.add_handler(CallbackQueryHandler(handle_edit_category_selection, pattern="^edit_"))
-    app.add_handler(CallbackQueryHandler(button_handler))
     app.add_handler(
         MessageHandler(
             filters.TEXT & filters.ChatType.PRIVATE, combined_message_handler
