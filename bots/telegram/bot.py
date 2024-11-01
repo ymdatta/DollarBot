@@ -9,23 +9,26 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import (
     Application,
+    CallbackQueryHandler,
     CommandHandler,
     ContextTypes,
     MessageHandler,
     filters,
 )
 
+from config import MONGO_URI, TELEGRAM_BOT_API_BASE_URL, TELEGRAM_BOT_TOKEN
+
 # Constants
-API_BASE_URL = "http://localhost:8000"
-TOKEN = "7217139754:AAGTo4BtF2obYrxm_MsHmXLekxvnNQ8F3fs"
+API_BASE_URL = TELEGRAM_BOT_API_BASE_URL
+TOKEN = TELEGRAM_BOT_TOKEN
 BOT_USERNAME = "@moneyhandlerbot"
 TSK = "None"
 TOKEN_ALGORITHM = "HS256"
-MONGO_URI = os.getenv(
-    "MONGO_URI",
-    "mongodb+srv://mmdb_admin:tiaNSKxzyO2NdXts@moneymanagerdb.s2bp9.mongodb.net/"
-    "?retryWrites=true&w=majority&appName=MoneyManagerDB",
-)
+# MONGO_URI = os.getenv(
+#     "MONGO_URI",
+#     "mongodb+srv://mmdb_admin:tiaNSKxzyO2NdXts@moneymanagerdb.s2bp9.mongodb.net/"
+#     "?retryWrites=true&w=majority&appName=MoneyManagerDB",
+# )
 
 # MongoDB setup
 client = AsyncIOMotorClient(MONGO_URI)
@@ -174,6 +177,66 @@ async def attempt_signup(update: Update, username: str, password: str):
         await update.message.reply_text(f"An error occurred: {response.text}")
 
 
+async def expense_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    Show buttons for expense actions (Add, Delete, View).
+    """
+    keyboard = [
+        [InlineKeyboardButton("Add Expense", callback_data="add_expense")],
+        [InlineKeyboardButton("Delete Expense", callback_data="delete_expense")],
+        [InlineKeyboardButton("View Expenses", callback_data="view_expenses")],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await update.message.reply_text(
+        "Choose an action for your expenses:", reply_markup=reply_markup
+    )
+
+
+async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    Handle inline button actions for expenses.
+    """
+    query = update.callback_query
+    await query.answer()  # Acknowledge the callback
+
+    if query.data == "add_expense":
+        await add_expense_handler(query, context)
+    elif query.data == "delete_expense":
+        await delete_expense_handler(query, context)
+    elif query.data == "view_expenses":
+        await view_expenses_handler(query, context)
+
+
+async def add_expense_handler(query, context):
+    """
+    Handle adding a new expense.
+    """
+    await query.edit_message_text(
+        "Please enter the amount, category, and date (e.g., `50 Food 2024-10-31`):"
+    )
+    context.user_data["expense_action"] = "add"
+
+
+async def delete_expense_handler(query, context):
+    """
+    Handle deleting an expense.
+    """
+    await query.edit_message_text(
+        "Please enter the ID or description of the expense to delete:"
+    )
+    context.user_data["expense_action"] = "delete"
+
+
+async def view_expenses_handler(query, context):
+    """
+    Handle viewing expenses.
+    """
+    # Retrieve and display the expense list (this example shows a placeholder message)
+    # You can fetch actual expenses from your database and format them here.
+    expense_list = "1. Food - $50\n2. Transport - $15"
+    await query.edit_message_text(f"Here are your recent expenses:\n\n{expense_list}")
+
+
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
     Handle incoming text messages and direct messages to appropriate handlers based on context.
@@ -281,9 +344,13 @@ async def categories_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
         # Send the formatted table as a message with monospaced font
         await update.message.reply_text(table_str, parse_mode="MarkdownV2")
-
+    else:
         error_message = response.json().get("detail", "Unable to fetch categories.")
         await update.message.reply_text(f"Error: {error_message}")
+
+
+async def fallback_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Unrecognized command")
 
 
 async def error(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -301,7 +368,10 @@ if __name__ == "__main__":
     app.add_handler(CommandHandler("login", login_command))
     app.add_handler(CommandHandler("signup", signup_command))
     app.add_handler(CommandHandler("see_categories", categories_command))
+    app.add_handler(CommandHandler("expense", expense_command))
+    app.add_handler(CallbackQueryHandler(button_handler))
     app.add_handler(MessageHandler(filters.TEXT, handle_message))
+    app.add_handler(MessageHandler(filters.COMMAND, fallback_command))
     app.add_error_handler(error)
     print("Polling..")
     app.run_polling(poll_interval=3)
