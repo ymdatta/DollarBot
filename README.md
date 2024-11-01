@@ -6,13 +6,13 @@ A REST API application for managing expenses. Build your own automation, be it t
 ---
 
 #### Quality
-[![badge_pytest_status](https://img.shields.io/badge/PyTest-passing-brightgreen?style=plastic&logo=pytest&logoColor=white)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11605743334)
-[![badge_code_coverage](https://img.shields.io/badge/coverage-98%25-brightgreen?style=plastic)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11605743334)
-[![badge_total_tests](https://img.shields.io/badge/tests-72-blue?style=plastic&logo=pytest&logoColor=white&link=https%3A%2F%2Fgithub.com%2Fgitsetgopack%2Fhw2%2Ftree%2Fmain%2Ftests)](https://github.com/gitsetgopack/hw2/tree/main/tests)
-[![badge_pylint](https://img.shields.io/badge/pylint-10.00-brightgreen?style=plastic)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11605743334)
-[![badge_black](https://img.shields.io/badge/black_formatter-failing-red?style=plastic&labelColor=black)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11605743334)
-[![badge_mypy](https://img.shields.io/badge/bandit-failing-red?style=plastic)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11605743334)
-[![badge_bandit](https://img.shields.io/badge/bandit-failing-red?style=plastic)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11605743334)
+[![badge_pytest_status](https://img.shields.io/badge/PyTest-passing-brightgreen?style=plastic&logo=pytest&logoColor=white)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11624237149)
+[![badge_code_coverage](https://img.shields.io/badge/coverage-95%25-brightgreen?style=plastic)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11624237149)
+[![badge_total_tests](https://img.shields.io/badge/tests-72-blue?style=plastic&logo=pytest&logoColor=white)](https://github.com/gitsetgopack/hw2/tree/main/tests)
+[![badge_pylint](https://img.shields.io/badge/pylint-10.00-brightgreen?style=plastic)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11624237149)
+[![badge_black](https://img.shields.io/badge/black_formatter-passing-brightgreen?style=plastic&labelColor=black)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11624237149)
+[![badge_mypy](https://img.shields.io/badge/mypy-passing-brightgreen?style=plastic)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11624237149)
+[![badge_bandit](https://img.shields.io/badge/bandit-passing-brightgreen?style=plastic)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11624237149)
 
 
 <!-- [![badge_pyright](https://img.shields.io/badge/pyright-passing-brightgreen)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11190159988) -->
