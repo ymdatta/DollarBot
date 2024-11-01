@@ -7,7 +7,6 @@ from a specified number of days.
 import base64
 import io
 from datetime import datetime, timedelta
-from typing import Optional
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -145,7 +144,7 @@ async def expense_pie(x_days: int, token: str = Header(None)):
         labels=category_expenses.index,
         autopct="%1.1f%%",
         startangle=140,
-        colors=plt.cm.tab10.colors,
+        colors=["#FF9999", "#FF4D4D", "#FF0000"],
     )
     plt.title(f"Expense Distribution by Category (Last {x_days} Days)")
     plt.axis("equal")  # Equal aspect ratio ensures that pie chart is circular.
