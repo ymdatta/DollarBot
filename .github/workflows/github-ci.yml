@@ -147,17 +147,19 @@ jobs:
             COVERAGE_COLOR="yellowgreen"
           elif [ "$COVERAGE" -ge 60 ]; then
             COVERAGE_COLOR="yellow"
-          elif [ "$COVERAGE" -ge 50" ]; then
+          elif [ "$COVERAGE" -ge 50 ]; then  # corrected line
             COVERAGE_COLOR="orange"
           else
             COVERAGE_COLOR="red"
           fi
+
           TOTAL_TESTS_BADGE_URL="https://img.shields.io/badge/tests-${NUM_TESTS}-blue?style=plastic&logo=pytest&logoColor=white"
           CODE_COVERAGE_BADGE_URL="https://img.shields.io/badge/coverage-${COVERAGE}%25-${COVERAGE_COLOR}?style=plastic"
           PYTEST_STATUS_BADGE_URL="https://img.shields.io/badge/PyTest-${TESTS_STATUS}-${TESTS_COLOR}?style=plastic&logo=pytest&logoColor=white"
           echo "TOTAL_TESTS_BADGE_URL=$TOTAL_TESTS_BADGE_URL" >> $GITHUB_ENV
           echo "CODE_COVERAGE_BADGE_URL=$CODE_COVERAGE_BADGE_URL" >> $GITHUB_ENV
           echo "PYTEST_STATUS_BADGE_URL=$PYTEST_STATUS_BADGE_URL" >> $GITHUB_ENV
+
 
       - name: Update README with all the badges
         run: |
