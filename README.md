@@ -7,10 +7,21 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 # Money Manager
+<div align="center">
+  <img src="docs/logo/logo.png" alt="Project Logo" width="300"/>
+</div>
 
-A REST API application for managing expenses. Build your own automation, be it telegram bot, discord or your own app.
 
-![built_with_love](http://ForTheBadge.com/images/badges/built-with-love.svg)
+A REST API application for managing expenses. Build your own automation—be it a Telegram bot 🤖, Discord bot, or your own app 📱!
+
+🚨 Spoiler Alert! 🚨 We have built a Telegram bot as a proof of concept! 🤖🎉
+
+<div align="center">
+  <img src="http://ForTheBadge.com/images/badges/built-with-love.svg" alt="built_with_love"/>
+</div>
+
+
+
 
 ---
 
