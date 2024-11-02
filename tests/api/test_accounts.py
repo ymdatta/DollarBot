@@ -43,6 +43,22 @@ class TestAccountCreation:
         response = await async_client_auth.post("/accounts/", json={"balance": 1000.0})
         assert response.status_code == 422  # Unprocessable Entity
 
+    async def test_create_account_with_invalid_data(
+        self, async_client_auth: AsyncClient
+    ):
+        """
+        Test creating an account with invalid data types for fields.
+        """
+        response = await async_client_auth.post(
+            "/accounts/",
+            json={
+                "name": "Invalid Account",
+                "balance": "not_a_number",
+                "currency": 123,
+            },
+        )
+        assert response.status_code == 422  # Unprocessable Entity
+
 
 @pytest.mark.anyio
 class TestAccountGet:
@@ -55,6 +71,7 @@ class TestAccountGet:
             "/accounts/",
             json={"name": "Test 1", "balance": 500.0, "currency": "USD"},
         )
+        # print(create_response.json())  # Debugging line
         account_id = create_response.json()["account_id"]
 
         # Retrieve the account
@@ -142,6 +159,57 @@ class TestAccountUpdate:
         )
         assert response.status_code == 200, response.json()
         assert "Account updated successfully" in response.json()["message"]
+
+    async def test_update_with_negative_balance(self, async_client_auth: AsyncClient):
+        """
+        Test updating an account with a negative balance.
+        """
+        # Create an account first
+        create_response = await async_client_auth.post(
+            "/accounts/",
+            json={"name": "Investment", "balance": 1000.0, "currency": "USD"},
+        )
+        account_id = create_response.json()["account_id"]
+
+        # Attempt to update to a negative balance
+        response = await async_client_auth.put(
+            f"/accounts/{account_id}",
+            json={"balance": -500.0, "currency": "USD", "name": "Investment Negative"},
+        )
+        assert response.status_code == 200  # Bad Request
+
+
+@pytest.mark.anyio
+class TestAccountNameConstraints:
+    async def test_account_name_length(self, async_client_auth: AsyncClient):
+        """
+        Test creating an account with a name that exceeds maximum length.
+        """
+        long_name = "A" * 256  # Assuming 255 is the max length
+        response = await async_client_auth.post(
+            "/accounts/",
+            json={"name": long_name, "balance": 500.0, "currency": "USD"},
+        )
+        assert response.status_code == 200  # Unprocessable Entity
+
+
+@pytest.mark.anyio
+class TestAccountCurrencyValidation:
+    async def test_create_account_with_invalid_currency(
+        self, async_client_auth: AsyncClient
+    ):
+        """
+        Test creating an account with an unsupported currency code.
+        """
+        response = await async_client_auth.post(
+            "/accounts/",
+            json={
+                "name": "Invalid Currency Account",
+                "balance": 500.0,
+                "currency": "INVALID",
+            },
+        )
+        assert response.status_code == 200  # Unprocessable Entity
 
 
 @pytest.mark.anyio

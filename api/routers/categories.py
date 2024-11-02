@@ -86,6 +86,9 @@ async def update_category(
     if not user or "categories" not in user or category_name not in user["categories"]:
         raise HTTPException(status_code=404, detail="Category not found")
 
+    if category_update.monthly_budget < 0:
+        raise HTTPException(status_code=400, detail="Monthly budget must be positive")
+
     user["categories"][category_name]["monthly_budget"] = category_update.monthly_budget
 
     await users_collection.update_one(
