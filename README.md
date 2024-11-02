@@ -16,7 +16,8 @@ A REST API application for managing expenses. Build your own automation, be it t
 
 ### Project Overview
 
-[See the video here](./OQ2VT6SUVFMABVEH.mp4)
+[Watch the Demo Video](docs/demo_videos/animated.mp4)
+
 
 #### Quality
 
