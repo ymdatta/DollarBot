@@ -96,13 +96,13 @@ async def create_user(user: UserCreate):
         {
             "user_id": str(user_id),
             "name": "Checking",
-            "balance": 0,
+            "balance": 1000,
             "currency": "USD",
         },
         {
             "user_id": str(user_id),
             "name": "Savings",
-            "balance": 0,
+            "balance": 10000,
             "currency": "USD",
         },
     ]

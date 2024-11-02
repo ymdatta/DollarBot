@@ -20,8 +20,6 @@ from config import MONGO_URI, TELEGRAM_BOT_API_BASE_URL, TELEGRAM_BOT_TOKEN
 
 # Constants
 API_BASE_URL = TELEGRAM_BOT_API_BASE_URL
-TOKEN = TELEGRAM_BOT_TOKEN
-BOT_USERNAME = "@moneyhandlerbot"
 TSK = "None"
 TOKEN_ALGORITHM = "HS256"
 
@@ -453,113 +451,186 @@ async def view_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def expense_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """
-    Show buttons for expense actions (Add, Delete, View).
-    """
-
     keyboard = [
         [InlineKeyboardButton("Add Expense", callback_data="add_expense")],
-        [InlineKeyboardButton("Delete Expense", callback_data="delete_expense")],
         [InlineKeyboardButton("View Expenses", callback_data="view_expenses")],
+        [InlineKeyboardButton("Update Expense", callback_data="update_expense")],
+        [InlineKeyboardButton("Delete Expense", callback_data="delete_expense")],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    await update.message.reply_text(
-        "Choose an action for your expenses:", reply_markup=reply_markup
-    )
+    await update.message.reply_text("Choose an expense action:", reply_markup=reply_markup)
 
-
-async def add_expense_handler(query, context):
+@authenticate
+async def add_expense_handler(query, context, **kwargs):
     """
     Start the process of adding a new expense by prompting for the amount.
     """
     await query.edit_message_text("Please enter the amount:")
     context.user_data["expense_action"] = "add"
-    context.user_data["expense_step"] = "amount"  # Set the next step as amount
+    context.user_data["expense_step"] = "amount"
 
 
-async def process_expense_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
+@authenticate
+async def view_expenses_handler(query, context, **kwargs):
     """
-    Handle the sequential input for adding an expense (amount, category, date).
+    Handle viewing expenses and display them in a formatted list.
     """
-    user_id = update.message.chat_id if update.message else None
-    text = update.message.text if update.message else ""
-
-    if context.user_data.get("expense_action") == "add":
-        # Process amount
-        if context.user_data.get("expense_step") == "amount":
-            try:
-                # Try to parse amount as a float
-                amount = float(text)
-                context.user_data["amount"] = amount
-                context.user_data["expense_step"] = "category"
-                await update.message.reply_text(
-                    "Please enter the category (e.g., Food):"
-                )
-            except ValueError:
-                await update.message.reply_text(
-                    "Invalid amount. Please enter a numeric value."
-                )
-
-        # Process category
-        elif context.user_data.get("expense_step") == "category":
-            context.user_data["category"] = text
-            context.user_data["expense_step"] = "date"
-            await update.message.reply_text("Please enter the date (YYYY-MM-DD):")
-
-        # Process date
-        elif context.user_data.get("expense_step") == "date":
-            try:
-                # Validate date format
-                date = datetime.datetime.strptime(text, "%Y-%m-%d").date()
-                context.user_data["date"] = date
-                # Complete the expense addition
-                await finalize_expense(update, context)
-            except ValueError:
-                await update.message.reply_text(
-                    "Invalid date format. Please enter a date in YYYY-MM-DD format."
-                )
+    headers = {"token": kwargs.get("token", None)}
+    response = requests.get(f"{API_BASE_URL}/expenses/", headers=headers)
+    
+    if response.status_code == 200:
+        expenses_data = response.json().get("expenses", [])
+        expense_list = "\n".join(
+            [f"{i+1}. {exp['category']} - {exp['amount']} {exp['currency']} on {exp['date']}" 
+             for i, exp in enumerate(expenses_data)]
+        )
+        await query.edit_message_text(f"Your recent expenses:\n\n{expense_list}")
+    else:
+        await query.edit_message_text("Unable to retrieve expenses.")
 
 
-async def finalize_expense(update: Update, context: ContextTypes.DEFAULT_TYPE):
+@authenticate
+async def update_expense_handler(query, context, **kwargs):
     """
-    Finalize the expense entry and clear the temporary data.
+    Start the process to update an expense by selecting one from the list.
+    """
+    headers = {"token": kwargs.get("token", None)}
+    response = requests.get(f"{API_BASE_URL}/expenses/", headers=headers)
+
+    if response.status_code == 200:
+        expenses_data = response.json().get("expenses", [])
+        
+        # Display each expense as a button to select for updating
+        keyboard = [
+            [InlineKeyboardButton(f"{exp['category']} - {exp['amount']} {exp['currency']}",
+                                  callback_data=f"update_{exp['_id']}")]
+            for exp in expenses_data
+        ]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        await query.edit_message_text("Select an expense to update:", reply_markup=reply_markup)
+    else:
+        await query.edit_message_text("Error fetching expenses for update.")
+
+
+@authenticate
+async def delete_expense_handler(query, context, **kwargs):
+    """
+    Handle selecting and deleting an expense.
+    """
+    headers = {"token": kwargs.get("token", None)}
+    response = requests.get(f"{API_BASE_URL}/expenses/", headers=headers)
+
+    if response.status_code == 200:
+        expenses_data = response.json().get("expenses", [])
+        
+        # Display each expense as a button to select for deletion
+        keyboard = [
+            [InlineKeyboardButton(f"{exp['category']} - {exp['amount']} {exp['currency']}",
+                                  callback_data=f"delete_{exp['_id']}")]
+            for exp in expenses_data
+        ]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        await query.edit_message_text("Select an expense to delete:", reply_markup=reply_markup)
+    else:
+        await query.edit_message_text("Error fetching expenses for deletion.")
+
+
+async def handle_expense_update_selection(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    Handle selection of an expense for updating and prompt for new amount.
+    """
+    query = update.callback_query
+    await query.answer()
+    expense_id = query.data.replace("update_", "")
+    context.user_data["expense_id"] = expense_id
+    context.user_data["expense_action"] = "update"
+    context.user_data["expense_step"] = "new_amount"
+
+    await query.edit_message_text("Please enter the new amount for this expense:")
+
+
+async def handle_expense_delete_selection(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    Handle the confirmation and deletion of a selected expense.
+    """
+    query = update.callback_query
+    await query.answer()
+    expense_id = query.data.replace("delete_", "")
+    headers = {"token": context.user_data.get("token", None)}
+    
+    response = requests.delete(f"{API_BASE_URL}/expenses/{expense_id}", headers=headers)
+    
+    if response.status_code == 200:
+        await query.edit_message_text("Expense deleted successfully!")
+    else:
+        await query.edit_message_text("Failed to delete expense.")
+
+@authenticate
+async def finalize_expense_update(update: Update, context: ContextTypes.DEFAULT_TYPE, **kwargs):
+    """
+    Finalize updating an expense by applying the new amount and category.
+    """
+    expense_id = context.user_data.get("expense_id")
+    new_amount = context.user_data.get("new_amount")
+    headers = {"token": kwargs.get("token", None)}
+    payload = {"amount": new_amount}
+    
+    response = requests.put(f"{API_BASE_URL}/expenses/{expense_id}", json=payload, headers=headers)
+    
+    if response.status_code == 200:
+        await update.message.reply_text("Expense updated successfully!")
+    else:
+        await update.message.reply_text("Failed to update expense.")
+
+    context.user_data.pop("expense_action", None)
+    context.user_data.pop("expense_step", None)
+    context.user_data.pop("expense_id", None)
+    context.user_data.pop("new_amount", None)
+
+@authenticate
+async def finalize_expense(update: Update, context: ContextTypes.DEFAULT_TYPE, **kwargs):
+    """
+    Finalize the expense entry by sending it to the API and notifying the user of success.
     """
     amount = context.user_data.get("amount")
     category = context.user_data.get("category")
     date = context.user_data.get("date")
 
-    # Post the expense to the API or store it
-    # Example for demonstration purposes
-    await update.message.reply_text(
-        f"Expense added successfully!\n\nAmount: {amount}\nCategory: {category}\nDate: {date}"
-    )
+    headers = {"token": kwargs.get("token", None)}
+    payload = {
+        "amount": amount,
+        "category": category,
+        "currency": "USD",
+        "date": date.strftime("%Y-%m-%d")
+    }
 
-    # Clear user data for expense entry
+    response = requests.post(f"{API_BASE_URL}/expenses/", json=payload, headers=headers)
+
+    if response.status_code == 200:
+        await update.message.reply_text(
+            f"Expense added successfully!\n\nAmount: {amount}\nCategory: {category}\nDate: {date}"
+        )
+    else:
+        error_message = response.json().get("detail", "An error occurred while adding the expense.")
+        await update.message.reply_text(f"Failed to add expense. Error: {error_message}")
+
+    # Clear context data related to the expense entry
     context.user_data.pop("expense_action", None)
     context.user_data.pop("expense_step", None)
     context.user_data.pop("amount", None)
     context.user_data.pop("category", None)
     context.user_data.pop("date", None)
 
-
-async def delete_expense_handler(query, context):
-    """
-    Handle deleting an expense.
-    """
-    await query.edit_message_text(
-        "Please enter the ID or description of the expense to delete:"
-    )
-    context.user_data["expense_action"] = "delete"
-
-
-async def view_expenses_handler(query, context):
-    """
-    Handle viewing expenses.
-    """
-    # Retrieve and display the expense list (this example shows a placeholder message)
-    # You can fetch actual expenses from your database and format them here.
-    expense_list = "1. Food - $50\n2. Transport - $15"
-    await query.edit_message_text(f"Here are your recent expenses:\n\n{expense_list}")
+# Unified callback query handler to handle each expense action based on callback data
+@authenticate
+async def unified_expense_callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE, **kwargs):
+    query = update.callback_query
+    await query.answer()
+    
+    if query.data.startswith("update_"):
+        await handle_expense_update_selection(update, context)
+    elif query.data.startswith("delete_"):
+        await handle_expense_delete_selection(update, context)
 
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -642,13 +713,9 @@ async def combined_message_handler(update: Update, context: ContextTypes.DEFAULT
                 amount = float(text)
                 context.user_data["amount"] = amount
                 context.user_data["expense_step"] = "category"
-                await update.message.reply_text(
-                    "Please enter the category (e.g., Food):"
-                )
+                await update.message.reply_text("Please enter the category (e.g., Food):")
             except ValueError:
-                await update.message.reply_text(
-                    "Invalid amount. Please enter a numeric value."
-                )
+                await update.message.reply_text("Invalid amount. Please enter a numeric value.")
             return
 
         elif context.user_data.get("expense_step") == "category":
@@ -663,20 +730,26 @@ async def combined_message_handler(update: Update, context: ContextTypes.DEFAULT
                 context.user_data["date"] = date
                 await finalize_expense(update, context)
             except ValueError:
-                await update.message.reply_text(
-                    "Invalid date format. Please enter a date in YYYY-MM-DD format."
-                )
+                await update.message.reply_text("Invalid date format. Please enter a date in YYYY-MM-DD format.")
+            return
+
+    # Check if the user is in the process of updating an expense
+    elif context.user_data.get("expense_action") == "update":
+        if context.user_data.get("expense_step") == "new_amount":
+            try:
+                new_amount = float(text)
+                context.user_data["new_amount"] = new_amount
+                await finalize_expense_update(update, context)
+            except ValueError:
+                await update.message.reply_text("Invalid amount. Please enter a numeric value.")
             return
 
     # Check if the user is in the process of adding a new category
     elif context.user_data.get("category_action") == "add":
-        # Category addition flow: Step-by-step inputs
         if context.user_data.get("category_step") == "add_name":
             context.user_data["new_category_name"] = text
             context.user_data["category_step"] = "add_budget"
-            await update.message.reply_text(
-                "Please enter the monthly budget for this category:"
-            )
+            await update.message.reply_text("Please enter the monthly budget for this category:")
             return
 
         elif context.user_data.get("category_step") == "add_budget":
@@ -685,14 +758,11 @@ async def combined_message_handler(update: Update, context: ContextTypes.DEFAULT
                 context.user_data["new_category_budget"] = monthly_budget
                 await finalize_category_addition(update, context)
             except ValueError:
-                await update.message.reply_text(
-                    "Invalid budget. Please enter a numeric value."
-                )
+                await update.message.reply_text("Invalid budget. Please enter a numeric value.")
             return
 
     # Check if the user is in the process of editing a category's budget
     elif context.user_data.get("category_action") == "edit":
-        # Editing category flow: Prompt for a new budget after category selection
         if context.user_data.get("category_step") == "edit_budget":
             try:
                 new_budget = float(text)
@@ -718,9 +788,7 @@ async def combined_message_handler(update: Update, context: ContextTypes.DEFAULT
                     await update.message.reply_text(f"Error: {error_message}")
 
             except ValueError:
-                await update.message.reply_text(
-                    "Invalid budget. Please enter a numeric value."
-                )
+                await update.message.reply_text("Invalid budget. Please enter a numeric value.")
 
             # Clear context data after updating
             context.user_data.pop("category_action", None)
@@ -789,8 +857,12 @@ async def unified_callback_query_handler(
             f"Enter the new monthly budget for {selected_category}:"
         )
     elif data.startswith("delete_"):
+
         selected_category = data.replace("delete_", "")
         await delete_selected_category(query, context, selected_category)
+
+    if query.data.startswith("update_"):
+        await handle_expense_update_selection(update, context)
 
     elif data == "view_category":
         # Handle view categories (this can be expanded as needed)
@@ -805,8 +877,19 @@ async def unified_callback_query_handler(
         await edit_category_handler(query, context)
 
     elif data == "delete_category":
+
         # Show categories for deletion
         await delete_category_handler(query, context)
+
+     # Handle expense-related actions
+    elif data == "add_expense":
+        await add_expense_handler(query, context)
+    elif data == "view_expenses":
+        await view_expenses_handler(query, context)
+    elif data == "update_expense":
+        await update_expense_handler(query, context)
+    elif data == "delete_expense":
+        await delete_expense_handler(query, context)
 
     else:
         # Fallback for unrecognized data
@@ -835,12 +918,12 @@ async def error(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 if __name__ == "__main__":
     print("Starting Bot..")
-    app = Application.builder().token(TOKEN).build()
+    app = Application.builder().token(TELEGRAM_BOT_TOKEN).build()
     app.add_handler(CommandHandler("start", start_command))
     app.add_handler(CommandHandler("add", add_command))
     app.add_handler(CommandHandler("login", login_command))
     app.add_handler(CommandHandler("signup", signup_command))
-    app.add_handler(CommandHandler("see_categories", categories_command))
+    app.add_handler(CommandHandler("categories", categories_command))
     app.add_handler(CommandHandler("expenses", expense_command))
     app.add_handler(CallbackQueryHandler(unified_callback_query_handler))
 
