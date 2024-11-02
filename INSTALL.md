@@ -1,3 +1,18 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [MoneyManager Installation Guide](#moneymanager-installation-guide)
+  - [Prerequisites](#prerequisites)
+  - [Installation Steps](#installation-steps)
+  - [Available Make Commands](#available-make-commands)
+  - [Additional Information](#additional-information)
+  - [Troubleshooting](#troubleshooting)
+  - [Running the Project](#running-the-project)
+  - [Running Tests](#running-tests)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # MoneyManager Installation Guide
 
 Welcome to the **MoneyManager** project! This guide will help you set up the environment and install dependencies to get started.
@@ -52,14 +67,14 @@ Here are the commands available in the `Makefile` to help you work with the proj
   ```bash
   make run
   ```
-  
+
   This will execute the FastAPI app located at `api/app.py`.
 
 - **test**: Start a MongoDB Docker container, run tests, and clean up after the tests.
   ```bash
   make test
   ```
-  
+
   This command will:
   - Start a MongoDB container to simulate a database for testing.
   - Run all tests using `pytest`.
@@ -74,7 +89,7 @@ Here are the commands available in the `Makefile` to help you work with the proj
   ```bash
   make clean
   ```
-  
+
   This will:
   - Stop and remove the `mongo-test` Docker container if it exists.
   - Remove Python bytecode files (`.pyc`) and caches like `__pycache__`, `.pytest_cache`, and `.mypy_cache`.
@@ -83,7 +98,7 @@ Here are the commands available in the `Makefile` to help you work with the proj
   ```bash
   make no_verify_push
   ```
-  
+
   This command allows you to quickly commit and push changes without running verification checks. It will prompt you for a commit message.
 
 ## Additional Information

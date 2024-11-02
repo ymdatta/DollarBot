@@ -1,3 +1,23 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Contributing to Money Manager](#contributing-to-money-manager)
+  - [Getting Started](#getting-started)
+    - [1. Fork the Repository](#1-fork-the-repository)
+    - [2. Clone Your Fork](#2-clone-your-fork)
+    - [3. Set Up Environment](#3-set-up-environment)
+    - [4. Create a Branch](#4-create-a-branch)
+    - [5. Make Changes](#5-make-changes)
+    - [6. Run Formatters and Linters](#6-run-formatters-and-linters)
+    - [7. Commit Changes](#7-commit-changes)
+    - [8. Push Changes](#8-push-changes)
+    - [9. Submit a Pull Request](#9-submit-a-pull-request)
+  - [Code of Conduct](#code-of-conduct)
+  - [Guidelines](#guidelines)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Contributing to Money Manager
 
 Thank you for considering contributing to **MoneyManager**! We welcome all types of contributions, whether you're fixing a bug, adding a feature, improving documentation, or suggesting an idea.
@@ -46,7 +66,7 @@ Replace `feature/new-feature` with a meaningful name for your branch.
 
 ### 5. Make Changes
 
-Make your changes to the codebase. Ensure you write unit tests if applicable. 
+Make your changes to the codebase. Ensure you write unit tests if applicable.
 
 To run tests locally:
 

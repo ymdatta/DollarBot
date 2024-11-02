@@ -3,10 +3,6 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Money Manager](#money-manager)
-      - [Quality](#quality)
-      - [Standards](#standards)
-      - [Stats](#stats)
-      - [Tools \& Technologies](#tools--technologies)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
