@@ -25,11 +25,11 @@ A REST API application for managing expenses. Build your own automation—be it 
 
 ---
 
-### Project Overview
+## Project Overview
 
 https://github.com/user-attachments/assets/91fdf9e0-9489-4e05-ab61-a7599e5463e1
 
-#### Quality
+### Quality
 
 [![badge_pytest_status](https://img.shields.io/badge/PyTest-passing-brightgreen?style=plastic&logo=pytest&logoColor=white)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11639575982)
 [![badge_code_coverage](https://img.shields.io/badge/coverage-95%25-brightgreen?style=plastic)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11639575982)
@@ -39,7 +39,7 @@ https://github.com/user-attachments/assets/91fdf9e0-9489-4e05-ab61-a7599e5463e1
 [![badge_mypy](https://img.shields.io/badge/mypy-passing-brightgreen?style=plastic)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11639575982)
 [![badge_bandit](https://img.shields.io/badge/bandit-passing-brightgreen?style=plastic)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11639575982)
 
-#### Standards
+### Standards
 
 ![black](https://img.shields.io/badge/code%20style-black-black?style=plastic&)
 ![license](https://img.shields.io/github/license/gitsetgopack/MoneyManager?style=plastic&)
@@ -47,7 +47,7 @@ https://github.com/user-attachments/assets/91fdf9e0-9489-4e05-ab61-a7599e5463e1
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14027400.svg)](https://doi.org/10.5281/zenodo.14027400)
 
 
-#### Stats
+### Stats
 
 ![pr_open](https://img.shields.io/github/issues-pr/gitsetgopack/MoneyManager?style=plastic&)
 ![pr_close](https://img.shields.io/github/issues-pr-closed/gitsetgopack/MoneyManager?style=plastic&)
@@ -134,3 +134,28 @@ To check code coverage locally:
   coverage run -m pytest test/
   coverage report
   ```
+
+## Contributing
+
+Thank you for your interest in contributing to DollarBot! Your contributions are greatly appreciated, and this guide will help you get started. For full details on contributing, please refer to the [CONTRIBUTING.md](CONTRIBUTING.md) file, which provides comprehensive instructions and guidelines.
+
+## LICENSE
+
+By contributing to DollarBot, you agree that your contributions will fall under the project’s open-source license. Please take a moment to review and understand the licensing terms before contributing. The specific license details can be found in the [LICENSE](LICENSE) file.
+
+## 🤝 Contributors
+
+Listed alphabetically:
+
+- **Abhishek Rao** ([arao23@ncsu.edu](mailto:arao23@ncsu.edu))
+- **Astha Bhalodiya** ([abhalod@ncsu.edu](mailto:abhalod@ncsu.edu))
+- **Umang Diyora** ([udiyora@ncsu.edu](mailto:udiyora@ncsu.edu))
+
+## Code of Conduct
+
+Please note that we have a [Code of Conduct](CODE_OF_CONDUCT.md) that all contributors are expected to uphold. This ensures that our community remains welcoming and inclusive for everyone.
+
+---
+
+Thank you for using DollarBot! Follow this page to stay updated on new features and improvements.
+
