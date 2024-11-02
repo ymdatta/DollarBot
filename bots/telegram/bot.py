@@ -209,9 +209,9 @@ async def view_category_handler(query, context, **kwargs):
 
         # Combine header, separator, and rows into one string
         table_str = (
-            f"Here are your available categories with budgets:\n\n\n{header}{separator}\n"
+            f"Here are your available categories with budgets:\n\n\n```{header}{separator}\n"
             + "\n".join(rows)
-            + "\n"
+            + "\n```"
         )
 
         # Send the formatted table as a message with monospaced font
