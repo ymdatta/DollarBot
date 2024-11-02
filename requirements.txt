@@ -17,3 +17,5 @@ matplotlib
 pandas
 pandas-stubs
 reportlab
+python-telegram-bot
+requests
