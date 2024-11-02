@@ -209,9 +209,9 @@ async def view_category_handler(query, context, **kwargs):
 
         # Combine header, separator, and rows into one string
         table_str = (
-            f"Here are your available categories with budgets:\n\n```\n{header}{separator}\n"
+            f"Here are your available categories with budgets:\n\n\n{header}{separator}\n"
             + "\n".join(rows)
-            + "\n```"
+            + "\n"
         )
 
         # Send the formatted table as a message with monospaced font
@@ -235,11 +235,9 @@ async def edit_category_handler(query, context, **kwargs):
     """
     Display the user's categories as inline buttons to select for editing.
     """
-    print("COMBING")
+
     headers = {"token": kwargs.get("token", None)}
-    print(headers)
     response = requests.get(f"{API_BASE_URL}/categories/", headers=headers)
-    print(response.text)
 
     if response.status_code == 200:
         categories_data = response.json().get("categories", {})
@@ -457,18 +455,19 @@ async def view_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def expense_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
-    Show buttons for expense actions (Add, View, Delete, Update).
+    Show buttons for expense actions (Add, Delete, View).
     """
+
     keyboard = [
         [InlineKeyboardButton("Add Expense", callback_data="add_expense")],
-        [InlineKeyboardButton("View Expenses", callback_data="view_expenses")],
         [InlineKeyboardButton("Delete Expense", callback_data="delete_expense")],
-        [InlineKeyboardButton("Update Expense", callback_data="update_expense")],
+        [InlineKeyboardButton("View Expenses", callback_data="view_expenses")],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     await update.message.reply_text(
         "Choose an action for your expenses:", reply_markup=reply_markup
     )
+
 
 async def add_expense_handler(query, context):
     """
@@ -628,8 +627,8 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     elif query.data == "view_expenses":
         await view_expenses_handler(query, context)
 
-@authenticate
-async def combined_message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE, **kwargs):
+
+async def combined_message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
     Combined handler for handling category and expense inputs step-by-step.
     """
@@ -701,7 +700,8 @@ async def combined_message_handler(update: Update, context: ContextTypes.DEFAULT
                 selected_category = context.user_data.get("selected_category")
 
                 # Update the category budget in the database
-                headers = {"token": kwargs.get("token", None)}
+                token = user_tokens[user_id]
+                headers = {"token": token}
                 payload = {"name": selected_category, "monthly_budget": new_budget}
                 response = requests.put(
                     f"{API_BASE_URL}/categories/{selected_category}",
@@ -713,7 +713,6 @@ async def combined_message_handler(update: Update, context: ContextTypes.DEFAULT
                     await update.message.reply_text(
                         f"The budget for {selected_category} has been updated to {new_budget}."
                     )
-                    
                 else:
                     error_message = response.json().get(
                         "detail", "Failed to update category."
@@ -802,6 +801,10 @@ async def unified_callback_query_handler(
     elif data == "add_category":
         # Handle add category
         await add_category_handler(query, context)
+
+    elif data == "edit_category":
+        # Show categories for editing
+        await edit_category_handler(query, context)
 
     elif data == "delete_category":
         # Show categories for deletion
