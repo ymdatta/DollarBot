@@ -14,6 +14,10 @@ A REST API application for managing expenses. Build your own automation, be it t
 
 ---
 
+### Project Overview
+
+[OQ2VT6SUVFMABVEH.mp4](./OQ2VT6SUVFMABVEH.mp4) video file.
+
 #### Quality
 
 [![badge_pytest_status](https://img.shields.io/badge/PyTest-passing-brightgreen?style=plastic&logo=pytest&logoColor=white)](https://github.com/gitsetgopack/MoneyManager/actions/runs/11639575982)
