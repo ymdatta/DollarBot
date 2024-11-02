@@ -1,116 +1,123 @@
-# Contributing to DollarBot
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-Thank you for your interest in contributing to DollarBot! Your contributions are highly valued, and this document will help you get started with the process.
-Follow the set of guidelines below to contribute to DollarBot!
+- [Contributing to Money Manager](#contributing-to-money-manager)
+  - [Getting Started](#getting-started)
+    - [1. Fork the Repository](#1-fork-the-repository)
+    - [2. Clone Your Fork](#2-clone-your-fork)
+    - [3. Set Up Environment](#3-set-up-environment)
+    - [4. Create a Branch](#4-create-a-branch)
+    - [5. Make Changes](#5-make-changes)
+    - [6. Run Formatters and Linters](#6-run-formatters-and-linters)
+    - [7. Commit Changes](#7-commit-changes)
+    - [8. Push Changes](#8-push-changes)
+    - [9. Submit a Pull Request](#9-submit-a-pull-request)
+  - [Code of Conduct](#code-of-conduct)
+  - [Guidelines](#guidelines)
 
-## Table of Contents
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-- [Code of Conduct](#code-of-conduct)
-- [Getting Started](#getting-started)
-  - [Pre-requisites](#pre-requisites)
-  - [Fork and Clone the Repository](#fork-and-clone-the-repository)
-- [Contributing Guidelines](#contributing-guidelines)
-  - [Branching Strategy](#branching-strategy)
-  - [Commit Guidelines](#commit-guidelines)
-  - [Code Style](#code-style)
-  - [Reporting Bugs](#reporting-bugs)
-    - [Submitting a Bug](#submitting-a-bug)
-- [Submitting a Pull Request](#submitting-a-pull-request)
-  - [Pull Request Template](#pull-request-template)
-- [License](#license)
+# Contributing to Money Manager
 
-## Code of Conduct
-
-Please note that we have a [Code of Conduct](CODE_OF_CONDUCT.md) that all contributors are expected to follow. It ensures that our community is welcoming and inclusive.
-
-By participating, you are expected to uphold this code. Please report unacceptable behavior to dollarbot38@googlegroups.com
-(This project is a part of CSC510, Software Engineering at NC State for Fall'23, Group #38)
+Thank you for considering contributing to **MoneyManager**! We welcome all types of contributions, whether you're fixing a bug, adding a feature, improving documentation, or suggesting an idea.
 
 ## Getting Started
 
-### Pre-requisites
+To get started with contributing to this project, please follow these guidelines.
 
-Pre-requisites required before starting this project
-1. Have a good understanding of Python Programming Language
-2. Know how Telegram Bots work.
-3. Have a good understanding of common coding practices.
-4. If you like to contribute, please check the status of the repo, whether it's still being maintained or not.
-    (If you have any doubts, please reach out to the maintainers before creating a branch)
+### 1. Fork the Repository
 
-### Fork and Clone the Repository
+Start by forking the main repository on GitHub. This creates a copy of the repository under your GitHub account.
 
-To contribute, we recommend to fork the DollarBot repository to your GitHub account. This will create a copy of the project under your account.
-Once forked, clone the repository from your account to your local machine.
+- Navigate to [MoneyManager GitHub Repo](https://github.com/gitsetgopack/MoneyManager)
+- Click the **Fork** button in the top-right corner.
+
+### 2. Clone Your Fork
+
+Once you've forked the repository, clone your fork locally:
+
 ```bash
-git clone https://github.com/ymdatta/DollarBot.git
-cd DollarBot
+git clone https://github.com/your-username/MoneyManager.git
+cd MoneyManager
 ```
-## Contributing Guidelines
 
-### Branching Strategies
+Replace `your-username` with your GitHub username.
 
-Please create a new branch for your work and base it on the latest 'main' branch.
+### 3. Set Up Environment
 
-### Commit Guidelines
-1. Follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) for your commit messages.
-2. Provide a clear and concise description of your changes.
+To set up the environment, use the following command to install dependencies:
 
-### Code Style
-We request you to really adhere to the project's coding styles and language <>
+```bash
+make install
+```
 
-### Reporting Bugs
+This will install all necessary Python packages and set up the pre-commit hooks.
 
-This section guides you through submitting a bug report for DollarBot.
-Following these guidelines helps maintainers and the community understand your report, reproduce the behavior and find related reports.
+### 4. Create a Branch
 
-Before Submitting A Bug Report
+It's good practice to create a new branch for each change. This makes it easier to submit pull requests.
 
-## Submitting a Bug
+```bash
+git checkout -b feature/new-feature
+```
 
-We appreciate your efforts in helping us improve DollarBot by reporting bugs. Before you create a new issue, please take a moment to check if the bug has already been reported in our [Issues](https://github.com/ymdatta/DollarBot/issues) section.
+Replace `feature/new-feature` with a meaningful name for your branch.
 
-If you're certain that it's a new issue or have additional information to provide, follow these steps:
+### 5. Make Changes
 
-1. **Check the Issue Tracker**: Search our [Issues](https://github.com/ymdatta/DollarBot/issues) to see if a similar issue has already been reported. If you find one that resonates with your observation, we recommend you to add relevant details/updates/observations to that existing issue.
+Make your changes to the codebase. Ensure you write unit tests if applicable.
 
-2. **Create a New Issue**: If you can't find an existing bug matching the problem you've encountered, click on the "New Issue" button and select a template to create a new issue.
+To run tests locally:
 
-3. **Be Specific**: In the issue, please specify as much things as possible about the problem you're experience with the following information:
-  - A clear title that summarizes the bug.
-  - A detailed description of the bug, including what you expected to happen and what actually happened.
-  - Steps to reproduce the issue.
-  - Your environment, including operating system, browser (if applicable), and relevant software versions.
+```bash
+make test
+```
 
-4. **Attach Screenshots or Error Logs**: If relevant, include screenshots, error logs, or any other files that can help us better understand the issue.
+### 6. Run Formatters and Linters
 
-5. **Labels**: Apply relevant labels to your report, such as "bug," "needs confirmation," or any other labels used in our issue tracker.
+Before committing, make sure your code is formatted correctly:
 
-6. **Assignees**: If you know who should be responsible for the new issue, you may assign the issue directly to them. Otherwise, someone from the maintainers will handle it.
+```bash
+make fix
+```
 
-7. **Review and Feedback**: It's important to stay engaged in the issue thread. The maintainers/other contributors may have questions or need further information to RCA/diagnose the problem.
+This command will run `black` and `isort` to ensure the code style is consistent.
 
-And lastly, please be patient as the maintainers work to address the bug.
-We appreciate your contributions to making DollarBot better!
+### 7. Commit Changes
 
-## Suggesting Enhancements
-Any suggesting enhancements like adding new features or improving existing functionalities, etc can done by following the below guidelines. They help maintainers understand your improvement. The template- this template is to be filled to add suggestions. These can include the steps that you imagine you would take if the feature you're requesting existed.
+Commit your changes with a descriptive commit message:
 
-## Submitting a Pull Request
+```bash
+git add .
+git commit -m "Added a new feature to manage categories"
+```
 
-1. Code of Conduct: Please ensure that your interactions and contributions align with our [Code of Conduct](#code-of-conduct)
-2. Check your code from your end, to check whether your changes directly address the intended feature/issue.
-3. Once ready, on GitHub, navigate to your fork of the repository and click the "New Pull Request" button. Fill in the details, briefly explaining what the PR does and if, how it addresses the issue or feature.
-4. Your PR then will be reviewed by at least one project maintainer. Please be prepared to respond to any feedback or requests for changes. You might have to make adjustments and push additional commits as needed.
-5. License: By contributing to DollarBot, you agree that your contributions will be licensed under the project's [LICENSE](LICENSE.md).
+### 8. Push Changes
 
-## LICENSE
+Push your changes to your forked repository:
 
-By contributing to DollarBot, you agree that your contributions will be licensed under the project's open-source license. It's important to understand and respect the licensing terms before contributing. The specific license terms for this project can be found in the [LICENSE](LICENSE.md) file.
+```bash
+git push origin feature/new-feature
+```
 
-Please review the license carefully to ensure you are in compliance with its terms. If you have any questions or concerns about the license, feel free to reach out to the project maintainers or the community for clarification.
+### 9. Submit a Pull Request
 
-Contributors are expected to respect and adhere to the project's licensing terms. This typically includes granting the project and its users the necessary permissions to use, modify, and distribute your contributions.
+Once you've pushed your changes, go to the main repository on GitHub and submit a pull request (PR) from your forked repository.
 
-Remember that this information is provided for guidance, and the license text itself, found in the [LICENSE](LICENSE) file, is the authoritative source of licensing terms for the project. Your contributions are subject to these terms.
+- Navigate to your fork on GitHub.
+- Click **Compare & Pull Request**.
+- Provide a clear and concise description of your changes in the PR description.
 
-Thank you for your understanding and for contributing to DollarBot!
+## Code of Conduct
+
+We expect all contributors to follow our [Code of Conduct](CODE_OF_CONDUCT.md). Please respect others' work and efforts, and let's collaborate effectively to improve **MoneyManager** together.
+
+## Guidelines
+
+- Write clear, concise commit messages.
+- Test your changes thoroughly.
+- Include tests for any new functionality.
+- If you have any questions, please open an issue or contact the maintainers.
+
+Thank you for your contributions and for making **Money Manager** better!
