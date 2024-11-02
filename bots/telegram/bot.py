@@ -415,8 +415,8 @@ async def finalize_category_addition(
 # EXPENSES
 ##########################################################
 
-
-async def add_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+@authenticate
+async def add_command(update: Update, context: ContextTypes.DEFAULT_TYPE, **kwargs):
     """
     Check if the user is authenticated, then handle adding an expense.
     If the user is not logged in, prompt them to log in first.
@@ -429,8 +429,7 @@ async def add_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     # Token for the authenticated user
-    token = user_tokens[user_id]
-    headers = {"Authorization": f"Bearer {token}"}
+    headers = {"token": kwargs.get("token", None)}
     response = requests.post(
         f"{API_BASE_URL}/expenses/",
         json={"amount": 100, "currency": "USD", "category": "Food"},
@@ -627,8 +626,8 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     elif query.data == "view_expenses":
         await view_expenses_handler(query, context)
 
-
-async def combined_message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+@authenticate
+async def combined_message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE, **kwargs):
     """
     Combined handler for handling category and expense inputs step-by-step.
     """
@@ -700,8 +699,7 @@ async def combined_message_handler(update: Update, context: ContextTypes.DEFAULT
                 selected_category = context.user_data.get("selected_category")
 
                 # Update the category budget in the database
-                token = user_tokens[user_id]
-                headers = {"token": token}
+                headers = {"token": kwargs.get("token", None)}
                 payload = {"name": selected_category, "monthly_budget": new_budget}
                 response = requests.put(
                     f"{API_BASE_URL}/categories/{selected_category}",
