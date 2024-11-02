@@ -1,3 +1,6 @@
+"""POC: TELEGRAM bot"""
+# pylint: skip-file
+
 import datetime
 import os
 
@@ -160,7 +163,7 @@ async def attempt_login(update: Update, username: str, password: str):
         await update.message.reply_text("Login successful!")
     else:
         await update.message.reply_text(
-            f"Login failed: {response.json()['detail']}\n /signup if you havent, otherwise /login"
+            f"Login failed: {response.json()['detail']}\n /signup if you haven't, otherwise /login"
         )
 
 
