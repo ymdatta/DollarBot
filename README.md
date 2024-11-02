@@ -84,5 +84,53 @@ To get started, you'll need to create a Telegram bot through BotFather:
 
 1. Open the Telegram app (desktop or mobile), search for "BotFather," and click on "Start."
 2. Send the following command to BotFather:
-   /newbot
-4. .
+```bash
+/newbot
+``` 
+4. Follow the instructions to:
+- Choose a name for your bot.
+- Select a username ending with "bot" (required by Telegram).
+5. BotFather will confirm your bot's creation and provide an HTTP API access token—save this token for later.
+
+### Actual Installation
+
+These instructions guide you through setting up the bot's communication and running it:
+
+1. Clone this repository to your local system.
+2. Open a terminal session in the directory where the project was cloned and install the required dependencies:
+  ```bash
+  pip install -r requirements.txt
+  ```
+3. In the same directory, execute the following bash script to start the Telegram Bot:
+  ```bash
+  ./run.sh
+  ```
+  OR
+  ```bash
+  bash run.sh
+  ```
+4. When prompted, paste the API token you received from BotFather in step 4 of the pre-requisites.
+
+  A successful run will display the message: "TeleBot: Started polling."
+
+5. In the Telegram app, search for your bot using its username, open it, and type /start or /menu to begin using DollarBot for expense tracking!
+
+### Testing
+
+This project uses pytest to test all functionalities of the bot:
+
+Run the following command from the project's root directory to execute all unit tests:
+  ```bash
+  python -m pytest test/
+  ```
+Currently, the project includes 100+ tests covering all bot functions.
+
+### Code Coverage
+
+Code coverage is assessed as part of each build. Every time new code is pushed, a build runs, and code coverage is computed.
+
+To check code coverage locally:
+  ```bash
+  coverage run -m pytest test/
+  coverage report
+  ```
