@@ -145,7 +145,7 @@ These instructions guide you through setting up the bot's communication and runn
 
   A successful run will display the message: "TeleBot: Started polling."
 
-5. In the Telegram app, search for your bot using its username, open it, and type /start or /menu to begin using DollarBot for expense tracking!
+5. In the Telegram app, search for your bot using its username, open it, and type /start or /menu to begin using MoneyManager for expense tracking!
 
 ### Testing
 
@@ -171,7 +171,7 @@ To check code coverage locally:
 
 ## Configuration
 
-For **users**, no additional configuration is required—just start using DollarBot! 
+For **users**, no additional configuration is required—just start using MoneyManager! 
 
 For **contributors**, we’ve designed the system to be as modular as possible, so that updates to one module won’t impact others. However, there are a few configurable parameters available to help tailor and extend the system:
 
@@ -199,11 +199,11 @@ Alternatively, you’re welcome to submit a bug report in our repository. Make s
 
 ## Contributing
 
-Thank you for your interest in contributing to DollarBot! Your contributions are greatly appreciated, and this guide will help you get started. For full details on contributing, please refer to the [CONTRIBUTING.md](CONTRIBUTING.md) file, which provides comprehensive instructions and guidelines.
+Thank you for your interest in contributing to MoneyManager! Your contributions are greatly appreciated, and this guide will help you get started. For full details on contributing, please refer to the [CONTRIBUTING.md](CONTRIBUTING.md) file, which provides comprehensive instructions and guidelines.
 
 ## LICENSE
 
-By contributing to DollarBot, you agree that your contributions will fall under the project’s open-source license. Please take a moment to review and understand the licensing terms before contributing. The specific license details can be found in the [LICENSE](LICENSE) file.
+By contributing to MoneyManager, you agree that your contributions will fall under the project’s open-source license. Please take a moment to review and understand the licensing terms before contributing. The specific license details can be found in the [LICENSE](LICENSE) file.
 
 ## 🤝 Contributors
 
@@ -219,5 +219,5 @@ Please note that we have a [Code of Conduct](CODE_OF_CONDUCT.md) that all contri
 
 ---
 
-Thank you for using DollarBot! Follow this page to stay updated on new features and improvements.
+Thank you for using MoneyManager! Follow this page to stay updated on new features and improvements.
 
