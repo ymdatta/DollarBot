@@ -11,6 +11,7 @@ black
 pylint
 mypy
 bandit
+pandas-stubs
 types-python-jose
 matplotlib
 pandas
