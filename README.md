@@ -2,7 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [Money Manager](#money-manager)
+- [Money Manager](#money-manager) is a tool designed to help you track and manage your finances effectively. With a range of features for visualizing expenses and monitoring account balances, it offers a clear view of your spending patterns and financial health.
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -76,6 +76,38 @@ https://github.com/user-attachments/assets/91fdf9e0-9489-4e05-ab61-a7599e5463e1
 
 ---
 
+## Features
+
+- **Expense Tracking**: Add, update, and delete expenses. Track expenses by category, date, and account.
+- **Data Visualization**: View your expenses over time with customizable charts, including:
+  - Monthly and weekly spending trends
+  - Categorical expense breakdowns
+- **Authentication**: Secure access to your data using token-based authentication.
+- **RESTful API**: Access and interact with your financial data programmatically via a FastAPI-powered API.
+- **Testing Suite**: Comprehensive tests to ensure stability and reliability across key functionality.
+- **Multiple Accounts**: Manage multiple accounts like spending and saving.
+
+## Usage
+
+MoneyManager allows you to take control of your personal finances, providing insights into where your money goes and helping you make informed financial decisions. Whether you're looking to monitor daily spending or analyze broader trends, MoneyManager has the tools you need to stay on top of your finances.
+
+## Tech Stack
+
+- [![Python](https://img.shields.io/badge/Language-Python%203-blue)](https://www.python.org/)
+  - The entire application, from managing dependencies to testing, is built using Python 3.
+
+## Tools
+
+- [![Git](https://img.shields.io/badge/Tool-Git-orange)](https://git-scm.com/)
+- [![GitHub](https://img.shields.io/badge/Tool-GitHub-lightgrey)](https://github.com/)
+- [![GitHub Actions](https://img.shields.io/badge/CI/CD-GitHub%20Actions-blue)](https://github.com/features/actions)
+- [![MongoDB](https://img.shields.io/badge/Database-MongoDB-green)](https://www.mongodb.com/)
+- [![REST API](https://img.shields.io/badge/API-REST-red)](https://restfulapi.net/)
+- [![Docker](https://img.shields.io/badge/Containerization-Docker-blue)](https://www.docker.com/)
+- [![Telegram](https://img.shields.io/badge/Messaging-Telegram-blue)](https://telegram.org/) - Used as a proof of concept (POC) for messaging integration.
+
+Each tool is an essential part of the development and deployment process, enhancing functionality, reliability, and ease of collaboration.
+
 ## Installation
 
 ### Pre-requisite Tasks
@@ -125,6 +157,8 @@ Run the following command from the project's root directory to execute all unit 
   ```
 Currently, the project includes 100+ tests covering all bot functions.
 
+<img width="677" alt="image" src="https://github.com/user-attachments/assets/03d6d77f-7494-424e-bda6-0518ac79b124">
+
 ### Code Coverage
 
 Code coverage is assessed as part of each build. Every time new code is pushed, a build runs, and code coverage is computed.
@@ -134,6 +168,34 @@ To check code coverage locally:
   coverage run -m pytest test/
   coverage report
   ```
+
+## Configuration
+
+For **users**, no additional configuration is required—just start using DollarBot! 
+
+For **contributors**, we’ve designed the system to be as modular as possible, so that updates to one module won’t impact others. However, there are a few configurable parameters available to help tailor and extend the system:
+
+- Adding and removing categories
+- Adjusting graphing options
+- Modifying the Telegram bot name, etc.
+
+## Troubleshooting
+
+- **Ensure you have a valid bot token**: You can generate a token by creating a new bot via Telegram’s BotFather.
+- **Verify token placement**: Double-check that the token is correctly added to your bot’s code or configuration.
+- **Check bot permissions**: Confirm that your bot has the necessary permissions for the intended actions.
+
+Alternatively, you’re welcome to submit a bug report in our repository. Make sure to follow the steps outlined in [CONTRIBUTING.md](CONTRIBUTING.md) for reporting issues.
+
+## 🚀 Future Enhancements
+
+- **External Integrations**: Explore integrations with platforms like Discord, WhatsApp, and Slack to provide seamless notifications and financial management within users' preferred communication apps.
+- **UI/Website Development**: Develop a user-friendly web interface to enhance accessibility, offering streamlined access to financial data and resources.
+- **Advanced Telegram Bot**: Enhance the current Telegram bot with extensive testing and improvements for greater reliability and comprehensive functionality.
+- **Expanded REST Features**:
+  - Advanced analytics for deeper insights into financial habits.
+  - CSV import/export support for easy data handling.
+  - Group expense tracking with features like bill splitting, real-time updates, and integrated payment options.
 
 ## Contributing
 
