@@ -1,13 +1,20 @@
+from unittest.mock import AsyncMock, patch
+
 import pytest
 import pytest_asyncio
-from unittest.mock import AsyncMock, patch
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import CallbackContext
+
 from bots.telegram.bot import (
-    start_command, login_command, signup_command,
-    categories_command, expense_command, unified_callback_query_handler,
-    handle_message
+    categories_command,
+    expense_command,
+    handle_message,
+    login_command,
+    signup_command,
+    start_command,
+    unified_callback_query_handler,
 )
+
 
 # Fixture to mock Update and Context for testing
 @pytest.fixture
@@ -18,9 +25,11 @@ def mock_update():
     mock_update.message.chat_id = 12345
     return mock_update
 
+
 @pytest.fixture
 def mock_context():
     return AsyncMock(spec=CallbackContext)
+
 
 # Test start command
 @pytest.mark.asyncio
@@ -30,17 +39,24 @@ async def test_start_command(mock_update, mock_context):
         "Welcome to Money Manager! Please signup using /signup or log in using /login"
     )
 
+
 # Test login command
 @pytest.mark.asyncio
 async def test_login_command(mock_update, mock_context):
     await login_command(mock_update, mock_context)
-    mock_update.message.reply_text.assert_called_once_with("Please enter your username:")
+    mock_update.message.reply_text.assert_called_once_with(
+        "Please enter your username:"
+    )
+
 
 # Test signup command
 @pytest.mark.asyncio
 async def test_signup_command(mock_update, mock_context):
     await signup_command(mock_update, mock_context)
-    mock_update.message.reply_text.assert_called_once_with("To sign up, please enter your desired username:")
+    mock_update.message.reply_text.assert_called_once_with(
+        "To sign up, please enter your desired username:"
+    )
+
 
 # Test expense command with buttons
 @pytest.mark.asyncio
@@ -57,16 +73,22 @@ async def test_expense_command(mock_update, mock_context):
         "Choose an expense action:", reply_markup=expected_markup
     )
 
+
 # Test unified callback query handler for each callback data case
 @pytest.mark.asyncio
-@pytest.mark.parametrize("callback_data, handler_patch", [
-    ("view_category", "view_category_handler"),
-    ("add_category", "add_category_handler"),
-    ("add_expense", "add_expense_handler"),
-    ("view_expenses", "view_expenses_handler"),
-])
-async def test_unified_callback_handlers(callback_data, handler_patch, mock_update, mock_context):
+@pytest.mark.parametrize(
+    "callback_data, handler_patch",
+    [
+        ("view_category", "view_category_handler"),
+        ("add_category", "add_category_handler"),
+        ("add_expense", "add_expense_handler"),
+        ("view_expenses", "view_expenses_handler"),
+    ],
+)
+async def test_unified_callback_handlers(
+    callback_data, handler_patch, mock_update, mock_context
+):
     mock_update.callback_query.data = callback_data
-    with patch(f'bots.telegram.bot.{handler_patch}') as mock_handler:
+    with patch(f"bots.telegram.bot.{handler_patch}") as mock_handler:
         await unified_callback_query_handler(mock_update, mock_context)
         mock_handler.assert_called_once_with(mock_update.callback_query, mock_context)
