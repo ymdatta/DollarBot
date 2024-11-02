@@ -1,7 +1,6 @@
 from unittest.mock import AsyncMock, patch
 
 import pytest
-import pytest_asyncio
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import CallbackContext
 
