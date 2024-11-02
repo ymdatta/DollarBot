@@ -73,3 +73,16 @@ https://github.com/user-attachments/assets/91fdf9e0-9489-4e05-ab61-a7599e5463e1
 [![Zoom](https://img.shields.io/badge/Zoom-2D8CFF?logo=zoom&logoColor=white)](https://www.zoom.com/)
 [![DigitalOcean](https://img.shields.io/badge/DigitalOcean-%230167ff.svg?logo=digitalOcean&logoColor=white)]([#](https://www.digitalocean.com/))
 [![ChatGPT](https://img.shields.io/badge/ChatGPT-74aa9c?logo=openai&logoColor=white)](https://chatgpt.com/)
+
+---
+
+## Installation
+
+### Pre-requisite Tasks
+
+To get started, you'll need to create a Telegram bot through BotFather:
+
+1. Open the Telegram app (desktop or mobile), search for "BotFather," and click on "Start."
+2. Send the following command to BotFather:
+   /newbot
+4. .
